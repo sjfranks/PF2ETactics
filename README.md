@@ -2,6 +2,8 @@
 
 **▶ Play in your browser: https://sjfranks.github.io/PF2ETactics/**
 
+Alternate link (served straight from this repo): https://raw.githack.com/sjfranks/PF2ETactics/main/index.html
+
 An XCOM-style 3D tactics sandbox that runs the Pathfinder Second Edition (Remaster) rules. Build heroes from level 1 to 20, assemble encounters on the GM Core XP budget from all 492 Monster Core creatures, and fight them turn by turn on textured, animated battlefields. Every Strike, save, flank and Reactive Strike is rolled and explained.
 
 ## Features
