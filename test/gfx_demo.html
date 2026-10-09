@@ -1,0 +1,146 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Gfx demo diorama</title>
+<style>html,body{margin:0;height:100%;background:#000;overflow:hidden;font:12px/1.4 sans-serif;color:#ddd}#hud{position:absolute;left:8px;top:6px;background:rgba(0,0,0,.45);padding:4px 8px;border-radius:4px;pointer-events:none;white-space:pre}</style></head>
+<body><div id="hud"></div>
+<script src="../vendor/three.min.js"></script><script src="../src/gfx.js"></script>
+<script>
+/* URL params:
+   q=high|medium|low|off   post quality            preset=<env preset> (default from map)
+   fx=<effect name>         trigger one effect (see EFFECTS) ; t=<sec> freeze that many seconds after trigger
+   warm=<sec>               pre-simulate seconds before first frame (default 1.5)
+   cam=tx,tz,dist,yaw,pitch camera                  hud=0 hide text      map=demo|dark|lava (layout variant)
+   Keys: 1-4 quality (high/medium/low/off), space pause, n/p next/prev effect, a toggle auto-cycle, g grading off/on */
+const Q = new URLSearchParams(location.search); const G = PF.Gfx;
+const W = 16, H = 16;
+const VARIANT = Q.get('map') || 'demo';
+const ROWS = {
+  demo: ['TT;....,,....;TT', 'T;.f..##### .;.T'.replace(' ', '.'), '..ff..#:A:#..o..', '..;...#P:r#..;..', '.o....#:::#.....', '.RR...##+##..c..', '.RR...,,,,,..cb.', ';....,,......b..',
+    'wwwwww==wwwwwwww', 'WWWWWW==WWWWWWWW', 'wwwwww==wwwwwwww', '..;~~.,,...LLL..', '.s..~.,,..LLLL.o', '..S..t,,.r..LL..', 'T;...F,,F.....;T', 'TT;..FF,....;.TT'],
+  dark: ['################', '#::S::#FFF#::::#', '#:::::#FFF#:P::#', '#::A::+:::+::::#', '#:::::#:::#::S:#', '###:#####:###:##', '#::::::::::::::#', '#:P::__:::__:P:#', '#::::__:+:__:::#', '#::S:__:A:__:S:#', '#::::__:::__:::#', '#:P::::::::::P:#', '#::::::::::::::#', '##:#########:###', '#::::c::b::t:::#', '################'],
+  cave: ['################', '##....##...;..##', '#..P.......#...#', '#.....__=__....#', '#..;..__=__..P.#', '##....__=__....#', '#.....__=__..###', '#..P..__=__....#', '#.....__=__....#', '#.....__=__..P.#', '#..##.__=__....#', '#.....__=__....#', '#.P...__=__.;..#', '#...........P..#', '##....##.....###', '################']
+};
+const HROWS = { demo: { 2: '......02220.....', 3: '......02220.....', 4: '......02220.....', 5: '.33.............', 6: '.33.............' }, dark: { 8: '........3.......', 9: '.......333......', 10: '........3.......' }, cave: {} };
+const BASE = { demo: 'grass', dark: 'stone', cave: 'cave' }[VARIANT];
+const HBASE = { demo: 1, dark: 2, cave: 2 }[VARIANT];
+const HDEF = { demo: { w: 0, W: 0, L: 0 }, dark: { _: 0 }, cave: { _: 0 } }[VARIANT];
+const TERR = '.,:=+Rr;~wWLF_', OBJ = '#TPscbfoSAt';
+const tiles = ROWS[VARIANT].map((row, y) => row.split('').map((ch, x) => {
+  const obj = OBJ.includes(ch) ? ch : null; const terr = obj ? '.' : (TERR.includes(ch) ? ch : '.');
+  let h = HDEF[ch] != null ? HDEF[ch] : HBASE; const hr = (HROWS[VARIANT] || {})[y]; if (hr && /\d/.test(hr[x])) h = +hr[x];
+  return { x, y, ch, terr, obj, h, water: terr === 'w' ? 1 : terr === 'W' ? 2 : 0 };
+}));
+const B = { W, H, tile: (x, y) => tiles[y][x], map: { id: VARIANT === 'demo' ? 'chapel' : VARIANT === 'dark' ? 'crypt' : 'warrens', base: BASE } };
+const HL = 0.7;
+
+const renderer = new THREE.WebGLRenderer({ antialias: false, preserveDrawingBuffer: true });
+renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 2)); renderer.setSize(innerWidth, innerHeight); document.body.appendChild(renderer.domElement);
+const scene = new THREE.Scene(); const camera = new THREE.PerspectiveCamera(38, innerWidth / innerHeight, 0.1, 200);
+const t0 = performance.now();
+const presetName = Q.get('preset') || G.Battle.presetFor(B.map);
+console.log('GFX stage env');
+const env = G.Environment.apply(scene, renderer, presetName, { W, H, maxY: 4, envMap: Q.get('env') !== '0' });
+const fx = new G.Particles(scene, renderer, { lights: 8 });
+console.log('GFX stage build');
+const built = G.Battle.build(B, { HL, fx }); console.log('GFX built'); scene.add(built.group);
+const tBuild = performance.now() - t0;
+
+// texture swatch strip (every texture) along the south edge, outside the map
+if (VARIANT === 'demo') {
+  const names = G.Textures.names(); const strip = new THREE.Group(); scene.add(strip);
+  names.forEach((n, i) => {
+    let m; if (n === 'water') m = G.Materials.water(); else if (n === 'lava') m = G.Materials.lava(); else m = G.Materials.terrain(n, { world: 0.5 });
+    const b = new THREE.Mesh(G.Geo.bevelBox(0.7, 0.35, 0.7, 0.04), m); b.position.set(-0.1 + (i % 11) * 0.76 + 2.4, -0.5, 16.7 + Math.floor(i / 11) * 0.8); b.castShadow = b.receiveShadow = true; strip.add(b);
+  });
+  // a few standalone props on swatch row too
+}
+// placeholder capsule figures
+const units = [];
+function figure(x, y, team) {
+  const t = B.tile(x, y); const g = new THREE.Group(); const top = t.h * HL;
+  const col = team === 'pc' ? '#4fa8e0' : '#e0524a';
+  const base = new THREE.Mesh(new THREE.CylinderGeometry(0.42, 0.44, 0.07, 28), new THREE.MeshStandardMaterial({ color: '#1b2226', roughness: 0.6 })); base.position.y = 0.035; g.add(base);
+  const rim = new THREE.Mesh(new THREE.TorusGeometry(0.42, 0.03, 6, 32), new THREE.MeshStandardMaterial({ color: col, emissive: col, emissiveIntensity: 0.8 })); rim.rotation.x = Math.PI / 2; rim.position.y = 0.075; g.add(rim);
+  const body = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.24, 0.8, 14), new THREE.MeshStandardMaterial({ color: team === 'pc' ? '#5a6a80' : '#7a4a3a', roughness: 0.7 })); body.position.y = 0.5; g.add(body);
+  const head = new THREE.Mesh(new THREE.SphereGeometry(0.16, 14, 10), new THREE.MeshStandardMaterial({ color: '#d6ad88', roughness: 0.7 })); head.position.y = 1.07; g.add(head);
+  g.traverse(o => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
+  g.position.set(x + 0.5, top, y + 0.5); scene.add(g); units.push(g); return g;
+}
+const figs = VARIANT === 'demo' ? [[4, 3, 'pc'], [5, 6, 'pc'], [9, 6, 'pc'], [3, 13, 'foe'], [8, 12, 'foe'], [11, 4, 'foe'], [8, 3, 'foe']] : VARIANT === 'dark' ? [[7, 12, 'pc'], [9, 12, 'pc'], [4, 6, 'foe'], [11, 6, 'foe']] : [[3, 12, 'pc'], [4, 13, 'pc'], [12, 3, 'foe'], [10, 2, 'foe']];
+figs.forEach(f => figure(f[0], f[1], f[2]));
+const U = i => units[i].position.clone().add(new THREE.Vector3(0, 0.75, 0));
+const Ug = i => units[i].position.clone().add(new THREE.Vector3(0, 0.05, 0));
+// persistent emitters for the demo
+if (VARIANT === 'demo') {
+  const br = G.Props.make('brazier'); br.position.set(12.5, 1 * HL, 6.5); scene.add(br); br.updateMatrixWorld(true); br.userData.attachFx(fx);
+  const br2 = G.Props.make('stall', { seed: 3 }); br2.position.set(14.5, HL, 4.5); scene.add(br2);
+  const tr = G.Props.make('pillar', { broken: true, seed: 5 }); tr.position.set(1.5, HL, 3.5); scene.add(tr);
+  fx.emitter('aura', Ug(1), { color: '#6fd0ff', radius: 0.5 });
+  fx.emitter('sparkle', Ug(2), { color: '#ffe080' });
+}
+
+console.log('GFX stage post');
+const post = new G.Post(renderer, scene, camera, { quality: Q.get('q') || 'high' }); post.setGrading(env.grading);
+const resize = () => { renderer.setSize(innerWidth, innerHeight); camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); post.setSize(innerWidth, innerHeight, renderer.getPixelRatio()); };
+addEventListener('resize', resize);
+const cam = (Q.get('cam') || '').split(',').map(Number); const C = { tx: cam[0] || 8, tz: cam[1] || 9.5, dist: cam[2] || 24, yaw: cam[3] != null && !isNaN(cam[3]) ? cam[3] : 0.6, pitch: cam[4] || 0.95 };
+function applyCam() { const cp = Math.cos(C.pitch), sp = Math.sin(C.pitch); camera.position.set(C.tx + Math.sin(C.yaw) * cp * C.dist, sp * C.dist, C.tz + Math.cos(C.yaw) * cp * C.dist); camera.lookAt(C.tx, 0.6, C.tz); }
+applyCam();
+
+// effects catalogue
+const v = (x, y, z) => new THREE.Vector3(x, y, z);
+const EFFECTS = {
+  spark: () => fx.burst('spark', U(3)), impact: () => fx.burst('impact', U(3)), crit: () => fx.burst('crit', U(3)), magic: () => fx.burst('magic', U(4), { color: '#b07cff' }),
+  heal: () => fx.burst('heal', U(1)), dust: () => fx.burst('dust', Ug(0)), smoke: () => fx.burst('smoke', U(4)), embers: () => fx.burst('embers', U(4)), frost: () => fx.burst('frost', U(3)), acid: () => fx.burst('acid', U(3)),
+  shadow: () => fx.burst('shadow', U(4)), holy: () => fx.burst('holy', U(0)), death: () => fx.burst('death', U(5)),
+  arrow: () => fx.projectile('arrow', U(0), U(5)), bolt: () => fx.projectile('bolt', U(1), U(3)), javelin: () => fx.projectile('javelin', U(2), U(4)), rock: () => fx.projectile('rock', U(4), U(1)), sling: () => fx.projectile('sling', U(3), U(0)),
+  pmagic: () => fx.projectile('magic', U(0), U(4), { color: '#8fd0ff' }), pfire: () => fx.projectile('fire', U(1), U(4)), pfrost: () => fx.projectile('frost', U(2), U(5)), pacid: () => fx.projectile('acid', U(1), U(3)), force: () => fx.projectile('force', U(0), U(5), { count: 3 }),
+  lightning: () => fx.bolt(U(2), U(5)), chain: () => fx.bolt(U(2), U(5)).then(() => fx.bolt(U(5), U(6))), beam: () => fx.beam(U(1), U(6), { color: '#ff8ad8' }),
+  coneFire: () => fx.cone(U(2), U(4).sub(U(2)), 4.5, 0.5, 'fire'), coneCold: () => fx.cone(U(2), U(4).sub(U(2)), 4.5, 0.5, 'cold'), coneAcid: () => fx.cone(U(2), U(4).sub(U(2)), 4.5, 0.5, 'acid'),
+  coneElec: () => fx.cone(U(2), U(4).sub(U(2)), 4.5, 0.5, 'electricity'), conePoison: () => fx.cone(U(2), U(4).sub(U(2)), 4.5, 0.5, 'poison'), coneSonic: () => fx.cone(U(2), U(4).sub(U(2)), 4.5, 0.5, 'sonic'),
+  lineLightning: () => fx.line(U(0), v(12.5, 1.5, 13.5), 1, 'electricity'), lineFire: () => fx.line(U(0), v(12.5, 1, 13.5), 1, 'fire'), gust: () => fx.line(U(0), v(12.5, 1, 13.5), 1, 'gust'),
+  fireball: () => fx.explosion(v(8.5, HL + 0.6, 12.5), 2, 'fire', { groundY: HL }), iceStorm: () => fx.explosion(v(8.5, HL + 0.6, 12.5), 2, 'cold', { groundY: HL }), shock: () => fx.explosion(v(8.5, HL + 0.6, 12.5), 2, 'electricity', { groundY: HL }),
+  acidBurst: () => fx.explosion(v(8.5, HL + 0.6, 12.5), 2, 'acid', { groundY: HL }), voidBurst: () => fx.explosion(v(8.5, HL + 0.6, 12.5), 2, 'void', { groundY: HL }), sonicBurst: () => fx.explosion(v(8.5, HL + 0.6, 12.5), 2, 'sonic', { groundY: HL }), holyBurst: () => fx.explosion(v(8.5, HL + 0.6, 12.5), 2, 'holy', { groundY: HL }),
+  ring: () => fx.ring(Ug(1), 3, '#ffd27a'), shield: () => fx.shieldFlash(units[0].position.clone().add(v(0, 0.6, 0)), '#7fb0ff'), flash: () => fx.lightFlash(U(1), '#ffffff', 5, 0.6)
+};
+const NAMES = Object.keys(EFFECTS); let cur = Q.get('fx') ? NAMES.indexOf(Q.get('fx').split(',')[0]) : -1; let auto = !Q.get('fx'); let paused = false; let nextAt = 0.5; let simT = 0;
+const hud = document.getElementById('hud'); if (Q.get('hud') === '0') hud.style.display = 'none';
+function trigger(i) { cur = (i + NAMES.length) % NAMES.length; const p = EFFECTS[NAMES[cur]](); if (p && p.then) p.then(() => {}); }
+function step(dt) { simT += dt; G.update(dt); fx.update(dt); env.update(dt, camera, new THREE.Vector3(C.tx, 0, C.tz)); if (auto && simT >= nextAt) { trigger(cur + 1); nextAt = simT + 1.8; } }
+addEventListener('keydown', e => {
+  const qs = { 1: 'high', 2: 'medium', 3: 'low', 4: 'off' }; if (qs[e.key]) post.setQuality(qs[e.key]);
+  if (e.key === ' ') paused = !paused; if (e.key === 'n') trigger(cur + 1); if (e.key === 'p') trigger(cur - 1); if (e.key === 'a') auto = !auto;
+  if (e.key === 'g') post.setGrading(post.grading.contrast === 1 ? env.grading : { contrast: 1, saturation: 1, tintShadows: [1, 1, 1], tintHighlights: [1, 1, 1], vignette: 0 });
+  if (e.key === 'ArrowLeft') C.yaw += 0.1; if (e.key === 'ArrowRight') C.yaw -= 0.1; if (e.key === 'ArrowUp') C.dist *= 0.9; if (e.key === 'ArrowDown') C.dist *= 1.1; applyCam();
+});
+// deterministic warm-up / freeze
+const warm = Q.get('warm') != null ? +Q.get('warm') : 1.5; for (let t = 0; t < warm; t += 1 / 30) step(1 / 30);
+const freezeT = Q.get('t') != null ? +Q.get('t') : null;
+if (Q.get('fx')) { auto = false; Q.get('fx').split(',').forEach(n => trigger(NAMES.indexOf(n))); if (freezeT != null) { for (let t = 0; t < freezeT; t += 1 / 60) step(1 / 60); paused = true; } }
+console.log('GFX warm done');
+if (Q.get('perfq')) { const gl = renderer.getContext(); const px = new Uint8Array(4);
+  for (const q of ['off', 'low', 'medium', 'high']) { post.setQuality(q); post.render(0); post.render(0); gl.readPixels(0, 0, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, px); const a = performance.now(); for (let i = 0; i < 3; i++) post.render(0); gl.readPixels(0, 0, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, px); console.log('GFX perfq', q, ((performance.now() - a) / 3).toFixed(0), 'ms/frame'); }
+  post.setQuality(Q.get('q') || 'high'); }
+if (Q.get('perf')) {
+  const gl = renderer.getContext(); const tm = (label, fn) => { const a = performance.now(); fn(); gl.readPixels(0, 0, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array(4)); console.log('GFX perf', label, (performance.now() - a).toFixed(0), 'ms'); };
+  const kids = scene.children.slice(); const vis = kids.map(k => k.visible);
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  tm('compile+first full', () => renderer.render(scene, camera));
+  tm('second full', () => renderer.render(scene, camera));
+  renderer.shadowMap.autoUpdate = false; tm('no shadow update', () => renderer.render(scene, camera)); renderer.shadowMap.autoUpdate = true;
+  kids.forEach((k, i) => { kids.forEach((o, j) => o.visible = (j === i) || o.isLight); tm('only ' + (k.name || k.type) + ' ' + i, () => renderer.render(scene, camera)); });
+  kids.forEach((k, i) => k.visible = vis[i]);
+  built.group.children.forEach(c => { const v0 = c.visible; built.group.children.forEach(o => o.visible = o === c); tm('battle child ' + c.name, () => renderer.render(scene, camera)); });
+  built.group.children.forEach(o => o.visible = true);
+}
+let totalFrames = 0; let frames = 0, fpsT = performance.now(), fps = 0, last = performance.now();
+function frame(now) {
+  const dt = Math.min(0.05, (now - last) / 1000); last = now; if (!paused) step(dt);
+  const fa = performance.now(); post.render(dt); frames++; totalFrames++; if (Q.get('log')) console.log('GFX frame', totalFrames, (performance.now() - fa).toFixed(0), 'ms', NAMES[cur]);
+  if (now - fpsT > 1000) { fps = frames * 1000 / (now - fpsT); frames = 0; fpsT = now; }
+  hud.textContent = `preset ${presetName}  post ${post.quality}  fps ${fps.toFixed(1)}  post cpu ${post.stats.ms.toFixed(1)}ms  build ${tBuild.toFixed(0)}ms\nfx: ${NAMES[cur] || '-'}  particles ${fx.add.n}+${fx.alpha.n}+${fx.streaks.n}  calls ${post.stats.calls} tris ${post.stats.tris}\nkeys: 1-4 quality, space pause, n/p effect, a auto, g grading, arrows camera`;
+  if (totalFrames >= 3 && !window.__ready) { window.__ready = true; console.log('GFX ready build', tBuild.toFixed(0), 'ms; calls', renderer.info.render.calls, 'tris', renderer.info.render.triangles); }
+  requestAnimationFrame(frame);
+}
+renderer.info.autoReset = true;
+requestAnimationFrame(frame);
+window.__gfx = { scene, camera, renderer, post, fx, env, built, EFFECTS, trigger };
+</script></body></html>
