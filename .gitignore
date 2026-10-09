@@ -1,3 +1,4 @@
 vendor/threejs/
 shots/
 node_modules/
+.claude/
