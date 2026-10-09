@@ -1,0 +1,11973 @@
+[
+{
+"slug": "aapoph-granitescale",
+"name": "Aapoph Granitescale",
+"level": 6,
+"size": "med",
+"traits": [
+"humanoid",
+"mutant",
+"serpentfolk"
+],
+"strikes": [
+"Longspear",
+"Fangs",
+"Javelin"
+],
+"abilities": [
+"Telepathy 100 feet",
+"+2 Status to Will Saves vs. Mental",
+"Chipping Scales",
+"Reactive Strike",
+"Rattling Spear",
+"Serpentfolk Venom"
+],
+"speed": 25,
+"other": {}
+},
+{
+"slug": "aapoph-serpentfolk",
+"name": "Aapoph Serpentfolk",
+"level": 3,
+"size": "med",
+"traits": [
+"humanoid",
+"mutant",
+"serpentfolk"
+],
+"strikes": [
+"Scimitar",
+"Fangs",
+"Tail"
+],
+"abilities": [
+"Telepathy 100 feet",
+"+2 Status to Will Saves vs. Mental",
+"Reactive Strike",
+"Serpentfolk Venom",
+"Slithering Attack",
+"Knockdown"
+],
+"speed": 25,
+"other": {}
+},
+{
+"slug": "adamantine-dragon-adult-spellcaster",
+"name": "Adamantine Dragon (Adult, Spellcaster)",
+"level": 13,
+"size": "huge",
+"traits": [
+"dragon",
+"primal"
+],
+"strikes": [
+"Jaws",
+"Claw",
+"Tail",
+"Rock"
+],
+"abilities": [
+"Tremorsense (Imprecise) 90 feet",
+"+2 Status to All Saves vs. Primal",
+"Abandon Armor",
+"Frightful Presence",
+"Resilient Form",
+"Adamantine Body",
+"Avalanche Breath",
+"Burrowing Pounce",
+"Rock Tunneler",
+"Swallow Whole",
+"Throw Rock",
+"Grab"
+],
+"speed": 30,
+"other": {
+"burrow": 40,
+"fly": 150
+}
+},
+{
+"slug": "adamantine-dragon-adult",
+"name": "Adamantine Dragon (Adult)",
+"level": 13,
+"size": "huge",
+"traits": [
+"dragon",
+"primal"
+],
+"strikes": [
+"Jaws",
+"Claw",
+"Tail",
+"Rock"
+],
+"abilities": [
+"Tremorsense (Imprecise) 90 feet",
+"+2 Status to All Saves vs. Primal",
+"Abandon Armor",
+"Frightful Presence",
+"Resilient Form",
+"Adamantine Body",
+"Avalanche Breath",
+"Burrowing Pounce",
+"Draconic Frenzy",
+"Draconic Momentum",
+"Rock Tunneler",
+"Swallow Whole"
+],
+"speed": 30,
+"other": {
+"burrow": 40,
+"fly": 150
+}
+},
+{
+"slug": "adamantine-dragon-ancient-spellcaster",
+"name": "Adamantine Dragon (Ancient, Spellcaster)",
+"level": 18,
+"size": "grg",
+"traits": [
+"dragon",
+"primal"
+],
+"strikes": [
+"Jaws",
+"Claw",
+"Tail",
+"Rock"
+],
+"abilities": [
+"Tremorsense (Imprecise) 120 feet",
+"+2 Status to All Saves vs. Primal",
+"Abandon Armor",
+"Frightful Presence",
+"Resilient Form",
+"Adamantine Body",
+"Avalanche Breath",
+"Burrowing Pounce",
+"Fast Swallow",
+"Rock Tunneler",
+"Swallow Whole",
+"Throw Rock"
+],
+"speed": 40,
+"other": {
+"burrow": 50,
+"fly": 180
+}
+},
+{
+"slug": "adamantine-dragon-ancient",
+"name": "Adamantine Dragon (Ancient)",
+"level": 18,
+"size": "grg",
+"traits": [
+"dragon",
+"primal"
+],
+"strikes": [
+"Jaws",
+"Claw",
+"Tail",
+"Rock"
+],
+"abilities": [
+"Tremorsense (Imprecise) 120 feet",
+"+2 Status to All Saves vs. Primal",
+"Abandon Armor",
+"Frightful Presence",
+"Resilient Form",
+"Adamantine Body",
+"Avalanche Breath",
+"Burrowing Pounce",
+"Draconic Frenzy",
+"Draconic Momentum",
+"Fast Swallow",
+"Rock Tunneler"
+],
+"speed": 40,
+"other": {
+"burrow": 50,
+"fly": 180
+}
+},
+{
+"slug": "adamantine-dragon-young-spellcaster",
+"name": "Adamantine Dragon (Young, Spellcaster)",
+"level": 9,
+"size": "lg",
+"traits": [
+"dragon",
+"primal"
+],
+"strikes": [
+"Jaws",
+"Claw",
+"Tail",
+"Rock"
+],
+"abilities": [
+"Tremorsense (Imprecise) 60 feet",
+"+2 Status to All Saves vs. Primal",
+"Abandon Armor",
+"Frightful Presence",
+"Resilient Form",
+"Adamantine Body",
+"Avalanche Breath",
+"Burrowing Pounce",
+"Rock Tunneler",
+"Swallow Whole",
+"Throw Rock",
+"Grab"
+],
+"speed": 25,
+"other": {
+"burrow": 30,
+"fly": 90
+}
+},
+{
+"slug": "adamantine-dragon-young",
+"name": "Adamantine Dragon (Young)",
+"level": 9,
+"size": "lg",
+"traits": [
+"dragon",
+"primal"
+],
+"strikes": [
+"Jaws",
+"Claw",
+"Tail",
+"Rock"
+],
+"abilities": [
+"Tremorsense (Imprecise) 60 feet",
+"+2 Status to All Saves vs. Primal",
+"Abandon Armor",
+"Frightful Presence",
+"Resilient Form",
+"Adamantine Body",
+"Avalanche Breath",
+"Burrowing Pounce",
+"Draconic Frenzy",
+"Draconic Momentum",
+"Rock Tunneler",
+"Swallow Whole"
+],
+"speed": 25,
+"other": {
+"burrow": 30,
+"fly": 90
+}
+},
+{
+"slug": "aeolaeka",
+"name": "Aeolaeka",
+"level": 12,
+"size": "lg",
+"traits": [
+"azata",
+"celestial",
+"earth",
+"holy"
+],
+"strikes": [
+"Warhammer"
+],
+"abilities": [
+"Tremorsense (Precise) 60 feet",
+"Constant Spells",
+"Earth Glide",
+"Liberate the Earth",
+"Statue"
+],
+"speed": 25,
+"other": {
+"burrow": 25
+}
+},
+{
+"slug": "aesra",
+"name": "Aesra",
+"level": 7,
+"size": "med",
+"traits": [
+"archon",
+"celestial",
+"holy"
+],
+"strikes": [
+"Flame of Justice",
+"Flame of Justice"
+],
+"abilities": [
+"At-Will Spells",
+"Constant Spells",
+"All-Around Vision",
+"+1 Status to All Saves vs. Magic",
+"Archon's Protection",
+"Flame of Justice",
+"Flaming Slash",
+"Maintain Formation"
+],
+"speed": 30,
+"other": {
+"fly": 60
+}
+},
+{
+"slug": "air-scamp",
+"name": "Air Scamp",
+"level": 1,
+"size": "sm",
+"traits": [
+"air",
+"elemental"
+],
+"strikes": [
+"Jaws"
+],
+"abilities": [
+"Fog Vision",
+"Fast Healing 2 (In Open Air)",
+"Sirocco Breath"
+],
+"speed": 20,
+"other": {
+"fly": 40
+}
+},
+{
+"slug": "aiuvarin-elementalist",
+"name": "Aiuvarin Elementalist",
+"level": 2,
+"size": "med",
+"traits": [
+"aiuvarin",
+"elf",
+"human",
+"humanoid"
+],
+"strikes": [
+"Dagger",
+"Dagger"
+],
+"abilities": [
+"Elemental Field",
+"Elf Step"
+],
+"speed": 30,
+"other": {}
+},
+{
+"slug": "akhana",
+"name": "Akhana",
+"level": 12,
+"size": "med",
+"traits": [
+"aeon",
+"monitor"
+],
+"strikes": [
+"Tail",
+"Fist"
+],
+"abilities": [
+"Envisioning",
+"Lifesense 120 feet",
+"At-Will Spells",
+"+1 Status to All Saves vs. Magic",
+"Balance Life",
+"Flying Fists",
+"Reclaim Life",
+"Sprout Life",
+"Grab"
+],
+"speed": 0,
+"other": {
+"fly": 60
+}
+},
+{
+"slug": "alce",
+"name": "Alce",
+"level": 4,
+"size": "lg",
+"traits": [
+"animal"
+],
+"strikes": [
+"Beak",
+"Talon"
+],
+"abilities": [
+"Pounce",
+"Regal Shriek"
+],
+"speed": 35,
+"other": {}
+},
+{
+"slug": "animated-armor",
+"name": "Animated Armor",
+"level": 2,
+"size": "med",
+"traits": [
+"construct",
+"mindless"
+],
+"strikes": [
+"Glaive",
+"Gauntlet"
+],
+"abilities": [
+"Construct Armor (Hardness 9)"
+],
+"speed": 20,
+"other": {}
+},
+{
+"slug": "animated-broom",
+"name": "Animated Broom",
+"level": -1,
+"size": "sm",
+"traits": [
+"construct",
+"mindless"
+],
+"strikes": [
+"Bristles"
+],
+"abilities": [
+"Construct Armor (Hardness 2)",
+"Dust"
+],
+"speed": 15,
+"other": {}
+},
+{
+"slug": "animated-statue",
+"name": "Animated Statue",
+"level": 3,
+"size": "med",
+"traits": [
+"construct",
+"mindless"
+],
+"strikes": [
+"Fist"
+],
+"abilities": [
+"Construct Armor (Hardness 6)",
+"Grab"
+],
+"speed": 20,
+"other": {}
+},
+{
+"slug": "ankhrav-hive-mother",
+"name": "Ankhrav Hive Mother",
+"level": 8,
+"size": "huge",
+"traits": [
+"animal"
+],
+"strikes": [
+"Mandibles",
+"Acid Spit"
+],
+"abilities": [
+"Tremorsense (Imprecise) 90 feet",
+"Reactive Strike",
+"Armor-Rending Bite",
+"Frenzy Pheromone",
+"Spray Acid"
+],
+"speed": 25,
+"other": {
+"burrow": 20
+}
+},
+{
+"slug": "ankhrav",
+"name": "Ankhrav",
+"level": 3,
+"size": "lg",
+"traits": [
+"animal"
+],
+"strikes": [
+"Mandibles",
+"Acid Spit"
+],
+"abilities": [
+"Tremorsense (Imprecise) 30 feet",
+"Armor-Rending Bite",
+"Spray Acid"
+],
+"speed": 25,
+"other": {
+"burrow": 20
+}
+},
+{
+"slug": "ankylosaurus",
+"name": "Ankylosaurus",
+"level": 6,
+"size": "huge",
+"traits": [
+"animal",
+"dinosaur"
+],
+"strikes": [
+"Tail",
+"Foot"
+],
+"abilities": [
+"Punishing Tail",
+"Trample"
+],
+"speed": 25,
+"other": {}
+},
+{
+"slug": "aolaz",
+"name": "Aolaz",
+"level": 18,
+"size": "grg",
+"traits": [
+"construct"
+],
+"strikes": [
+"Trunk",
+"Foot"
+],
+"abilities": [
+"Flawless Hearing",
+"Constant Spells",
+"Roll",
+"Trample",
+"Ultrasonic Blast",
+"Grab"
+],
+"speed": 50,
+"other": {}
+},
+{
+"slug": "arbiter",
+"name": "Arbiter",
+"level": 1,
+"size": "tiny",
+"traits": [
+"aeon",
+"monitor"
+],
+"strikes": [
+"Shortsword"
+],
+"abilities": [
+"Locate Aeon",
+"+1 Status to All Saves vs. Magic",
+"Electrical Burst"
+],
+"speed": 20,
+"other": {
+"fly": 40
+}
+},
+{
+"slug": "arboreal-regent",
+"name": "Arboreal Regent",
+"level": 8,
+"size": "huge",
+"traits": [
+"plant",
+"wood"
+],
+"strikes": [
+"Branch",
+"Root",
+"Rock"
+],
+"abilities": [
+"Constant Spells",
+"Awaken Tree",
+"Sunder Objects",
+"Throw Rock"
+],
+"speed": 25,
+"other": {}
+},
+{
+"slug": "arboreal-warden",
+"name": "Arboreal Warden",
+"level": 4,
+"size": "lg",
+"traits": [
+"plant",
+"wood"
+],
+"strikes": [
+"Stone Longsword",
+"Shield Bash"
+],
+"abilities": [
+"Reactive Strike",
+"Shield Block",
+"Shield Push"
+],
+"speed": 25,
+"other": {}
+},
+{
+"slug": "army-ant-swarm",
+"name": "Army Ant Swarm",
+"level": 5,
+"size": "lg",
+"traits": [
+"animal",
+"swarm"
+],
+"strikes": [],
+"abilities": [
+"Swarm Mind",
+"Cling",
+"Swarming Bites"
+],
+"speed": 30,
+"other": {
+"climb": 30
+}
+},
+{
+"slug": "astradaemon",
+"name": "Astradaemon",
+"level": 16,
+"size": "lg",
+"traits": [
+"daemon",
+"fiend",
+"unholy"
+],
+"strikes": [
+"Jaws",
+"Claw",
+"Tail"
+],
+"abilities": [
+"Telepathy 100 feet",
+"Lifesense 30 feet",
+"Constant Spells",
+"+1 Status to All Saves vs. Magic",
+"Bent Light",
+"Soul Siphon",
+"Devour Soul",
+"Essence Drain",
+"Grab"
+],
+"speed": 60,
+"other": {
+"fly": 60
+}
+},
+{
+"slug": "athamaru-hunter",
+"name": "Athamaru Hunter",
+"level": 3,
+"size": "med",
+"traits": [
+"amphibious",
+"humanoid",
+"locathah"
+],
+"strikes": [
+"Longspear",
+"Crossbow"
+],
+"abilities": [
+"Cooperative Hunting",
+"Fan Bolt",
+"Hunt Prey",
+"Pack Attack",
+"Smooth Swimmer"
+],
+"speed": 10,
+"other": {
+"swim": 40
+}
+},
+{
+"slug": "augnagar",
+"name": "Augnagar",
+"level": 14,
+"size": "huge",
+"traits": [
+"fiend",
+"qlippoth",
+"unholy"
+],
+"strikes": [
+"Jaws",
+"Sting"
+],
+"abilities": [
+"Telepathy 100 feet",
+"Constant Spells",
+"Confusing Display",
+"Inhale Vitality",
+"Rotting Curse"
+],
+"speed": 40,
+"other": {
+"climb": 40,
+"fly": 40
+}
+},
+{
+"slug": "awakened-tree",
+"name": "Awakened Tree",
+"level": 6,
+"size": "huge",
+"traits": [
+"plant",
+"wood"
+],
+"strikes": [
+"Branch",
+"Root"
+],
+"abilities": [],
+"speed": 20,
+"other": {}
+},
+{
+"slug": "axiomite",
+"name": "Axiomite",
+"level": 8,
+"size": "med",
+"traits": [
+"aeon",
+"monitor"
+],
+"strikes": [
+"Warhammer",
+"Fist"
+],
+"abilities": [
+"At-Will Spells",
+"+1 Status to All Saves vs. Magic",
+"Crystalline Dust Form"
+],
+"speed": 25,
+"other": {}
+},
+{
+"slug": "azarketi-crab-catcher",
+"name": "Azarketi Crab Catcher",
+"level": 0,
+"size": "med",
+"traits": [
+"amphibious",
+"azarketi",
+"humanoid"
+],
+"strikes": [
+"Dagger",
+"Dagger"
+],
+"abilities": [
+"Hydration",
+"Swim Away"
+],
+"speed": 25,
+"other": {
+"swim": 25
+}
+},
+{
+"slug": "azarketi-tide-tamer",
+"name": "Azarketi Tide Tamer",
+"level": 7,
+"size": "med",
+"traits": [
+"amphibious",
+"azarketi",
+"humanoid"
+],
+"strikes": [
+"Trident",
+"Trident",
+"Hand Crossbow"
+],
+"abilities": [
+"Hydration",
+"Speaker of the Oceans",
+"Aquatic Predator"
+],
+"speed": 25,
+"other": {
+"swim": 25
+}
+},
+{
+"slug": "azuretzi",
+"name": "Azuretzi",
+"level": 5,
+"size": "sm",
+"traits": [
+"monitor",
+"protean"
+],
+"strikes": [
+"Jaws",
+"Claw",
+"Tail"
+],
+"abilities": [
+"Entropy Sense",
+"Constant Spells",
+"+1 Status to All Saves vs. Magic",
+"Fast Healing 2",
+"Protean Anatomy 8",
+"Spell Pilfer",
+"Constrict",
+"Mimic Form",
+"Mocking Touch",
+"Grab"
+],
+"speed": 25,
+"other": {
+"fly": 25,
+"swim": 25
+}
+},
+{
+"slug": "balisse",
+"name": "Balisse",
+"level": 8,
+"size": "med",
+"traits": [
+"angel",
+"celestial",
+"holy"
+],
+"strikes": [
+"Scimitar"
+],
+"abilities": [
+"+2 Bonus on Perception to Detect lies and illusions",
+"At-Will Spells",
+"Constant Spells",
+"+1 Status to All Saves vs. Magic",
+"Confessor's Aura",
+"Brand of the Impenitent",
+"Guiding Angel"
+],
+"speed": 30,
+"other": {
+"fly": 40
+}
+},
+{
+"slug": "bandersnatch",
+"name": "Bandersnatch",
+"level": 17,
+"size": "grg",
+"traits": [
+"beast",
+"tane"
+],
+"strikes": [
+"Jaws",
+"Claws",
+"Tail",
+"Quill"
+],
+"abilities": [
+"Planar Acclimation",
+"+1 Status to All Saves vs. Magic",
+"Fast Healing 15",
+"Confusing Gaze",
+"Quick Recovery",
+"Reactive Strike (Tail Only)",
+"Focus Gaze",
+"Frumious Charge",
+"Pain",
+"Relentless Tracker"
+],
+"speed": 50,
+"other": {
+"climb": 20
+}
+},
+{
+"slug": "banshee",
+"name": "Banshee",
+"level": 17,
+"size": "med",
+"traits": [
+"incorporeal",
+"spirit",
+"undead",
+"unholy"
+],
+"strikes": [
+"Hand"
+],
+"abilities": [
+"Hears Heartbeats",
+"Sunlight Powerlessness",
+"Spectral Ripple",
+"Terrifying Touch",
+"Vengeful Spite",
+"Wail"
+],
+"speed": null,
+"other": {
+"fly": 60
+}
+},
+{
+"slug": "barghest",
+"name": "Barghest",
+"level": 4,
+"size": "med",
+"traits": [
+"beast",
+"unholy"
+],
+"strikes": [
+"Claw"
+],
+"abilities": [
+"Primal Hunt",
+"Change Shape",
+"Unhealing Wound",
+"Knockdown"
+],
+"speed": 25,
+"other": {}
+},
+{
+"slug": "basilisk",
+"name": "Basilisk",
+"level": 5,
+"size": "med",
+"traits": [
+"beast"
+],
+"strikes": [
+"Jaws"
+],
+"abilities": [
+"Petrifying Glance",
+"Petrifying Gaze"
+],
+"speed": 20,
+"other": {}
+},
+{
+"slug": "benthic-worm",
+"name": "Benthic Worm",
+"level": 15,
+"size": "grg",
+"traits": [
+"amphibious",
+"animal"
+],
+"strikes": [
+"Jaws",
+"Stinger",
+"Body"
+],
+"abilities": [
+"Tremorsense (Imprecise) 100 feet",
+"Inexorable",
+"Slough Skin",
+"Benthic Worm Venom",
+"Breach",
+"Fast Swallow",
+"Swallow Whole",
+"Thrash",
+"Improved Grab"
+],
+"speed": 40,
+"other": {
+"burrow": 40,
+"swim": 60
+}
+},
+{
+"slug": "boar",
+"name": "Boar",
+"level": 2,
+"size": "med",
+"traits": [
+"animal"
+],
+"strikes": [
+"Tusk"
+],
+"abilities": [
+"Ferocity",
+"Boar Charge"
+],
+"speed": 40,
+"other": {}
+},
+{
+"slug": "boggard-scout",
+"name": "Boggard Scout",
+"level": 1,
+"size": "med",
+"traits": [
+"amphibious",
+"boggard",
+"humanoid"
+],
+"strikes": [
+"Morningstar",
+"Tongue",
+"Sling"
+],
+"abilities": [
+"Swamp Passage",
+"Terrifying Croak",
+"Tongue Grab"
+],
+"speed": 20,
+"other": {
+"swim": 25
+}
+},
+{
+"slug": "boggard-swampseer",
+"name": "Boggard Swampseer",
+"level": 3,
+"size": "med",
+"traits": [
+"amphibious",
+"boggard",
+"humanoid"
+],
+"strikes": [
+"Staff",
+"Tongue"
+],
+"abilities": [
+"Destructive Croak",
+"Drowning Drone",
+"Swamp Passage",
+"Terrifying Croak",
+"Tongue Grab"
+],
+"speed": 20,
+"other": {
+"swim": 25
+}
+},
+{
+"slug": "boggard-warrior",
+"name": "Boggard Warrior",
+"level": 2,
+"size": "med",
+"traits": [
+"amphibious",
+"boggard",
+"humanoid"
+],
+"strikes": [
+"Club",
+"Tongue",
+"Javelin",
+"Club"
+],
+"abilities": [
+"Swamp Passage",
+"Terrifying Croak",
+"Tongue Grab"
+],
+"speed": 20,
+"other": {
+"swim": 25
+}
+},
+{
+"slug": "bogwid",
+"name": "Bogwid",
+"level": 5,
+"size": "med",
+"traits": [
+"aberration"
+],
+"strikes": [
+"Tentacle",
+"Larval Spit"
+],
+"abilities": [
+"Revolting Aura",
+"Bogwid Fever",
+"Ravenous Young"
+],
+"speed": 25,
+"other": {
+"climb": 20,
+"swim": 20
+}
+},
+{
+"slug": "bone-prophet",
+"name": "Bone Prophet",
+"level": 8,
+"size": "med",
+"traits": [
+"humanoid",
+"serpentfolk"
+],
+"strikes": [
+"Staff",
+"Fangs"
+],
+"abilities": [
+"Telepathy 100 feet",
+"Thin of Blood",
+"Raise Serpent",
+"Serpentfolk Venom"
+],
+"speed": 25,
+"other": {}
+},
+{
+"slug": "bottlenose-dolphin",
+"name": "Bottlenose Dolphin",
+"level": 0,
+"size": "med",
+"traits": [
+"animal"
+],
+"strikes": [
+"Snout",
+"Jaws"
+],
+"abilities": [
+"Aquatic Echolocation 120 feet",
+"Deep Breath",
+"Ramming Speed"
+],
+"speed": 0,
+"other": {
+"swim": 60
+}
+},
+{
+"slug": "brimorak",
+"name": "Brimorak",
+"level": 5,
+"size": "med",
+"traits": [
+"demon",
+"fiend",
+"unholy"
+],
+"strikes": [
+"Flaming Sword",
+"Hoof"
+],
+"abilities": [
+"Telepathy 60 feet",
+"Extinguishing Aversion",
+"Smoke Vision",
+"Boiling Blood",
+"Flaming Weapon",
+"Frothing Spew",
+"Fume"
+],
+"speed": 30,
+"other": {}
+},
+{
+"slug": "brine-shark",
+"name": "Brine Shark",
+"level": 3,
+"size": "med",
+"traits": [
+"aquatic",
+"elemental",
+"water"
+],
+"strikes": [
+"Jaws"
+],
+"abilities": [
+"Deep Plunge",
+"Grab"
+],
+"speed": 15,
+"other": {
+"swim": 50
+}
+},
+{
+"slug": "brontosaurus",
+"name": "Brontosaurus",
+"level": 10,
+"size": "grg",
+"traits": [
+"animal",
+"dinosaur"
+],
+"strikes": [
+"Tail",
+"Foot"
+],
+"abilities": [
+"Tail Sweep",
+"Trample",
+"Improved Knockdown"
+],
+"speed": 35,
+"other": {}
+},
+{
+"slug": "bugbear-prowler",
+"name": "Bugbear Prowler",
+"level": 2,
+"size": "med",
+"traits": [
+"bugbear",
+"humanoid"
+],
+"strikes": [
+"Bastard Sword",
+"Fist",
+"Javelin"
+],
+"abilities": [
+"Bushwhack",
+"Mauler"
+],
+"speed": 25,
+"other": {}
+},
+{
+"slug": "bugbear-tormentor",
+"name": "Bugbear Tormentor",
+"level": 3,
+"size": "med",
+"traits": [
+"bugbear",
+"humanoid"
+],
+"strikes": [
+"Dagger",
+"Sickle",
+"Dagger"
+],
+"abilities": [
+"Sneak Attack",
+"Twin Feint"
+],
+"speed": 25,
+"other": {}
+},
+{
+"slug": "cacodaemon",
+"name": "Cacodaemon",
+"level": 1,
+"size": "tiny",
+"traits": [
+"daemon",
+"fiend",
+"unholy"
+],
+"strikes": [
+"Jaws"
+],
+"abilities": [
+"Telepathy 100 feet",
+"At-Will Spells",
+"Cacodaemonia",
+"Change Shape",
+"Soul Lock"
+],
+"speed": 5,
+"other": {
+"fly": 40
+}
+},
+{
+"slug": "caldera-oni",
+"name": "Caldera Oni",
+"level": 14,
+"size": "lg",
+"traits": [
+"fire",
+"giant",
+"humanoid",
+"oni"
+],
+"strikes": [
+"Katana",
+"Jaws"
+],
+"abilities": [
+"Greater Darkvision",
+"Bean Panic",
+"Reactive Strike",
+"Stoke the Volcano",
+"Ash Form",
+"Change Shape",
+"Dance of Burning War"
+],
+"speed": 40,
+"other": {
+"fly": 40
+}
+},
+{
+"slug": "caligni-dancer",
+"name": "Caligni Dancer",
+"level": 1,
+"size": "sm",
+"traits": [
+"caligni",
+"humanoid"
+],
+"strikes": [
+"Baton",
+"Dagger",
+"Dagger"
+],
+"abilities": [
+"Greater Darkvision",
+"Distracting Frolic",
+"Final Dance",
+"Light Blindness",
+"Dancer's Curse",
+"Sneak Attack"
+],
+"speed": 25,
+"other": {}
+},
+{
+"slug": "caligni-hunter",
+"name": "Caligni Hunter",
+"level": 4,
+"size": "med",
+"traits": [
+"caligni",
+"humanoid"
+],
+"strikes": [
+"Shortsword"
+],
+"abilities": [
+"Greater Darkvision",
+"At-Will Spells",
+"Final Fate",
+"Light Blindness",
+"Double Slice",
+"Encircling Command",
+"Sneak Attack"
+],
+"speed": 25,
+"other": {}
+},
+{
+"slug": "caligni-skulker",
+"name": "Caligni Skulker",
+"level": 2,
+"size": "sm",
+"traits": [
+"caligni",
+"humanoid"
+],
+"strikes": [
+"Dagger",
+"Dagger"
+],
+"abilities": [
+"Greater Darkvision",
+"Final Night",
+"Light Blindness",
+"Sneak Attack",
+"Tumble Behind"
+],
+"speed": 25,
+"other": {}
+},
+{
+"slug": "cassisian",
+"name": "Cassisian",
+"level": 1,
+"size": "tiny",
+"traits": [
+"angel",
+"celestial",
+"holy"
+],
+"strikes": [
+"Headbutt"
+],
+"abilities": [
+"+1 Status to All Saves vs. Unholy Creatures",
+"+1 Status to AC vs. Unholy Creatures",
+"Transfer Protection",
+"Change Shape",
+"Eye Beams",
+"Repository of Lore",
+"Knockdown"
+],
+"speed": 0,
+"other": {
+"fly": 40
+}
+},
+{
+"slug": "catfolk-pouncer",
+"name": "Catfolk Pouncer",
+"level": 1,
+"size": "med",
+"traits": [
+"catfolk",
+"humanoid"
+],
+"strikes": [
+"Greataxe",
+"Dagger",
+"Dagger"
+],
+"abilities": [
+"Cat's Luck",
+"Sudden Charge"
+],
+"speed": 30,
+"other": {}
+},
+{
+"slug": "cauthooj",
+"name": "Cauthooj",
+"level": 12,
+"size": "med",
+"traits": [
+"beast"
+],
+"strikes": [
+"Beak"
+],
+"abilities": [
+"Thoughtsense (Imprecise) 60 feet",
+"Hop-Dodge",
+"Staccato Strike",
+"Warbling Song"
+],
+"speed": 35,
+"other": {}
+},
+{
+"slug": "cave-bear",
+"name": "Cave Bear",
+"level": 6,
+"size": "lg",
+"traits": [
+"animal"
+],
+"strikes": [
+"Jaws",
+"Claw"
+],
+"abilities": [
+"Mauler",
+"Rush",
+"Grab"
+],
+"speed": 35,
+"other": {}
+},
+{
+"slug": "cave-worm",
+"name": "Cave Worm",
+"level": 13,
+"size": "grg",
+"traits": [
+"animal"
+],
+"strikes": [
+"Jaws",
+"Stinger",
+"Body",
+"Regurgitate"
+],
+"abilities": [
+"Tremorsense (Imprecise) 100 feet",
+"Inexorable",
+"Slough Skin",
+"Cave Worm Venom",
+"Fast Swallow",
+"Regurgitate",
+"Rock Tunneler",
+"Swallow Whole",
+"Thrash",
+"Improved Grab"
+],
+"speed": 40,
+"other": {
+"burrow": 40,
+"swim": 20
+}
+},
+{
+"slug": "centaur-herbalist",
+"name": "Centaur Herbalist",
+"level": 3,
+"size": "lg",
+"traits": [
+"beast",
+"centaur",
+"humanoid"
+],
+"strikes": [
+"Hoof",
+"Sling"
+],
+"abilities": [
+"Load Sachet",
+"Trample"
+],
+"speed": 40,
+"other": {}
+},
+{
+"slug": "centipede-swarm",
+"name": "Centipede Swarm",
+"level": 3,
+"size": "lg",
+"traits": [
+"animal",
+"swarm"
+],
+"strikes": [],
+"abilities": [
+"Tremorsense (Imprecise) 30 feet",
+"Swarm Mind",
+"Centipede Swarm Venom",
+"Swarming Bites"
+],
+"speed": 30,
+"other": {
+"climb": 30
+}
+},
+{
+"slug": "changeling-exile",
+"name": "Changeling Exile",
+"level": 3,
+"size": "med",
+"traits": [
+"changeling",
+"human",
+"humanoid"
+],
+"strikes": [
+"Claws",
+"Staff",
+"Sickle"
+],
+"abilities": [
+"+2 Circumstance to All Saves vs. Dream and Sleep"
+],
+"speed": 25,
+"other": {}
+},
+{
+"slug": "charnel-creation",
+"name": "Charnel Creation",
+"level": 8,
+"size": "lg",
+"traits": [
+"construct",
+"mindless"
+],
+"strikes": [
+"Fist"
+],
+"abilities": [
+"Berserk",
+"Electric Healing",
+"Electric Reflexes",
+"Berserk Slam"
+],
+"speed": 25,
+"other": {}
+},
+{
+"slug": "chimera",
+"name": "Chimera",
+"level": 8,
+"size": "lg",
+"traits": [
+"beast"
+],
+"strikes": [
+"Dragon Jaws",
+"Lion Jaws",
+"Goat Horns",
+"Claw"
+],
+"abilities": [
+"Multiple Reactions",
+"Reactive Strike",
+"Three Headed",
+"Draconic Bite",
+"Dragon Breath",
+"Three-Headed Strike"
+],
+"speed": 25,
+"other": {
+"fly": 40
+}
+},
+{
+"slug": "choral",
+"name": "Choral",
+"level": 6,
+"size": "sm",
+"traits": [
+"angel",
+"celestial",
+"holy"
+],
+"strikes": [
+"Fist",
+"Piercing Hymn"
+],
+"abilities": [
+"At-Will Spells",
+"Constant Spells",
+"+1 Status to All Saves vs. Magic",
+"Harmonizing Aura",
+"Deafening Aria",
+"Harmonize"
+],
+"speed": 30,
+"other": {
+"fly": 40
+}
+},
+{
+"slug": "chupacabra",
+"name": "Chupacabra",
+"level": 3,
+"size": "sm",
+"traits": [
+"beast"
+],
+"strikes": [
+"Jaws",
+"Claw"
+],
+"abilities": [
+"Pounce",
+"Suck Blood",
+"Grab"
+],
+"speed": 25,
+"other": {}
+},
+{
+"slug": "cinder-rat",
+"name": "Cinder Rat",
+"level": 3,
+"size": "sm",
+"traits": [
+"elemental",
+"fire"
+],
+"strikes": [
+"Jaws"
+],
+"abilities": [
+"Smoke Vision",
+"Fetid Fumes"
+],
+"speed": 40,
+"other": {}
+},
+{
+"slug": "clay-effigy",
+"name": "Clay Effigy",
+"level": 10,
+"size": "lg",
+"traits": [
+"construct",
+"mindless"
+],
+"strikes": [
+"Fist"
+],
+"abilities": [
+"Sacred Art",
+"Effigy's Curse",
+"Cast Out",
+"Heavy Stride"
+],
+"speed": 20,
+"other": {}
+},
+{
+"slug": "cloud-giant",
+"name": "Cloud Giant",
+"level": 11,
+"size": "huge",
+"traits": [
+"air",
+"giant",
+"humanoid"
+],
+"strikes": [
+"Ranseur",
+"Fist"
+],
+"abilities": [
+"Cloudsight",
+"Reactive Strike",
+"Crushing Cloud",
+"Wind Strike"
+],
+"speed": 30,
+"other": {}
+},
+{
+"slug": "coarti",
+"name": "Coarti",
+"level": 7,
+"size": "med",
+"traits": [
+"devil",
+"fiend",
+"unholy"
+],
+"strikes": [
+"Morningstar",
+"Wing"
+],
+"abilities": [
+"Greater Darkvision",
+"Telepathy 100 feet",
+"Constant Spells",
+"+1 Status to All Saves vs. Magic",
+"Blood Contract",
+"Despairing Shriek",
+"Wing Snap"
+],
+"speed": 25,
+"other": {
+"fly": 40
+}
+},
+{
+"slug": "cockatrice",
+"name": "Cockatrice",
+"level": 3,
+"size": "sm",
+"traits": [
+"beast"
+],
+"strikes": [
+"Beak"
+],
+"abilities": [
+"Calcification"
+],
+"speed": 20,
+"other": {
+"fly": 40
+}
+},
+{
+"slug": "coil-spy",
+"name": "Coil Spy",
+"level": 4,
+"size": "med",
+"traits": [
+"humanoid",
+"serpentfolk"
+],
+"strikes": [
+"Shortsword",
+"Fangs",
+"Hand Crossbow (Spider Venom)",
+"Hand Crossbow (Serpentfolk Venom)"
+],
+"abilities": [
+"+1 Status to All Saves vs. Magic",
+"+4 Status to Will Saves vs. Mental",
+"Thin of Blood",
+"Deceptive Reposition",
+"Maintain Disguise",
+"Serpentfolk Venom",
+"Sneak Attack"
+],
+"speed": 25,
+"other": {}
+},
+{
+"slug": "compsognathus",
+"name": "Compsognathus",
+"level": -1,
+"size": "tiny",
+"traits": [
+"animal",
+"dinosaur"
+],
+"strikes": [
+"Jaws"
+],
+"abilities": [
+"Compsognathus Venom"
+],
+"speed": 30,
+"other": {
+"swim": 15
+}
+},
+{
+"slug": "con-rit",
+"name": "Con Rit",
+"level": 7,
+"size": "huge",
+"traits": [
+"animal",
+"aquatic"
+],
+"strikes": [
+"Mandible"
+],
+"abilities": [
+"Con Rit Venom",
+"Spit Venom",
+"Undulate"
+],
+"speed": 10,
+"other": {
+"swim": 60
+}
+},
+{
+"slug": "conspirator-dragon-adult-spellcaster",
+"name": "Conspirator Dragon (Adult, Spellcaster)",
+"level": 12,
+"size": "lg",
+"traits": [
+"dragon",
+"occult"
+],
+"strikes": [
+"Jaws",
+"Claw",
+"Tail",
+"Mental Blast"
+],
+"abilities": [
+"Telepathy 100 feet",
+"+2 to Sense Motive",
+"+2 Status to All Saves vs. Occult",
+"Retract Body",
+"Conjure Disguise",
+"Detonate Disguise",
+"Rushed Transformation",
+"Smoke Breath",
+"Sneak Attack"
+],
+"speed": 40,
+"other": {
+"climb": 40,
+"fly": 140
+}
+},
+{
+"slug": "conspirator-dragon-adult",
+"name": "Conspirator Dragon (Adult)",
+"level": 12,
+"size": "lg",
+"traits": [
+"dragon",
+"occult"
+],
+"strikes": [
+"Jaws",
+"Claw",
+"Tail",
+"Mental Blast"
+],
+"abilities": [
+"Telepathy 100 feet",
+"+2 to Sense Motive",
+"+2 Status to All Saves vs. Occult",
+"Retract Body",
+"Conjure Disguise",
+"Detonate Disguise",
+"Draconic Frenzy",
+"Draconic Momentum",
+"Rushed Transformation",
+"Smoke Breath",
+"Sneak Attack"
+],
+"speed": 40,
+"other": {
+"climb": 40,
+"fly": 140
+}
+},
+{
+"slug": "conspirator-dragon-ancient-spellcaster",
+"name": "Conspirator Dragon (Ancient, Spellcaster)",
+"level": 17,
+"size": "huge",
+"traits": [
+"dragon",
+"occult"
+],
+"strikes": [
+"Jaws",
+"Claw",
+"Tail",
+"Mental Blast"
+],
+"abilities": [
+"Telepathy 100 feet",
+"+2 to Sense Motive",
+"+2 Status to All Saves vs. Occult",
+"Retract Body",
+"Conjure Disguise",
+"Detonate Disguise",
+"Rushed Transformation",
+"Smoke Breath",
+"Sneak Attack"
+],
+"speed": 50,
+"other": {
+"climb": 50,
+"fly": 200
+}
+},
+{
+"slug": "conspirator-dragon-ancient",
+"name": "Conspirator Dragon (Ancient)",
+"level": 17,
+"size": "huge",
+"traits": [
+"dragon",
+"occult"
+],
+"strikes": [
+"Jaws",
+"Claw",
+"Tail",
+"Mental Blast"
+],
+"abilities": [
+"Telepathy 100 feet",
+"+2 to Sense Motive",
+"+2 Status to All Saves vs. Occult",
+"Retract Body",
+"Conjure Disguise",
+"Detonate Disguise",
+"Draconic Frenzy",
+"Draconic Momentum",
+"Rushed Transformation",
+"Smoke Breath",
+"Sneak Attack"
+],
+"speed": 50,
+"other": {
+"climb": 50,
+"fly": 200
+}
+},
+{
+"slug": "conspirator-dragon-young-spellcaster",
+"name": "Conspirator Dragon (Young, Spellcaster)",
+"level": 8,
+"size": "lg",
+"traits": [
+"dragon",
+"occult"
+],
+"strikes": [
+"Jaws",
+"Claw",
+"Tail",
+"Mental Blast"
+],
+"abilities": [
+"Telepathy 100 feet",
+"+2 to Sense Motive",
+"+2 Status to All Saves vs. Occult",
+"Retract Body",
+"Conjure Disguise",
+"Detonate Disguise",
+"Rushed Transformation",
+"Smoke Breath",
+"Sneak Attack"
+],
+"speed": 30,
+"other": {
+"climb": 30,
+"fly": 120
+}
+},
+{
+"slug": "conspirator-dragon-young",
+"name": "Conspirator Dragon (Young)",
+"level": 8,
+"size": "lg",
+"traits": [
+"dragon",
+"occult"
+],
+"strikes": [
+"Jaws",
+"Claw",
+"Tail",
+"Mental Blast"
+],
+"abilities": [
+"Telepathy 100 feet",
+"+2 to Sense Motive",
+"+2 Status to All Saves vs. Occult",
+"Retract Body",
+"Conjure Disguise",
+"Detonate Disguise",
+"Draconic Frenzy",
+"Draconic Momentum",
+"Rushed Transformation",
+"Smoke Breath",
+"Sneak Attack"
+],
+"speed": 30,
+"other": {
+"climb": 30,
+"fly": 120
+}
+},
+{
+"slug": "crag-linnorm",
+"name": "Crag Linnorm",
+"level": 14,
+"size": "grg",
+"traits": [
+"dragon",
+"fire"
+],
+"strikes": [
+"Jaws",
+"Claw",
+"Tail"
+],
+"abilities": [
+"Constant Spells",
+"+1 Status to All Saves vs. Magic",
+"Regeneration 10 (Deactivated by Cold Iron)",
+"Curse of Fire",
+"Reactive Strike (Tail Only)",
+"Constrict",
+"Crag Linnorm Venom",
+"Magma Breath",
+"Improved Grab"
+],
+"speed": 35,
+"other": {
+"fly": 100,
+"swim": 60
+}
+},
+{
+"slug": "crawling-hand",
+"name": "Crawling Hand",
+"level": -1,
+"size": "tiny",
+"traits": [
+"undead",
+"unholy"
+],
+"strikes": [
+"Claw"
+],
+"abilities": [
+"Tremorsense (Imprecise) 30 feet",
+"Lifesense 30 feet",
+"Void Healing",
+"Mark Quarry",
+"Throat Grab"
+],
+"speed": 30,
+"other": {
+"climb": 30
+}
+},
+{
+"slug": "crocodile",
+"name": "Crocodile",
+"level": 2,
+"size": "lg",
+"traits": [
+"animal"
+],
+"strikes": [
+"Jaws",
+"Tail"
+],
+"abilities": [
+"Deep Breath",
+"Aquatic Ambush",
+"Death Roll",
+"Grab"
+],
+"speed": 20,
+"other": {
+"swim": 25
+}
+},
+{
+"slug": "cuckoo-hag",
+"name": "Cuckoo Hag",
+"level": 9,
+"size": "med",
+"traits": [
+"hag",
+"humanoid"
+],
+"strikes": [
+"Claw"
+],
+"abilities": [
+"Coven",
+"+1 Status to All Saves vs. Magic",
+"Sound Imitation",
+"Change Shape",
+"Cuckoo's Lair",
+"Soul Covenant"
+],
+"speed": 25,
+"other": {}
+},
+{
+"slug": "cyclops",
+"name": "Cyclops",
+"level": 5,
+"size": "lg",
+"traits": [
+"giant",
+"humanoid"
+],
+"strikes": [
+"Greataxe",
+"Heavy Crossbow"
+],
+"abilities": [
+"Ferocity",
+"Flash of Insight",
+"Swipe"
+],
+"speed": 30,
+"other": {}
+},
+{
+"slug": "cythnigot",
+"name": "Cythnigot",
+"level": 1,
+"size": "tiny",
+"traits": [
+"fiend",
+"qlippoth",
+"unholy"
+],
+"strikes": [
+"Bite"
+],
+"abilities": [
+"Telepathy (Touch Only)",
+"Sickening Display",
+"Tangle Spores"
+],
+"speed": 30,
+"other": {
+"fly": 40
+}
+},
+{
+"slug": "daeodon",
+"name": "Daeodon",
+"level": 4,
+"size": "lg",
+"traits": [
+"animal"
+],
+"strikes": [
+"Tusk"
+],
+"abilities": [
+"Ferocity",
+"Daeodon Charge"
+],
+"speed": 40,
+"other": {}
+},
+{
+"slug": "deadly-mantis",
+"name": "Deadly Mantis",
+"level": 11,
+"size": "grg",
+"traits": [
+"animal"
+],
+"strikes": [
+"Mandibles",
+"Leg"
+],
+"abilities": [
+"Fling",
+"Leaping Grab",
+"Rending Mandibles",
+"Sudden Strike",
+"Grab"
+],
+"speed": 50,
+"other": {
+"climb": 50
+}
+},
+{
+"slug": "deinonychus",
+"name": "Deinonychus",
+"level": 2,
+"size": "med",
+"traits": [
+"animal",
+"dinosaur"
+],
+"strikes": [
+"Jaws",
+"Talon"
+],
+"abilities": [
+"Darting Strike",
+"Predator's Advantage"
+],
+"speed": 30,
+"other": {}
+},
+{
+"slug": "deinosuchus",
+"name": "Deinosuchus",
+"level": 9,
+"size": "huge",
+"traits": [
+"animal"
+],
+"strikes": [
+"Jaws",
+"Tail"
+],
+"abilities": [
+"Deep Breath",
+"Aquatic Ambush",
+"Swallow Whole",
+"Grab"
+],
+"speed": 30,
+"other": {
+"swim": 40
+}
+},
+{
+"slug": "dero-magister",
+"name": "Dero Magister",
+"level": 5,
+"size": "sm",
+"traits": [
+"dero",
+"humanoid"
+],
+"strikes": [
+"Staff"
+],
+"abilities": [
+"Vulnerable to Sunlight",
+"Cytillesh Stare",
+"Dero Medicine"
+],
+"speed": 20,
+"other": {}
+},
+{
+"slug": "dero-stalker",
+"name": "Dero Stalker",
+"level": 2,
+"size": "sm",
+"traits": [
+"dero",
+"humanoid"
+],
+"strikes": [
+"Club",
+"Club",
+"Hand Crossbow"
+],
+"abilities": [
+"Vulnerable to Sunlight",
+"Dero Medicine",
+"Exploit Lethargy",
+"Sneak Attack"
+],
+"speed": 20,
+"other": {}
+},
+{
+"slug": "dero-strangler",
+"name": "Dero Strangler",
+"level": 3,
+"size": "sm",
+"traits": [
+"dero",
+"humanoid"
+],
+"strikes": [
+"Spiked Chain",
+"Hand Crossbow"
+],
+"abilities": [
+"Ill Glow",
+"Vulnerable to Sunlight",
+"Dero Medicine",
+"Strangle"
+],
+"speed": 20,
+"other": {}
+},
+{
+"slug": "desert-drake",
+"name": "Desert Drake",
+"level": 8,
+"size": "lg",
+"traits": [
+"dragon",
+"earth"
+],
+"strikes": [
+"Fangs",
+"Tail"
+],
+"abilities": [
+"Sandstorm Sight",
+"Wing Deflection",
+"Draconic Frenzy",
+"Sandstorm Breath",
+"Speed Surge",
+"Surprise Attacker",
+"Push"
+],
+"speed": 20,
+"other": {
+"burrow": 20,
+"fly": 50
+}
+},
+{
+"slug": "dezullon",
+"name": "Dezullon",
+"level": 10,
+"size": "med",
+"traits": [
+"plant"
+],
+"strikes": [
+"Vine",
+"Acid Glob"
+],
+"abilities": [
+"Regeneration 15 (Deactivated by Fire)",
+"Stench",
+"Amnesia Venom",
+"Constrict",
+"Root",
+"Grab"
+],
+"speed": 25,
+"other": {
+"climb": 30
+}
+},
+{
+"slug": "dhampir-wizard",
+"name": "Dhampir Wizard",
+"level": 2,
+"size": "med",
+"traits": [
+"dhampir",
+"human",
+"humanoid"
+],
+"strikes": [
+"Staff",
+"Fist",
+"Dagger",
+"Dagger"
+],
+"abilities": [
+"+2 Circumstance to All Saves vs. Disease",
+"Blood of the Night",
+"Void Healing"
+],
+"speed": 25,
+"other": {}
+},
+{
+"slug": "diabolic-dragon-adult-spellcaster",
+"name": "Diabolic Dragon (Adult, Spellcaster)",
+"level": 15,
+"size": "huge",
+"traits": [
+"divine",
+"dragon",
+"unholy"
+],
+"strikes": [
+"Jaws",
+"Claws",
+"Tail"
+],
+"abilities": [
+"Smoke Vision",
+"+2 Status to All Saves vs. Divine",
+"Frightful Presence",
+"Hell's Sting",
+"Reactive Strike",
+"Diabolic Fire",
+"Hellfire Breath",
+"Grab",
+"Knockdown"
+],
+"speed": 60,
+"other": {
+"fly": 150
+}
+},
+{
+"slug": "diabolic-dragon-adult",
+"name": "Diabolic Dragon (Adult)",
+"level": 15,
+"size": "huge",
+"traits": [
+"divine",
+"dragon",
+"unholy"
+],
+"strikes": [
+"Jaws",
+"Claws",
+"Tail"
+],
+"abilities": [
+"Smoke Vision",
+"+2 Status to All Saves vs. Divine",
+"Frightful Presence",
+"Hell's Sting",
+"Reactive Strike",
+"Diabolic Fire",
+"Draconic Frenzy",
+"Draconic Momentum",
+"Hellfire Breath",
+"Grab",
+"Knockdown"
+],
+"speed": 60,
+"other": {
+"fly": 150
+}
+},
+{
+"slug": "diabolic-dragon-ancient-spellcaster",
+"name": "Diabolic Dragon (Ancient, Spellcaster)",
+"level": 20,
+"size": "grg",
+"traits": [
+"divine",
+"dragon",
+"unholy"
+],
+"strikes": [
+"Jaws",
+"Claws",
+"Tail"
+],
+"abilities": [
+"Smoke Vision",
+"+2 Status to All Saves vs. Divine",
+"Frightful Presence",
+"Hell's Sting",
+"Reactive Strike",
+"Diabolic Fire",
+"Hellfire Breath",
+"Improved Grab",
+"Improved Knockdown"
+],
+"speed": 70,
+"other": {
+"fly": 180
+}
+},
+{
+"slug": "diabolic-dragon-ancient",
+"name": "Diabolic Dragon (Ancient)",
+"level": 20,
+"size": "grg",
+"traits": [
+"divine",
+"dragon",
+"unholy"
+],
+"strikes": [
+"Jaws",
+"Claws",
+"Tail"
+],
+"abilities": [
+"Smoke Vision",
+"+2 Status to All Saves vs. Divine",
+"Frightful Presence",
+"Hell's Sting",
+"Reactive Strike",
+"Diabolic Fire",
+"Draconic Frenzy",
+"Draconic Momentum",
+"Hellfire Breath",
+"Improved Grab",
+"Improved Knockdown"
+],
+"speed": 70,
+"other": {
+"fly": 180
+}
+},
+{
+"slug": "diabolic-dragon-young-spellcaster",
+"name": "Diabolic Dragon (Young, Spellcaster)",
+"level": 11,
+"size": "lg",
+"traits": [
+"divine",
+"dragon",
+"unholy"
+],
+"strikes": [
+"Jaws",
+"Claws",
+"Tail"
+],
+"abilities": [
+"Smoke Vision",
+"+2 Status to All Saves vs. Divine",
+"Frightful Presence",
+"Hell's Sting",
+"Reactive Strike",
+"Diabolic Fire",
+"Hellfire Breath",
+"Grab",
+"Knockdown"
+],
+"speed": 50,
+"other": {
+"fly": 120
+}
+},
+{
+"slug": "diabolic-dragon-young",
+"name": "Diabolic Dragon (Young)",
+"level": 11,
+"size": "lg",
+"traits": [
+"divine",
+"dragon",
+"unholy"
+],
+"strikes": [
+"Jaws",
+"Claws",
+"Tail"
+],
+"abilities": [
+"Smoke Vision",
+"+2 Status to All Saves vs. Divine",
+"Frightful Presence",
+"Hell's Sting",
+"Reactive Strike",
+"Diabolic Fire",
+"Draconic Frenzy",
+"Draconic Momentum",
+"Hellfire Breath",
+"Grab",
+"Knockdown"
+],
+"speed": 50,
+"other": {
+"fly": 120
+}
+},
+{
+"slug": "dire-wolf",
+"name": "Dire Wolf",
+"level": 3,
+"size": "lg",
+"traits": [
+"animal"
+],
+"strikes": [
+"Jaws"
+],
+"abilities": [
+"Buck",
+"Pack Attack",
+"Worry",
+"Grab",
+"Knockdown"
+],
+"speed": 35,
+"other": {}
+},
+{
+"slug": "doldrums-heap",
+"name": "Doldrums Heap",
+"level": 9,
+"size": "huge",
+"traits": [
+"amphibious",
+"plant"
+],
+"strikes": [
+"Tendrils"
+],
+"abilities": [
+"Wavesense (Precise) 120 feet",
+"Mirage Spores",
+"Constrict",
+"Draw In",
+"Grab"
+],
+"speed": 20,
+"other": {
+"climb": 20,
+"swim": 40
+}
+},
+{
+"slug": "dragon-turtle",
+"name": "Dragon Turtle",
+"level": 9,
+"size": "huge",
+"traits": [
+"amphibious",
+"dragon"
+],
+"strikes": [
+"Jaws",
+"Claw"
+],
+"abilities": [
+"Shell Block",
+"Capsize",
+"Conjure Storm",
+"Draconic Frenzy",
+"Tsunami"
+],
+"speed": 20,
+"other": {
+"swim": 30
+}
+},
+{
+"slug": "draxie",
+"name": "Draxie",
+"level": 3,
+"size": "tiny",
+"traits": [
+"fey",
+"sprite"
+],
+"strikes": [
+"Jaws",
+"Euphoric Spark"
+],
+"abilities": [
+"Telepathy (Touch)",
+"Draxie Dust"
+],
+"speed": 15,
+"other": {
+"fly": 40
+}
+},
+{
+"slug": "dromaar-mountaineer",
+"name": "Dromaar Mountaineer",
+"level": 2,
+"size": "med",
+"traits": [
+"dromaar",
+"human",
+"humanoid",
+"orc"
+],
+"strikes": [
+"Pick",
+"Fist",
+"Bola"
+],
+"abilities": [
+"Ferocity",
+"Tangle Prey"
+],
+"speed": 25,
+"other": {}
+},
+{
+"slug": "dryad-queen",
+"name": "Dryad Queen",
+"level": 13,
+"size": "med",
+"traits": [
+"fey",
+"nymph",
+"plant",
+"wood"
+],
+"strikes": [
+"Branch",
+"Leaves"
+],
+"abilities": [
+"Nature Empathy",
+"Tied to the Land",
+"Constant Spells",
+"Nymph's Beauty",
+"Change Shape",
+"Focus Beauty",
+"Inspiration",
+"Tree Meld"
+],
+"speed": 30,
+"other": {}
+},
+{
+"slug": "dryad",
+"name": "Dryad",
+"level": 3,
+"size": "med",
+"traits": [
+"fey",
+"nymph",
+"plant",
+"wood"
+],
+"strikes": [
+"Branch"
+],
+"abilities": [
+"Nature Empathy",
+"Constant Spells",
+"Tree Dependent",
+"Tree Meld"
+],
+"speed": 25,
+"other": {}
+},
+{
+"slug": "dullahan",
+"name": "Dullahan",
+"level": 7,
+"size": "med",
+"traits": [
+"undead",
+"unholy"
+],
+"strikes": [
+"Keen Longsword",
+"Keen Returning Hatchet",
+"Fist",
+"Keen Returning Hatchet"
+],
+"abilities": [
+"Lifesense 60 feet",
+"Fast Healing 5",
+"Frightful Presence",
+"Reactive Strike",
+"Head Hunter",
+"Reap",
+"Summon Steed"
+],
+"speed": 20,
+"other": {}
+},
+{
+"slug": "duskwalker-ghost-hunter",
+"name": "Duskwalker Ghost Hunter",
+"level": 4,
+"size": "med",
+"traits": [
+"duskwalker",
+"human",
+"humanoid"
+],
+"strikes": [
+"Hatchet",
+"Hatchet",
+"Composite Longbow"
+],
+"abilities": [
+"+1 Status to All Saves vs. Death Effects",
+"Ghost Dodge",
+"Ghost Hunter",
+"Spirit Hunter",
+"Spirit Shot"
+],
+"speed": 25,
+"other": {}
+},
+{
+"slug": "dwarf-stonecaster",
+"name": "Dwarf Stonecaster",
+"level": 4,
+"size": "med",
+"traits": [
+"dwarf",
+"humanoid"
+],
+"strikes": [
+"Staff",
+"Clan Dagger"
+],
+"abilities": [
+"Tremorsense (Imprecise) 10 feet",
+"Boulder Roll",
+"Dwarven Doughtiness",
+"Tremor"
+],
+"speed": 20,
+"other": {}
+},
+{
+"slug": "dwarf-warrior",
+"name": "Dwarf Warrior",
+"level": 1,
+"size": "med",
+"traits": [
+"dwarf",
+"humanoid"
+],
+"strikes": [
+"Warhammer",
+"Clan Dagger"
+],
+"abilities": [
+"Shield Block",
+"Dwarven Doughtiness",
+"Shielded Charge"
+],
+"speed": 20,
+"other": {}
+},
+{
+"slug": "dybbuk",
+"name": "Dybbuk",
+"level": 15,
+"size": "med",
+"traits": [
+"incorporeal",
+"spirit",
+"undead",
+"unholy"
+],
+"strikes": [
+"Ghostly Hand"
+],
+"abilities": [
+"Telepathy 100 feet",
+"At-Will Spells",
+"Frightful Presence",
+"Void Healing",
+"Malevolent Possession"
+],
+"speed": 0,
+"other": {
+"fly": 50
+}
+},
+{
+"slug": "eagle",
+"name": "Eagle",
+"level": -1,
+"size": "sm",
+"traits": [
+"animal"
+],
+"strikes": [
+"Beak",
+"Talon"
+],
+"abilities": [
+"Eagle Dive"
+],
+"speed": 10,
+"other": {
+"fly": 60
+}
+},
+{
+"slug": "earth-scamp",
+"name": "Earth Scamp",
+"level": 1,
+"size": "sm",
+"traits": [
+"earth",
+"elemental"
+],
+"strikes": [
+"Body"
+],
+"abilities": [
+"Tremorsense (Imprecise) 30 feet",
+"Fast Healing 2 (While Underground)",
+"Scree Breath"
+],
+"speed": 20,
+"other": {
+"burrow": 20,
+"fly": 15
+}
+},
+{
+"slug": "elananx",
+"name": "Elananx",
+"level": 6,
+"size": "med",
+"traits": [
+"fey",
+"fire"
+],
+"strikes": [
+"Jaws",
+"Claw"
+],
+"abilities": [
+"Cinder Dispersal",
+"Pack Attack",
+"Pounce"
+],
+"speed": 30,
+"other": {}
+},
+{
+"slug": "electric-eel",
+"name": "Electric Eel",
+"level": 1,
+"size": "sm",
+"traits": [
+"animal",
+"aquatic"
+],
+"strikes": [
+"Jaws",
+"Tail"
+],
+"abilities": [
+"Stunning Shock"
+],
+"speed": 5,
+"other": {
+"swim": 30
+}
+},
+{
+"slug": "elemental-avalanche",
+"name": "Elemental Avalanche",
+"level": 11,
+"size": "huge",
+"traits": [
+"earth",
+"elemental"
+],
+"strikes": [
+"Fist",
+"Rock"
+],
+"abilities": [
+"Tremorsense (Imprecise) 90 feet",
+"Earthbound",
+"Crumble",
+"Spike Stones",
+"Earth Glide",
+"Grinding Stones",
+"Trample",
+"Knockdown"
+],
+"speed": 25,
+"other": {
+"burrow": 25
+}
+},
+{
+"slug": "elemental-hurricane",
+"name": "Elemental Hurricane",
+"level": 11,
+"size": "huge",
+"traits": [
+"air",
+"elemental"
+],
+"strikes": [
+"Gust",
+"Lightning Lash"
+],
+"abilities": [
+"Disperse",
+"High Winds",
+"Swiftness",
+"Gale Breath",
+"Push 10 feet"
+],
+"speed": 0,
+"other": {
+"fly": 100
+}
+},
+{
+"slug": "elemental-inferno",
+"name": "Elemental Inferno",
+"level": 11,
+"size": "huge",
+"traits": [
+"elemental",
+"fire"
+],
+"strikes": [
+"Tendril",
+"Fire Mote"
+],
+"abilities": [
+"Smoke Vision",
+"Explosion",
+"Intense Heat",
+"Blue Flames",
+"Inferno Leap"
+],
+"speed": 70,
+"other": {}
+},
+{
+"slug": "elemental-tsunami",
+"name": "Elemental Tsunami",
+"level": 11,
+"size": "huge",
+"traits": [
+"aquatic",
+"elemental",
+"water"
+],
+"strikes": [
+"Wave"
+],
+"abilities": [
+"Waterbound",
+"Vortex",
+"Drench",
+"Surge",
+"Push or Pull 10 feet"
+],
+"speed": 35,
+"other": {
+"swim": 100
+}
+},
+{
+"slug": "elephant",
+"name": "Elephant",
+"level": 7,
+"size": "huge",
+"traits": [
+"animal"
+],
+"strikes": [
+"Tusk",
+"Trunk",
+"Foot"
+],
+"abilities": [
+"Trample",
+"Grabbing Trunk"
+],
+"speed": 40,
+"other": {}
+},
+{
+"slug": "elf-ranger",
+"name": "Elf Ranger",
+"level": 1,
+"size": "med",
+"traits": [
+"elf",
+"humanoid"
+],
+"strikes": [
+"Dagger",
+"Dagger",
+"Shortbow"
+],
+"abilities": [
+"Double Shot",
+"Elf Step",
+"Unimpeded Journey"
+],
+"speed": 30,
+"other": {}
+},
+{
+"slug": "empyreal-dragon-adult-spellcaster",
+"name": "Empyreal Dragon (Adult, Spellcaster)",
+"level": 14,
+"size": "huge",
+"traits": [
+"divine",
+"dragon",
+"holy"
+],
+"strikes": [
+"Jaws",
+"Claws",
+"Tail",
+"Wing"
+],
+"abilities": [
+"Lifesense (Imprecise) 30 feet",
+"Constant Spells",
+"+2 Status to All Saves vs. Divine",
+"Divine Deflection",
+"Inspiring Presence",
+"Direct Halo",
+"Halo Pulse",
+"Spirit Breath"
+],
+"speed": 70,
+"other": {
+"fly": 180
+}
+},
+{
+"slug": "empyreal-dragon-adult",
+"name": "Empyreal Dragon (Adult)",
+"level": 14,
+"size": "huge",
+"traits": [
+"divine",
+"dragon",
+"holy"
+],
+"strikes": [
+"Jaws",
+"Claws",
+"Tail",
+"Wing"
+],
+"abilities": [
+"Lifesense (Imprecise) 30 feet",
+"Constant Spells",
+"+2 Status to All Saves vs. Divine",
+"Divine Deflection",
+"Inspiring Presence",
+"Direct Halo",
+"Draconic Frenzy",
+"Draconic Momentum",
+"Halo Pulse",
+"Spirit Breath"
+],
+"speed": 70,
+"other": {
+"fly": 180
+}
+},
+{
+"slug": "empyreal-dragon-ancient-spellcaster",
+"name": "Empyreal Dragon (Ancient, Spellcaster)",
+"level": 19,
+"size": "grg",
+"traits": [
+"divine",
+"dragon",
+"holy"
+],
+"strikes": [
+"Jaws",
+"Claws",
+"Tail",
+"Wing"
+],
+"abilities": [
+"Lifesense (Imprecise) 30 feet",
+"Constant Spells",
+"+2 Status to All Saves vs. Divine",
+"Divine Deflection",
+"Inspiring Presence",
+"Direct Halo",
+"Halo Pulse",
+"Spirit Breath"
+],
+"speed": 80,
+"other": {
+"fly": 200
+}
+},
+{
+"slug": "empyreal-dragon-ancient",
+"name": "Empyreal Dragon (Ancient)",
+"level": 19,
+"size": "grg",
+"traits": [
+"divine",
+"dragon",
+"holy"
+],
+"strikes": [
+"Jaws",
+"Claws",
+"Tail",
+"Wing"
+],
+"abilities": [
+"Lifesense (Imprecise) 30 feet",
+"Constant Spells",
+"+2 Status to All Saves vs. Divine",
+"Divine Deflection",
+"Inspiring Presence",
+"Direct Halo",
+"Draconic Frenzy",
+"Draconic Momentum",
+"Halo Pulse",
+"Spirit Breath"
+],
+"speed": 80,
+"other": {
+"fly": 200
+}
+},
+{
+"slug": "empyreal-dragon-young-spellcaster",
+"name": "Empyreal Dragon (Young, Spellcaster)",
+"level": 10,
+"size": "lg",
+"traits": [
+"divine",
+"dragon",
+"holy"
+],
+"strikes": [
+"Jaws",
+"Claws",
+"Tail",
+"Wing"
+],
+"abilities": [
+"Lifesense (Imprecise) 30 feet",
+"Constant Spells",
+"+2 Status to All Saves vs. Divine",
+"Divine Deflection",
+"Inspiring Presence",
+"Direct Halo",
+"Halo Pulse",
+"Spirit Breath"
+],
+"speed": 60,
+"other": {
+"fly": 150
+}
+},
+{
+"slug": "empyreal-dragon-young",
+"name": "Empyreal Dragon (Young)",
+"level": 10,
+"size": "lg",
+"traits": [
+"divine",
+"dragon",
+"holy"
+],
+"strikes": [
+"Jaws",
+"Claws",
+"Tail",
+"Wing"
+],
+"abilities": [
+"Lifesense (Imprecise) 30 feet",
+"Constant Spells",
+"+2 Status to All Saves vs. Divine",
+"Divine Deflection",
+"Inspiring Presence",
+"Direct Halo",
+"Draconic Frenzy",
+"Draconic Momentum",
+"Halo Pulse",
+"Spirit Breath"
+],
+"speed": 60,
+"other": {
+"fly": 150
+}
+},
+{
+"slug": "envyspawn",
+"name": "Envyspawn",
+"level": 2,
+"size": "med",
+"traits": [
+"aberration"
+],
+"strikes": [
+"Jaws",
+"Claw",
+"Halberd"
+],
+"abilities": [
+"Sin Scent (Imprecise) 30 feet",
+"+1 Status to All Saves vs. Magic",
+"+4 Status to All Saves vs. Mental",
+"Reactive Strike",
+"Sinful Bite"
+],
+"speed": 30,
+"other": {}
+},
+{
+"slug": "faydhaan",
+"name": "Faydhaan",
+"level": 9,
+"size": "lg",
+"traits": [
+"elemental",
+"genie",
+"water"
+],
+"strikes": [
+"Trident",
+"Fist",
+"Trident"
+],
+"abilities": [
+"Wavesense (Imprecise) 60 feet",
+"Constant Spells",
+"Turbulent Seas",
+"Change Shape",
+"Gift of Hospitality",
+"Skewer"
+],
+"speed": 25,
+"other": {
+"swim": 40
+}
+},
+{
+"slug": "fey-dragonet",
+"name": "Fey Dragonet",
+"level": 2,
+"size": "tiny",
+"traits": [
+"dragon",
+"fey"
+],
+"strikes": [
+"Jaws"
+],
+"abilities": [
+"Telepathy 100 feet",
+"Euphoric Breath"
+],
+"speed": 15,
+"other": {
+"fly": 40,
+"swim": 20
+}
+},
+{
+"slug": "fire-giant",
+"name": "Fire Giant",
+"level": 10,
+"size": "lg",
+"traits": [
+"fire",
+"giant",
+"humanoid"
+],
+"strikes": [
+"Greatsword",
+"Fist",
+"Flame"
+],
+"abilities": [
+"Reactive Strike",
+"Flaming Stroke"
+],
+"speed": 25,
+"other": {}
+},
+{
+"slug": "fire-scamp",
+"name": "Fire Scamp",
+"level": 1,
+"size": "sm",
+"traits": [
+"elemental",
+"fire"
+],
+"strikes": [
+"Jaws"
+],
+"abilities": [
+"Smoke Vision",
+"Fast Healing 2 (While Touching Fire)",
+"Flame Breath"
+],
+"speed": 20,
+"other": {
+"fly": 25
+}
+},
+{
+"slug": "firewyrm",
+"name": "Firewyrm",
+"level": 9,
+"size": "huge",
+"traits": [
+"elemental",
+"fire"
+],
+"strikes": [
+"Tail",
+"Fire Mote"
+],
+"abilities": [
+"Smoke Vision",
+"Explosion",
+"Intense Heat",
+"Breath Fire"
+],
+"speed": 60,
+"other": {}
+},
+{
+"slug": "flame-drake",
+"name": "Flame Drake",
+"level": 5,
+"size": "lg",
+"traits": [
+"dragon",
+"fire"
+],
+"strikes": [
+"Fangs",
+"Tail"
+],
+"abilities": [
+"Smoke Vision",
+"Reactive Strike (Fangs Only)",
+"Draconic Frenzy",
+"Fireball Breath",
+"Speed Surge"
+],
+"speed": 20,
+"other": {
+"fly": 50
+}
+},
+{
+"slug": "flash-beetle",
+"name": "Flash Beetle",
+"level": -1,
+"size": "sm",
+"traits": [
+"animal"
+],
+"strikes": [
+"Mandibles"
+],
+"abilities": [
+"Luminescent Aura",
+"Light Flash"
+],
+"speed": 20,
+"other": {
+"fly": 15
+}
+},
+{
+"slug": "forest-troll",
+"name": "Forest Troll",
+"level": 5,
+"size": "lg",
+"traits": [
+"giant",
+"humanoid",
+"troll",
+"wood"
+],
+"strikes": [
+"Jaws",
+"Claw"
+],
+"abilities": [
+"Easily Misled",
+"Regeneration 20 (Deactivated by Electricity or Fire)",
+"Furious Flailing",
+"Chase Prey",
+"Rend"
+],
+"speed": 30,
+"other": {}
+},
+{
+"slug": "fortune-dragon-adult-spellcaster",
+"name": "Fortune Dragon (Adult, Spellcaster)",
+"level": 14,
+"size": "huge",
+"traits": [
+"arcane",
+"dragon"
+],
+"strikes": [
+"Jaws",
+"Claw",
+"Tail"
+],
+"abilities": [
+"+2 Status to All Saves vs. Arcane",
+"Aura of Disruption",
+"Capture Spell",
+"Disruptive Breath",
+"Share the Wealth",
+"Treasure Dive"
+],
+"speed": 70,
+"other": {
+"fly": 140
+}
+},
+{
+"slug": "fortune-dragon-adult",
+"name": "Fortune Dragon (Adult)",
+"level": 14,
+"size": "huge",
+"traits": [
+"arcane",
+"dragon"
+],
+"strikes": [
+"Jaws",
+"Claw",
+"Tail"
+],
+"abilities": [
+"+2 Status to All Saves vs. Arcane",
+"Aura of Disruption",
+"Capture Spell",
+"Disruptive Breath",
+"Draconic Frenzy",
+"Draconic Momentum",
+"Share the Wealth",
+"Treasure Dive"
+],
+"speed": 70,
+"other": {
+"fly": 140
+}
+},
+{
+"slug": "fortune-dragon-ancient-spellcaster",
+"name": "Fortune Dragon (Ancient, Spellcaster)",
+"level": 19,
+"size": "grg",
+"traits": [
+"arcane",
+"dragon"
+],
+"strikes": [
+"Jaws",
+"Claw",
+"Tail"
+],
+"abilities": [
+"+2 Status to All Saves vs. Arcane",
+"Aura of Disruption",
+"Capture Spell",
+"Disruptive Breath",
+"Drain Hoard",
+"Share the Wealth",
+"Treasure Dive"
+],
+"speed": 80,
+"other": {
+"fly": 180
+}
+},
+{
+"slug": "fortune-dragon-ancient",
+"name": "Fortune Dragon (Ancient)",
+"level": 19,
+"size": "grg",
+"traits": [
+"arcane",
+"dragon"
+],
+"strikes": [
+"Jaws",
+"Claw",
+"Tail"
+],
+"abilities": [
+"+2 Status to All Saves vs. Arcane",
+"Aura of Disruption",
+"Capture Spell",
+"Disruptive Breath",
+"Draconic Frenzy",
+"Draconic Momentum",
+"Drain Hoard",
+"Share the Wealth",
+"Treasure Dive"
+],
+"speed": 80,
+"other": {
+"fly": 180
+}
+},
+{
+"slug": "fortune-dragon-young-spellcaster",
+"name": "Fortune Dragon (Young, Spellcaster)",
+"level": 10,
+"size": "lg",
+"traits": [
+"arcane",
+"dragon"
+],
+"strikes": [
+"Jaws",
+"Claw",
+"Tail"
+],
+"abilities": [
+"+2 Status to All Saves vs. Arcane",
+"Capture Spell",
+"Disruptive Breath",
+"Share the Wealth",
+"Treasure Dive"
+],
+"speed": 60,
+"other": {
+"fly": 100
+}
+},
+{
+"slug": "fortune-dragon-young",
+"name": "Fortune Dragon (Young)",
+"level": 10,
+"size": "lg",
+"traits": [
+"arcane",
+"dragon"
+],
+"strikes": [
+"Jaws",
+"Claw",
+"Tail"
+],
+"abilities": [
+"+2 Status to All Saves vs. Arcane",
+"Capture Spell",
+"Disruptive Breath",
+"Draconic Frenzy",
+"Draconic Momentum",
+"Share the Wealth",
+"Treasure Dive"
+],
+"speed": 60,
+"other": {
+"fly": 100
+}
+},
+{
+"slug": "frost-drake",
+"name": "Frost Drake",
+"level": 7,
+"size": "lg",
+"traits": [
+"cold",
+"dragon"
+],
+"strikes": [
+"Fangs",
+"Tail"
+],
+"abilities": [
+"Snow Vision",
+"Retaliatory Strike",
+"Draconic Frenzy",
+"Freezing Mist Breath",
+"Ice Climb",
+"Speed Surge"
+],
+"speed": 20,
+"other": {
+"burrow": 20,
+"climb": 20,
+"fly": 50
+}
+},
+{
+"slug": "frost-giant",
+"name": "Frost Giant",
+"level": 9,
+"size": "lg",
+"traits": [
+"cold",
+"giant",
+"humanoid"
+],
+"strikes": [
+"Greataxe",
+"Fist",
+"Icicle"
+],
+"abilities": [
+"Reactive Strike",
+"Chill Breath",
+"Ice Stride",
+"Wide Swing"
+],
+"speed": 30,
+"other": {}
+},
+{
+"slug": "fungus-leshy",
+"name": "Fungus Leshy",
+"level": 2,
+"size": "sm",
+"traits": [
+"fungus",
+"leshy"
+],
+"strikes": [
+"Fist",
+"Spore Pod"
+],
+"abilities": [
+"Constant Spells",
+"Verdant Burst",
+"Change Shape",
+"Spore Cloud",
+"Spores"
+],
+"speed": 25,
+"other": {}
+},
+{
+"slug": "gancanagh",
+"name": "Gancanagh",
+"level": 4,
+"size": "med",
+"traits": [
+"azata",
+"celestial",
+"holy"
+],
+"strikes": [
+"Silver Rapier"
+],
+"abilities": [
+"At-Will Spells",
+"Constant Spells",
+"Vulnerable to Smoke",
+"Change Shape",
+"Invigorating Passion"
+],
+"speed": 30,
+"other": {}
+},
+{
+"slug": "gargoyle",
+"name": "Gargoyle",
+"level": 4,
+"size": "med",
+"traits": [
+"beast",
+"earth"
+],
+"strikes": [
+"Jaws",
+"Claw"
+],
+"abilities": [
+"Clawed Feet",
+"Statue"
+],
+"speed": 25,
+"other": {
+"fly": 40
+}
+},
+{
+"slug": "ghost-commoner",
+"name": "Ghost Commoner",
+"level": 4,
+"size": "med",
+"traits": [
+"ghost",
+"incorporeal",
+"spirit",
+"undead",
+"unholy"
+],
+"strikes": [
+"Ghostly Hand"
+],
+"abilities": [
+"Site Bound",
+"Rejuvenation",
+"Void Healing",
+"Frightful Moan"
+],
+"speed": 0,
+"other": {
+"fly": 25
+}
+},
+{
+"slug": "ghost-mage",
+"name": "Ghost Mage",
+"level": 10,
+"size": "med",
+"traits": [
+"ghost",
+"incorporeal",
+"spirit",
+"undead",
+"unholy"
+],
+"strikes": [
+"Ghostly Hand"
+],
+"abilities": [
+"Site Bound",
+"Rejuvenation",
+"Void Healing",
+"Frightful Moan",
+"Telekinetic Assault"
+],
+"speed": 0,
+"other": {
+"fly": 25
+}
+},
+{
+"slug": "ghoul-soldier",
+"name": "Ghoul Soldier",
+"level": 2,
+"size": "med",
+"traits": [
+"ghoul",
+"undead",
+"unholy"
+],
+"strikes": [
+"Jaws",
+"Claw",
+"Bastard Sword"
+],
+"abilities": [
+"Reactive Strike",
+"Stench",
+"Void Healing",
+"Consume Flesh",
+"Ghoul Whispers",
+"Grave Knowledge",
+"Swift Leap",
+"Grab"
+],
+"speed": 25,
+"other": {
+"burrow": 5
+}
+},
+{
+"slug": "ghoul-stalker",
+"name": "Ghoul Stalker",
+"level": 1,
+"size": "med",
+"traits": [
+"ghoul",
+"undead",
+"unholy"
+],
+"strikes": [
+"Jaws",
+"Claw"
+],
+"abilities": [
+"Stench",
+"Void Healing",
+"Consume Flesh",
+"Ghoul Whispers",
+"Grave Knowledge",
+"Swift Leap",
+"Grab"
+],
+"speed": 25,
+"other": {
+"burrow": 5
+}
+},
+{
+"slug": "giant-anaconda",
+"name": "Giant Anaconda",
+"level": 8,
+"size": "huge",
+"traits": [
+"animal"
+],
+"strikes": [
+"Jaws",
+"Tail"
+],
+"abilities": [
+"Tighten Coils",
+"Greater Constrict",
+"Slither",
+"Swallow Whole",
+"Wrap in Coils",
+"Grab",
+"Push 10 feet"
+],
+"speed": 30,
+"other": {
+"climb": 30,
+"swim": 30
+}
+},
+{
+"slug": "giant-animated-statue",
+"name": "Giant Animated Statue",
+"level": 7,
+"size": "huge",
+"traits": [
+"construct",
+"mindless"
+],
+"strikes": [
+"Stone Fist",
+"Flaming Coal"
+],
+"abilities": [
+"Construct Armor (Hardness 10)",
+"Brazier",
+"Burn Alive",
+"Grab"
+],
+"speed": 30,
+"other": {}
+},
+{
+"slug": "giant-ant",
+"name": "Giant Ant",
+"level": 2,
+"size": "med",
+"traits": [
+"animal"
+],
+"strikes": [
+"Mandibles",
+"Stinger"
+],
+"abilities": [
+"Giant Ant Venom",
+"Haul Away",
+"Grab"
+],
+"speed": 40,
+"other": {
+"climb": 20
+}
+},
+{
+"slug": "giant-bat",
+"name": "Giant Bat",
+"level": 2,
+"size": "lg",
+"traits": [
+"animal"
+],
+"strikes": [
+"Fangs",
+"Wing"
+],
+"abilities": [
+"Echolocation (Precise) 40 feet",
+"Wing Thrash"
+],
+"speed": 15,
+"other": {
+"fly": 30
+}
+},
+{
+"slug": "giant-centipede",
+"name": "Giant Centipede",
+"level": -1,
+"size": "med",
+"traits": [
+"animal"
+],
+"strikes": [
+"Mandibles"
+],
+"abilities": [
+"Giant Centipede Venom"
+],
+"speed": 30,
+"other": {
+"climb": 30
+}
+},
+{
+"slug": "giant-crawling-hand",
+"name": "Giant Crawling Hand",
+"level": 5,
+"size": "med",
+"traits": [
+"undead",
+"unholy"
+],
+"strikes": [
+"Claw"
+],
+"abilities": [
+"Tremorsense (Imprecise) 30 feet",
+"Lifesense 30 feet",
+"Pus Burst",
+"Void Healing",
+"Mark Quarry",
+"Grab"
+],
+"speed": 20,
+"other": {}
+},
+{
+"slug": "giant-eagle",
+"name": "Giant Eagle",
+"level": 3,
+"size": "lg",
+"traits": [
+"beast"
+],
+"strikes": [
+"Beak",
+"Talon"
+],
+"abilities": [
+"Evasive Maneuvers",
+"Carry",
+"Eagle Dive",
+"Grab"
+],
+"speed": 10,
+"other": {
+"fly": 60
+}
+},
+{
+"slug": "giant-flytrap",
+"name": "Giant Flytrap",
+"level": 10,
+"size": "huge",
+"traits": [
+"mindless",
+"plant"
+],
+"strikes": [
+"Leaf"
+],
+"abilities": [
+"Tremorsense (Imprecise) 60 feet",
+"Quick Capture",
+"Focused Assault",
+"Hungry Flurry",
+"Swallow Whole",
+"Improved Grab"
+],
+"speed": 25,
+"other": {}
+},
+{
+"slug": "giant-frilled-lizard",
+"name": "Giant Frilled Lizard",
+"level": 5,
+"size": "lg",
+"traits": [
+"animal"
+],
+"strikes": [
+"Jaws",
+"Tail"
+],
+"abilities": [
+"Intimidating Display"
+],
+"speed": 30,
+"other": {
+"climb": 30
+}
+},
+{
+"slug": "giant-gecko",
+"name": "Giant Gecko",
+"level": 1,
+"size": "med",
+"traits": [
+"animal"
+],
+"strikes": [
+"Jaws"
+],
+"abilities": [
+"Uncanny Climber"
+],
+"speed": 30,
+"other": {
+"climb": 30
+}
+},
+{
+"slug": "giant-hippocampus",
+"name": "Giant Hippocampus",
+"level": 8,
+"size": "huge",
+"traits": [
+"animal",
+"aquatic"
+],
+"strikes": [
+"Tail"
+],
+"abilities": [
+"Buck",
+"Sudden Retreat"
+],
+"speed": 10,
+"other": {
+"swim": 80
+}
+},
+{
+"slug": "giant-mantis",
+"name": "Giant Mantis",
+"level": 3,
+"size": "lg",
+"traits": [
+"animal"
+],
+"strikes": [
+"Leg",
+"Mandibles"
+],
+"abilities": [
+"Capturing Grab",
+"Lunging Strike",
+"Sudden Strike"
+],
+"speed": 25,
+"other": {
+"climb": 25,
+"fly": 20
+}
+},
+{
+"slug": "giant-monitor-lizard",
+"name": "Giant Monitor Lizard",
+"level": 2,
+"size": "med",
+"traits": [
+"animal"
+],
+"strikes": [
+"Jaws"
+],
+"abilities": [
+"Gnashing Grip",
+"Lurching Charge",
+"Monitor Lizard Venom",
+"Grab"
+],
+"speed": 30,
+"other": {
+"swim": 30
+}
+},
+{
+"slug": "giant-moray-eel",
+"name": "Giant Moray Eel",
+"level": 5,
+"size": "lg",
+"traits": [
+"animal",
+"aquatic"
+],
+"strikes": [
+"Jaws"
+],
+"abilities": [
+"Ambush",
+"Pharyngeal Jaws",
+"Swallow Whole",
+"Grab"
+],
+"speed": 10,
+"other": {
+"swim": 40
+}
+},
+{
+"slug": "giant-octopus",
+"name": "Giant Octopus",
+"level": 8,
+"size": "huge",
+"traits": [
+"animal",
+"aquatic"
+],
+"strikes": [
+"Arm",
+"Beak"
+],
+"abilities": [
+"Compression",
+"Constrict",
+"Giant Octopus Venom",
+"Ink Cloud",
+"Jet",
+"Writhing Arms",
+"Grab"
+],
+"speed": 15,
+"other": {
+"swim": 40
+}
+},
+{
+"slug": "giant-rat",
+"name": "Giant Rat",
+"level": -1,
+"size": "sm",
+"traits": [
+"animal"
+],
+"strikes": [
+"Jaws"
+],
+"abilities": [
+"Putrid Plague"
+],
+"speed": 30,
+"other": {
+"climb": 10
+}
+},
+{
+"slug": "giant-scorpion",
+"name": "Giant Scorpion",
+"level": 3,
+"size": "lg",
+"traits": [
+"animal"
+],
+"strikes": [
+"Pincer",
+"Stinger"
+],
+"abilities": [
+"Tremorsense (Imprecise) 60 feet",
+"Reactive Strike (Stinger Only)",
+"Constrict",
+"Giant Scorpion Venom",
+"Grab"
+],
+"speed": 40,
+"other": {}
+},
+{
+"slug": "giant-stag-beetle",
+"name": "Giant Stag Beetle",
+"level": 4,
+"size": "lg",
+"traits": [
+"animal"
+],
+"strikes": [
+"Mandibles",
+"Foot"
+],
+"abilities": [
+"Trample"
+],
+"speed": 20,
+"other": {
+"fly": 20
+}
+},
+{
+"slug": "giant-tarantula",
+"name": "Giant Tarantula",
+"level": 6,
+"size": "lg",
+"traits": [
+"animal"
+],
+"strikes": [
+"Fangs",
+"Leg"
+],
+"abilities": [
+"Giant Tarantula Venom",
+"Hair Barrage",
+"Knockdown"
+],
+"speed": 30,
+"other": {
+"climb": 30
+}
+},
+{
+"slug": "giant-viper",
+"name": "Giant Viper",
+"level": 2,
+"size": "med",
+"traits": [
+"animal"
+],
+"strikes": [
+"Fangs"
+],
+"abilities": [
+"Coiled Strike (Special)",
+"Coil",
+"Giant Viper Venom"
+],
+"speed": 20,
+"other": {
+"climb": 20,
+"swim": 20
+}
+},
+{
+"slug": "giant-wasp",
+"name": "Giant Wasp",
+"level": 3,
+"size": "lg",
+"traits": [
+"animal"
+],
+"strikes": [
+"Stinger"
+],
+"abilities": [
+"Giant Wasp Venom",
+"Implant Eggs",
+"Wasp Larva"
+],
+"speed": 20,
+"other": {
+"fly": 40
+}
+},
+{
+"slug": "gigantopithecus",
+"name": "Gigantopithecus",
+"level": 4,
+"size": "lg",
+"traits": [
+"animal"
+],
+"strikes": [
+"Fist",
+"Jaws"
+],
+"abilities": [
+"Frightening Display"
+],
+"speed": 30,
+"other": {
+"climb": 30
+}
+},
+{
+"slug": "gimmerling",
+"name": "Gimmerling",
+"level": 12,
+"size": "sm",
+"traits": [
+"fey"
+],
+"strikes": [
+"Claw",
+"Jaws",
+"Hand Crossbow"
+],
+"abilities": [
+"Hungersense (Imprecise) 30 feet",
+"Treacherous Aura",
+"Trip Up",
+"Change Shape",
+"Sly Disarm",
+"Sneak Attack",
+"Trickster's Step"
+],
+"speed": 30,
+"other": {}
+},
+{
+"slug": "giylea",
+"name": "Giylea",
+"level": 16,
+"size": "huge",
+"traits": [
+"archon",
+"celestial",
+"holy"
+],
+"strikes": [
+"Slam",
+"Tongue of Flame"
+],
+"abilities": [
+"All-Around Vision",
+"+1 Status to All Saves vs. Magic",
+"All-Knowing Eyes",
+"Archon's Protection",
+"Fiery Spokes",
+"Focus Gaze"
+],
+"speed": 0,
+"other": {
+"fly": 50
+}
+},
+{
+"slug": "globster",
+"name": "Globster",
+"level": 5,
+"size": "lg",
+"traits": [
+"aquatic",
+"ooze"
+],
+"strikes": [
+"Tendril"
+],
+"abilities": [
+"Stench",
+"Constrict",
+"Nauseating Slap",
+"Saturated",
+"Grab"
+],
+"speed": 15,
+"other": {
+"swim": 30
+}
+},
+{
+"slug": "gluttonyspawn",
+"name": "Gluttonyspawn",
+"level": 2,
+"size": "med",
+"traits": [
+"aberration"
+],
+"strikes": [
+"Jaws",
+"Claw",
+"Scythe"
+],
+"abilities": [
+"Sin Scent (Imprecise) 30 feet",
+"+1 Status to All Saves vs. Magic",
+"+4 Status to All Saves vs. Mental",
+"Reactive Strike",
+"Sinful Bite"
+],
+"speed": 30,
+"other": {}
+},
+{
+"slug": "gnome-bard",
+"name": "Gnome Bard",
+"level": 1,
+"size": "sm",
+"traits": [
+"gnome",
+"humanoid"
+],
+"strikes": [],
+"abilities": [
+"Gnomish Shift",
+"Do a Jig!"
+],
+"speed": 25,
+"other": {}
+},
+{
+"slug": "goblin-commando",
+"name": "Goblin Commando",
+"level": 1,
+"size": "sm",
+"traits": [
+"goblin",
+"humanoid"
+],
+"strikes": [
+"Horsechopper",
+"Shortbow"
+],
+"abilities": [
+"Goblin Scuttle"
+],
+"speed": 25,
+"other": {}
+},
+{
+"slug": "goblin-dog",
+"name": "Goblin Dog",
+"level": 1,
+"size": "med",
+"traits": [
+"animal"
+],
+"strikes": [
+"Jaws"
+],
+"abilities": [
+"Buck",
+"Irritating Dander",
+"Juke",
+"Goblin Pox",
+"Scratch"
+],
+"speed": 40,
+"other": {}
+},
+{
+"slug": "goblin-pyro",
+"name": "Goblin Pyro",
+"level": 1,
+"size": "sm",
+"traits": [
+"goblin",
+"humanoid"
+],
+"strikes": [],
+"abilities": [
+"Goblin Scuttle"
+],
+"speed": 25,
+"other": {}
+},
+{
+"slug": "goblin-war-chanter",
+"name": "Goblin War Chanter",
+"level": 1,
+"size": "sm",
+"traits": [
+"goblin",
+"humanoid"
+],
+"strikes": [
+"Dogslicer",
+"Shortbow"
+],
+"abilities": [
+"Goblin Scuttle",
+"Goblin Song"
+],
+"speed": 25,
+"other": {}
+},
+{
+"slug": "goblin-warrior",
+"name": "Goblin Warrior",
+"level": -1,
+"size": "sm",
+"traits": [
+"goblin",
+"humanoid"
+],
+"strikes": [
+"Dogslicer",
+"Shortbow"
+],
+"abilities": [
+"Goblin Scuttle"
+],
+"speed": 25,
+"other": {}
+},
+{
+"slug": "gogiteth",
+"name": "Gogiteth",
+"level": 12,
+"size": "lg",
+"traits": [
+"aberration"
+],
+"strikes": [
+"Jaws",
+"Leg"
+],
+"abilities": [
+"All-Around Vision",
+"Skittering Reposition",
+"Carry Off Prey",
+"Constrict",
+"Skittering Assault",
+"Improved Grab"
+],
+"speed": 40,
+"other": {
+"climb": 30
+}
+},
+{
+"slug": "goliath-spider",
+"name": "Goliath Spider",
+"level": 11,
+"size": "grg",
+"traits": [
+"animal"
+],
+"strikes": [
+"Fangs",
+"Web"
+],
+"abilities": [
+"Web Sense",
+"Spring Upon Prey",
+"Descend on a Web",
+"Goliath Spider Venom",
+"Web Tether"
+],
+"speed": 45,
+"other": {
+"climb": 30
+}
+},
+{
+"slug": "gongorinan",
+"name": "Gongorinan",
+"level": 11,
+"size": "med",
+"traits": [
+"fiend",
+"qlippoth",
+"unholy"
+],
+"strikes": [
+"Club",
+"Pincer",
+"Tentacle",
+"Stinger"
+],
+"abilities": [
+"Telepathy 100 feet",
+"Constant Spells",
+"Disquieting Display",
+"Gongorinan Venom",
+"Painful Limbs",
+"Reject Tools",
+"Grab"
+],
+"speed": 40,
+"other": {
+"climb": 40,
+"fly": 40
+}
+},
+{
+"slug": "gorilla",
+"name": "Gorilla",
+"level": 3,
+"size": "lg",
+"traits": [
+"animal"
+],
+"strikes": [
+"Fist",
+"Jaws"
+],
+"abilities": [
+"Frightening Display"
+],
+"speed": 30,
+"other": {
+"climb": 30
+}
+},
+{
+"slug": "gosreg",
+"name": "Gosreg",
+"level": 11,
+"size": "med",
+"traits": [
+"aberration"
+],
+"strikes": [
+"Jaws",
+"Claw"
+],
+"abilities": [
+"Telepathy 100 feet",
+"Borrow Languages",
+"Thoughtsense 60 feet",
+"+1 Status to All Saves vs. Magic",
+"Unsettled Aura",
+"Broadcast Stance",
+"Change Shape",
+"Mind Bolt"
+],
+"speed": 25,
+"other": {}
+},
+{
+"slug": "gourd-leshy",
+"name": "Gourd Leshy",
+"level": 1,
+"size": "sm",
+"traits": [
+"leshy",
+"plant"
+],
+"strikes": [
+"Fist",
+"Seed"
+],
+"abilities": [
+"Keepsake",
+"Constant Spells",
+"Verdant Burst",
+"Change Shape",
+"Ensnare"
+],
+"speed": 25,
+"other": {}
+},
+{
+"slug": "graveknight",
+"name": "Graveknight",
+"level": 10,
+"size": "med",
+"traits": [
+"graveknight",
+"undead",
+"unholy"
+],
+"strikes": [
+"Frost Greatsword",
+"Frost Fist",
+"Frost Composite Longbow"
+],
+"abilities": [
+"Reactive Strike",
+"Rejuvenation",
+"Sacrilegious Aura",
+"Void Healing",
+"Devastating Blast",
+"Graveknight's Curse",
+"Phantom Mount",
+"Weapon Master"
+],
+"speed": 25,
+"other": {}
+},
+{
+"slug": "great-cyclops",
+"name": "Great Cyclops",
+"level": 12,
+"size": "huge",
+"traits": [
+"giant",
+"humanoid",
+"mutant"
+],
+"strikes": [
+"Greatclub",
+"Horn",
+"Fist",
+"Rock"
+],
+"abilities": [
+"Ferocity",
+"Flash of Brutality",
+"Powerful Charge",
+"Throw Rock"
+],
+"speed": 40,
+"other": {}
+},
+{
+"slug": "great-white-shark",
+"name": "Great White Shark",
+"level": 4,
+"size": "huge",
+"traits": [
+"animal",
+"aquatic"
+],
+"strikes": [
+"Jaws"
+],
+"abilities": [
+"Blood Scent",
+"Breach",
+"Savage",
+"Strafing Chomp"
+],
+"speed": 0,
+"other": {
+"swim": 40
+}
+},
+{
+"slug": "greater-hell-hound",
+"name": "Greater Hell Hound",
+"level": 9,
+"size": "lg",
+"traits": [
+"beast",
+"fiend",
+"fire",
+"unholy"
+],
+"strikes": [
+"Jaws"
+],
+"abilities": [
+"Hellish Revenge",
+"Hellfire Breath",
+"Pack Attack"
+],
+"speed": 40,
+"other": {}
+},
+{
+"slug": "greater-herexen",
+"name": "Greater Herexen",
+"level": 8,
+"size": "med",
+"traits": [
+"undead",
+"unholy"
+],
+"strikes": [
+"Dagger"
+],
+"abilities": [
+"Final Blasphemy",
+"Void Healing",
+"Heretic's Smite"
+],
+"speed": 25,
+"other": {}
+},
+{
+"slug": "greater-nightmare",
+"name": "Greater Nightmare",
+"level": 11,
+"size": "huge",
+"traits": [
+"beast",
+"fiend",
+"unholy"
+],
+"strikes": [
+"Jaws",
+"Hoof"
+],
+"abilities": [
+"Smoke",
+"Flaming Gallop",
+"Trample"
+],
+"speed": 60,
+"other": {
+"fly": 120
+}
+},
+{
+"slug": "greater-shadow",
+"name": "Greater Shadow",
+"level": 7,
+"size": "med",
+"traits": [
+"incorporeal",
+"undead",
+"unholy"
+],
+"strikes": [
+"Shadow Hand"
+],
+"abilities": [
+"Light Vulnerability",
+"Void Healing",
+"Shadow Spawn",
+"Slink in Shadows",
+"Steal Shadow"
+],
+"speed": 0,
+"other": {
+"fly": 30
+}
+},
+{
+"slug": "greedspawn",
+"name": "Greedspawn",
+"level": 2,
+"size": "med",
+"traits": [
+"aberration"
+],
+"strikes": [
+"Jaws",
+"Claw",
+"Glaive"
+],
+"abilities": [
+"Sin Scent (Imprecise) 30 feet",
+"+1 Status to All Saves vs. Magic",
+"+4 Status to All Saves vs. Mental",
+"Reactive Strike",
+"Sinful Bite"
+],
+"speed": 30,
+"other": {}
+},
+{
+"slug": "griffon",
+"name": "Griffon",
+"level": 4,
+"size": "lg",
+"traits": [
+"animal"
+],
+"strikes": [
+"Beak",
+"Talon",
+"Wing"
+],
+"abilities": [
+"Flying Strafe",
+"Pounce",
+"Regal Shriek"
+],
+"speed": 25,
+"other": {
+"fly": 60
+}
+},
+{
+"slug": "grikkitog",
+"name": "Grikkitog",
+"level": 14,
+"size": "huge",
+"traits": [
+"aberration",
+"earth"
+],
+"strikes": [
+"Jaws"
+],
+"abilities": [
+"Tremorsense (Imprecise) 30 feet",
+"Implant Core",
+"Manifold Vision",
+"Infestation Aura",
+"Barbed Maw",
+"Earth Glide"
+],
+"speed": 20,
+"other": {
+"burrow": 20
+}
+},
+{
+"slug": "grim-reaper",
+"name": "Grim Reaper",
+"level": 21,
+"size": "med",
+"traits": [
+"undead",
+"unholy"
+],
+"strikes": [
+"Keen Scythe"
+],
+"abilities": [
+"Death's Grace",
+"Status Sight",
+"Constant Spells",
+"+1 Status to All Saves vs. Magic",
+"Aura of Misfortune",
+"Lurking Death",
+"Void Healing",
+"Death Strike",
+"Energy Drain",
+"Final Death",
+"Infuse Weapon"
+],
+"speed": 50,
+"other": {
+"fly": 75
+}
+},
+{
+"slug": "grindylow",
+"name": "Grindylow",
+"level": 0,
+"size": "sm",
+"traits": [
+"aberration",
+"amphibious"
+],
+"strikes": [
+"Bite",
+"Tentacle",
+"Spear",
+"Spear"
+],
+"abilities": [
+"Reactive Strike (Special)",
+"Clinging Suckers",
+"Jet",
+"Grab"
+],
+"speed": 10,
+"other": {
+"swim": 25
+}
+},
+{
+"slug": "grizzly-bear",
+"name": "Grizzly Bear",
+"level": 3,
+"size": "lg",
+"traits": [
+"animal"
+],
+"strikes": [
+"Jaws",
+"Claw"
+],
+"abilities": [
+"Mauler",
+"Rush",
+"Grab"
+],
+"speed": 35,
+"other": {}
+},
+{
+"slug": "grothlut",
+"name": "Grothlut",
+"level": 3,
+"size": "med",
+"traits": [
+"aberration",
+"mindless"
+],
+"strikes": [
+"Claw",
+"Digestive Spew"
+],
+"abilities": [
+"Disgusting Demise",
+"Piteous Moan"
+],
+"speed": 20,
+"other": {}
+},
+{
+"slug": "guard-dog",
+"name": "Guard Dog",
+"level": -1,
+"size": "sm",
+"traits": [
+"animal"
+],
+"strikes": [
+"Jaws"
+],
+"abilities": [
+"Pack Attack"
+],
+"speed": 30,
+"other": {}
+},
+{
+"slug": "guthallath",
+"name": "Guthallath",
+"level": 19,
+"size": "grg",
+"traits": [
+"construct"
+],
+"strikes": [
+"Fist",
+"Foot"
+],
+"abilities": [
+"Constant Spells",
+"Erosion Aura",
+"Immunity to Magic",
+"Annihilation Beams",
+"Deadly Throw",
+"Powerful Blows",
+"Trample",
+"Improved Grab",
+"Improved Knockdown",
+"Improved Push 20 feet"
+],
+"speed": 40,
+"other": {
+"burrow": 50
+}
+},
+{
+"slug": "gylou",
+"name": "Gylou",
+"level": 14,
+"size": "med",
+"traits": [
+"devil",
+"fiend",
+"unholy"
+],
+"strikes": [
+"Claw",
+"Tentacle"
+],
+"abilities": [
+"Greater Darkvision",
+"Telepathy 100 feet",
+"Constant Spells",
+"+1 Status to All Saves vs. Magic",
+"Reflexive Grab",
+"Change Shape",
+"Encage in Tentacles",
+"Indispensable Savvy",
+"Grab"
+],
+"speed": 35,
+"other": {
+"climb": 35
+}
+},
+{
+"slug": "hadrosaurid",
+"name": "Hadrosaurid",
+"level": 4,
+"size": "huge",
+"traits": [
+"animal",
+"dinosaur"
+],
+"strikes": [
+"Tail",
+"Foot"
+],
+"abilities": [
+"Sprint",
+"Trample"
+],
+"speed": 30,
+"other": {}
+},
+{
+"slug": "halfling-street-watcher",
+"name": "Halfling Street Watcher",
+"level": -1,
+"size": "sm",
+"traits": [
+"halfling",
+"humanoid"
+],
+"strikes": [
+"Frying Pan",
+"Halfling Sling Staff"
+],
+"abilities": [
+"Keen Eyes"
+],
+"speed": 25,
+"other": {}
+},
+{
+"slug": "halfling-troublemaker",
+"name": "Halfling Troublemaker",
+"level": 1,
+"size": "sm",
+"traits": [
+"halfling",
+"humanoid"
+],
+"strikes": [
+"Filcher's Fork",
+"Filcher's Fork"
+],
+"abilities": [
+"Graffiti Egg",
+"Keen Eyes",
+"Sneak Attack"
+],
+"speed": 30,
+"other": {}
+},
+{
+"slug": "harpy",
+"name": "Harpy",
+"level": 5,
+"size": "med",
+"traits": [
+"air",
+"beast",
+"humanoid"
+],
+"strikes": [
+"Talon",
+"Jaws"
+],
+"abilities": [
+"Wind's Whispers",
+"Stench",
+"Hungry Winds",
+"Putrid Plague"
+],
+"speed": 20,
+"other": {
+"fly": 60
+}
+},
+{
+"slug": "hell-hound",
+"name": "Hell Hound",
+"level": 3,
+"size": "med",
+"traits": [
+"beast",
+"fiend",
+"fire",
+"unholy"
+],
+"strikes": [
+"Jaws"
+],
+"abilities": [
+"Hellfire Breath",
+"Pack Attack"
+],
+"speed": 40,
+"other": {}
+},
+{
+"slug": "herexen",
+"name": "Herexen",
+"level": 2,
+"size": "med",
+"traits": [
+"undead",
+"unholy"
+],
+"strikes": [
+"Dagger"
+],
+"abilities": [
+"Final Blasphemy",
+"Void Healing",
+"Heretic's Smite"
+],
+"speed": 25,
+"other": {}
+},
+{
+"slug": "hippocampus",
+"name": "Hippocampus",
+"level": 1,
+"size": "lg",
+"traits": [
+"animal",
+"aquatic"
+],
+"strikes": [
+"Tail"
+],
+"abilities": [
+"Buck",
+"Sudden Retreat"
+],
+"speed": 5,
+"other": {
+"swim": 40
+}
+},
+{
+"slug": "hippogriff",
+"name": "Hippogriff",
+"level": 2,
+"size": "lg",
+"traits": [
+"animal"
+],
+"strikes": [
+"Beak",
+"Talon",
+"Wing"
+],
+"abilities": [
+"Buck",
+"Flying Strafe"
+],
+"speed": 30,
+"other": {
+"fly": 65
+}
+},
+{
+"slug": "hobgoblin-archer",
+"name": "Hobgoblin Archer",
+"level": 4,
+"size": "med",
+"traits": [
+"hobgoblin",
+"humanoid"
+],
+"strikes": [
+"Shortsword",
+"Crossbow"
+],
+"abilities": [
+"Formation",
+"Crossbow Precision",
+"Perfect Aim",
+"Running Reload"
+],
+"speed": 25,
+"other": {}
+},
+{
+"slug": "hobgoblin-general",
+"name": "Hobgoblin General",
+"level": 6,
+"size": "med",
+"traits": [
+"hobgoblin",
+"humanoid"
+],
+"strikes": [
+"Glaive",
+"Composite Shortbow"
+],
+"abilities": [
+"General's Cry",
+"Formation",
+"Polearm Critical Specialization"
+],
+"speed": 25,
+"other": {}
+},
+{
+"slug": "hobgoblin-soldier",
+"name": "Hobgoblin Soldier",
+"level": 1,
+"size": "med",
+"traits": [
+"hobgoblin",
+"humanoid"
+],
+"strikes": [
+"Longsword",
+"Shortbow"
+],
+"abilities": [
+"Formation",
+"Reactive Strike",
+"Shield Block"
+],
+"speed": 25,
+"other": {}
+},
+{
+"slug": "homunculus",
+"name": "Homunculus",
+"level": 0,
+"size": "tiny",
+"traits": [
+"construct"
+],
+"strikes": [
+"Jaws"
+],
+"abilities": [
+"Master Link",
+"Homunculus Poison"
+],
+"speed": 15,
+"other": {
+"fly": 40
+}
+},
+{
+"slug": "horned-dragon-adult-spellcaster",
+"name": "Horned Dragon (Adult, Spellcaster)",
+"level": 12,
+"size": "huge",
+"traits": [
+"amphibious",
+"dragon",
+"primal"
+],
+"strikes": [
+"Jaws",
+"Claw",
+"Tail",
+"Horn"
+],
+"abilities": [
+"+1 Status to All Saves vs. Primal",
+"Frightful Presence",
+"Twisting Tail",
+"Forest Passage",
+"Impaling Charge",
+"Poison Breath",
+"Trackless Journey"
+],
+"speed": 40,
+"other": {
+"fly": 160,
+"swim": 40
+}
+},
+{
+"slug": "horned-dragon-adult",
+"name": "Horned Dragon (Adult)",
+"level": 12,
+"size": "huge",
+"traits": [
+"amphibious",
+"dragon",
+"primal"
+],
+"strikes": [
+"Jaws",
+"Claw",
+"Tail",
+"Horn"
+],
+"abilities": [
+"+1 Status to All Saves vs. Primal",
+"Frightful Presence",
+"Twisting Tail",
+"Draconic Frenzy",
+"Draconic Momentum",
+"Forest Passage",
+"Impaling Charge",
+"Poison Breath",
+"Trackless Journey"
+],
+"speed": 40,
+"other": {
+"fly": 160,
+"swim": 40
+}
+},
+{
+"slug": "horned-dragon-ancient-spellcaster",
+"name": "Horned Dragon (Ancient, Spellcaster)",
+"level": 17,
+"size": "grg",
+"traits": [
+"amphibious",
+"dragon",
+"primal"
+],
+"strikes": [
+"Jaws",
+"Claw",
+"Tail",
+"Horn"
+],
+"abilities": [
+"Camouflage",
+"+1 Status to All Saves vs. Primal",
+"Frightful Presence",
+"Miasma",
+"Twisting Tail",
+"Forest Passage",
+"Impaling Charge",
+"Poison Breath",
+"Trackless Journey"
+],
+"speed": 50,
+"other": {
+"fly": 200,
+"swim": 50
+}
+},
+{
+"slug": "horned-dragon-ancient",
+"name": "Horned Dragon (Ancient)",
+"level": 17,
+"size": "grg",
+"traits": [
+"amphibious",
+"dragon",
+"primal"
+],
+"strikes": [
+"Jaws",
+"Claw",
+"Tail",
+"Horn"
+],
+"abilities": [
+"Camouflage",
+"+1 Status to All Saves vs. Primal",
+"Frightful Presence",
+"Miasma",
+"Twisting Tail",
+"Draconic Frenzy",
+"Draconic Momentum",
+"Forest Passage",
+"Impaling Charge",
+"Poison Breath",
+"Trackless Journey"
+],
+"speed": 50,
+"other": {
+"fly": 200,
+"swim": 50
+}
+},
+{
+"slug": "horned-dragon-young-spellcaster",
+"name": "Horned Dragon (Young, Spellcaster)",
+"level": 8,
+"size": "lg",
+"traits": [
+"amphibious",
+"dragon",
+"primal"
+],
+"strikes": [
+"Jaws",
+"Claw",
+"Tail",
+"Horn"
+],
+"abilities": [
+"Frightful Presence",
+"Twisting Tail",
+"Forest Passage",
+"Impaling Charge",
+"Poison Breath"
+],
+"speed": 30,
+"other": {
+"fly": 120,
+"swim": 30
+}
+},
+{
+"slug": "horned-dragon-young",
+"name": "Horned Dragon (Young)",
+"level": 8,
+"size": "lg",
+"traits": [
+"amphibious",
+"dragon",
+"primal"
+],
+"strikes": [
+"Jaws",
+"Claw",
+"Tail",
+"Horn"
+],
+"abilities": [
+"Frightful Presence",
+"Twisting Tail",
+"Draconic Frenzy",
+"Draconic Momentum",
+"Forest Passage",
+"Impaling Charge",
+"Poison Breath"
+],
+"speed": 30,
+"other": {
+"fly": 120,
+"swim": 30
+}
+},
+{
+"slug": "hryngar-bombardier",
+"name": "Hryngar Bombardier",
+"level": 1,
+"size": "med",
+"traits": [
+"duergar",
+"dwarf",
+"humanoid"
+],
+"strikes": [
+"Warhammer",
+"Alchemical Grenade"
+],
+"abilities": [
+"Alchemical Grenades",
+"+2 Status to All Saves vs. Magic",
+"Light Blindness",
+"Quick Bombardier"
+],
+"speed": 20,
+"other": {}
+},
+{
+"slug": "hryngar-sharpshooter",
+"name": "Hryngar Sharpshooter",
+"level": 0,
+"size": "med",
+"traits": [
+"duergar",
+"dwarf",
+"humanoid"
+],
+"strikes": [
+"Light Mace",
+"Crossbow"
+],
+"abilities": [
+"+2 Status to All Saves vs. Magic",
+"Light Blindness",
+"Bola Bolt"
+],
+"speed": 20,
+"other": {}
+},
+{
+"slug": "hryngar-taskmaster",
+"name": "Hryngar Taskmaster",
+"level": 2,
+"size": "med",
+"traits": [
+"duergar",
+"dwarf",
+"humanoid"
+],
+"strikes": [
+"Pick"
+],
+"abilities": [
+"+2 Status to All Saves vs. Magic",
+"Iron Mind",
+"Light Blindness",
+"Take Them Down!"
+],
+"speed": 20,
+"other": {}
+},
+{
+"slug": "hunting-spider",
+"name": "Hunting Spider",
+"level": 1,
+"size": "med",
+"traits": [
+"animal"
+],
+"strikes": [
+"Fangs",
+"Web"
+],
+"abilities": [
+"Web Sense",
+"Spring Upon Prey",
+"Descend on a Web",
+"Hunting Spider Venom",
+"Web Trap"
+],
+"speed": 25,
+"other": {
+"climb": 25
+}
+},
+{
+"slug": "hyaenodon",
+"name": "Hyaenodon",
+"level": 3,
+"size": "lg",
+"traits": [
+"animal"
+],
+"strikes": [
+"Jaws"
+],
+"abilities": [
+"Bonecrunching Bite",
+"Drag",
+"Pack Attack",
+"Knockdown"
+],
+"speed": 40,
+"other": {}
+},
+{
+"slug": "hydra",
+"name": "Hydra",
+"level": 6,
+"size": "huge",
+"traits": [
+"beast"
+],
+"strikes": [
+"Fangs"
+],
+"abilities": [
+"All-Around Vision",
+"Hydra Regeneration",
+"Head Regrowth",
+"Reactive Heads",
+"Reactive Strike (See Reactive Heads)",
+"Focused Assault",
+"Storm of Jaws"
+],
+"speed": 25,
+"other": {
+"swim": 25
+}
+},
+{
+"slug": "hyena",
+"name": "Hyena",
+"level": 1,
+"size": "med",
+"traits": [
+"animal"
+],
+"strikes": [
+"Jaws"
+],
+"abilities": [
+"Drag",
+"Pack Attack",
+"Knockdown"
+],
+"speed": 40,
+"other": {}
+},
+{
+"slug": "ice-linnorm",
+"name": "Ice Linnorm",
+"level": 17,
+"size": "grg",
+"traits": [
+"cold",
+"dragon"
+],
+"strikes": [
+"Jaws",
+"Claw",
+"Tail"
+],
+"abilities": [
+"Constant Spells",
+"+1 Status to All Saves vs. Magic",
+"Regeneration 10 (Deactivated by Cold Iron)",
+"Curse of Frost",
+"Reactive Strike (Tail Only)",
+"Constrict",
+"Ice Linnorm Venom",
+"Icemire Breath",
+"Improved Grab"
+],
+"speed": 35,
+"other": {
+"fly": 100,
+"swim": 40
+}
+},
+{
+"slug": "ifrit",
+"name": "Ifrit",
+"level": 9,
+"size": "lg",
+"traits": [
+"elemental",
+"fire",
+"genie"
+],
+"strikes": [
+"Scimitar",
+"Fist"
+],
+"abilities": [
+"Constant Spells",
+"Burning Grasp",
+"Change Shape",
+"Combat Grab",
+"Wings of Flame"
+],
+"speed": 25,
+"other": {}
+},
+{
+"slug": "imp",
+"name": "Imp",
+"level": 1,
+"size": "tiny",
+"traits": [
+"fiend",
+"unholy"
+],
+"strikes": [
+"Stinger"
+],
+"abilities": [
+"Telepathy (Touch)",
+"Change Shape",
+"Fiendish Healing",
+"Fiendish Temptation",
+"Imp Venom"
+],
+"speed": 20,
+"other": {
+"fly": 30
+}
+},
+{
+"slug": "irnakurse",
+"name": "Irnakurse",
+"level": 9,
+"size": "lg",
+"traits": [
+"aberration"
+],
+"strikes": [
+"Jaws",
+"Tentacle"
+],
+"abilities": [
+"Mind Lash",
+"Soul Scream",
+"Storm of Tentacles"
+],
+"speed": 15,
+"other": {}
+},
+{
+"slug": "iron-hag",
+"name": "Iron Hag",
+"level": 6,
+"size": "lg",
+"traits": [
+"hag",
+"humanoid"
+],
+"strikes": [
+"Claw",
+"Jaws"
+],
+"abilities": [
+"Coven",
+"+1 Status to All Saves vs. Magic",
+"Bonds of Iron",
+"Change Shape",
+"Embrace of Iron",
+"Grab"
+],
+"speed": 25,
+"other": {}
+},
+{
+"slug": "iron-warden",
+"name": "Iron Warden",
+"level": 13,
+"size": "lg",
+"traits": [
+"construct",
+"mindless"
+],
+"strikes": [
+"Fist"
+],
+"abilities": [
+"Shield Arm",
+"Shield Block",
+"Breath Poison",
+"Inexorable March",
+"Iron Warden Poison"
+],
+"speed": 20,
+"other": {}
+},
+{
+"slug": "island-oni",
+"name": "Island Oni",
+"level": 17,
+"size": "huge",
+"traits": [
+"giant",
+"humanoid",
+"oni",
+"water"
+],
+"strikes": [
+"Longspear",
+"Jaws",
+"Thunderbolt"
+],
+"abilities": [
+"Greater Darkvision",
+"Mist Vision",
+"Constant Spells",
+"+1 Status to All Saves vs. Water",
+"Bean Panic",
+"Lost Oni Island",
+"Reactive Strike",
+"Change Shape",
+"Conductive Downpour",
+"Electrifying Pierce",
+"Swallow Whole",
+"Tripping Tide"
+],
+"speed": 40,
+"other": {
+"fly": 40,
+"swim": 50
+}
+},
+{
+"slug": "jaathoom",
+"name": "Jaathoom",
+"level": 5,
+"size": "lg",
+"traits": [
+"air",
+"elemental",
+"genie"
+],
+"strikes": [
+"Scimitar",
+"Fist",
+"Crashing Wind"
+],
+"abilities": [
+"Cloud of Visions",
+"Naturally Invisible",
+"Turbulent Skies",
+"Change Shape",
+"Hurricane Blast",
+"Ominous Dreams"
+],
+"speed": 25,
+"other": {
+"fly": 40
+}
+},
+{
+"slug": "jabali",
+"name": "Jabali",
+"level": 7,
+"size": "lg",
+"traits": [
+"earth",
+"elemental",
+"genie"
+],
+"strikes": [
+"Falchion",
+"Fist"
+],
+"abilities": [
+"Tremorsense (Imprecise) 60 feet",
+"Constant Spells",
+"Earth Glide",
+"Stone Clutch",
+"Push 10 feet"
+],
+"speed": 25,
+"other": {
+"burrow": 45,
+"climb": 20
+}
+},
+{
+"slug": "jah-tohl",
+"name": "Jah-Tohl",
+"level": 8,
+"size": "lg",
+"traits": [
+"aberration"
+],
+"strikes": [
+"Jaws",
+"Claw"
+],
+"abilities": [
+"Telepathy 100 feet",
+"Thoughtsense 60 feet",
+"+1 Status to All Saves vs. Magic",
+"Brain Blisters",
+"Brain Loss",
+"Collect Brain",
+"Mind Snatcher Venom"
+],
+"speed": 25,
+"other": {
+"fly": 30
+}
+},
+{
+"slug": "jann",
+"name": "Jann",
+"level": 4,
+"size": "med",
+"traits": [
+"air",
+"earth",
+"elemental",
+"fire",
+"genie",
+"metal",
+"water",
+"wood"
+],
+"strikes": [
+"Scimitar",
+"Fist",
+"Composite Shortbow"
+],
+"abilities": [
+"Constant Spells",
+"Commanding Presence",
+"Elemental Resistance",
+"All Made One",
+"Change Shape",
+"Wanderer's Wish"
+],
+"speed": 25,
+"other": {
+"fly": 15
+}
+},
+{
+"slug": "jinkin",
+"name": "Jinkin",
+"level": 1,
+"size": "tiny",
+"traits": [
+"fey",
+"gremlin"
+],
+"strikes": [
+"Shortsword"
+],
+"abilities": [
+"Sneak Attack",
+"Tinker"
+],
+"speed": 30,
+"other": {}
+},
+{
+"slug": "jungle-drake",
+"name": "Jungle Drake",
+"level": 6,
+"size": "lg",
+"traits": [
+"dragon",
+"wood"
+],
+"strikes": [
+"Fangs",
+"Stinger"
+],
+"abilities": [
+"Twisting Tail",
+"Draconic Frenzy",
+"Forest Passage",
+"Jungle Drake Venom",
+"Predatory Grab",
+"Speed Surge",
+"Spit Venom"
+],
+"speed": 20,
+"other": {
+"fly": 50
+}
+},
+{
+"slug": "kanya",
+"name": "Kanya",
+"level": 7,
+"size": "lg",
+"traits": [
+"azata",
+"celestial",
+"holy"
+],
+"strikes": [
+"Longsword",
+"Tail"
+],
+"abilities": [
+"Constant Spells",
+"Free Expression",
+"Muse's Courage",
+"Grab"
+],
+"speed": 25,
+"other": {
+"fly": 45
+}
+},
+{
+"slug": "keketar",
+"name": "Keketar",
+"level": 17,
+"size": "lg",
+"traits": [
+"monitor",
+"protean"
+],
+"strikes": [
+"Jaws",
+"Claw",
+"Tail"
+],
+"abilities": [
+"Telepathy 100 feet",
+"Entropy Sense (Imprecise) 60 feet",
+"Constant Spells",
+"+1 Status to All Saves vs. Magic",
+"Fast Healing 10",
+"Protean Anatomy 25",
+"Reactive Strike",
+"Spatial Riptide",
+"Change Shape",
+"Constrict",
+"Reshape Reality",
+"Warpwave Strike"
+],
+"speed": 40,
+"other": {
+"fly": 50,
+"swim": 40
+}
+},
+{
+"slug": "kholo-bonekeeper",
+"name": "Kholo Bonekeeper",
+"level": 3,
+"size": "med",
+"traits": [
+"humanoid",
+"kholo"
+],
+"strikes": [
+"Falchion",
+"Jaws"
+],
+"abilities": [
+"Pack Attack",
+"Rugged Travel"
+],
+"speed": 25,
+"other": {}
+},
+{
+"slug": "kholo-hunter",
+"name": "Kholo Hunter",
+"level": 2,
+"size": "med",
+"traits": [
+"humanoid",
+"kholo"
+],
+"strikes": [
+"Battle Axe",
+"Jaws",
+"Shortbow"
+],
+"abilities": [
+"Pack Attack",
+"Rugged Travel"
+],
+"speed": 25,
+"other": {}
+},
+{
+"slug": "kholo-sergeant",
+"name": "Kholo Sergeant",
+"level": 4,
+"size": "med",
+"traits": [
+"humanoid",
+"kholo"
+],
+"strikes": [
+"Scimitar",
+"Jaws",
+"Composite Shortbow"
+],
+"abilities": [
+"Reactive Strike",
+"Bark Orders",
+"Pack Attack",
+"Rugged Travel"
+],
+"speed": 25,
+"other": {}
+},
+{
+"slug": "kobold-cavern-mage",
+"name": "Kobold Cavern Mage",
+"level": 2,
+"size": "sm",
+"traits": [
+"humanoid",
+"kobold"
+],
+"strikes": [
+"Claw",
+"Light Hammer",
+"Light Hammer"
+],
+"abilities": [
+"Inspiring Display",
+"Scamper"
+],
+"speed": 25,
+"other": {}
+},
+{
+"slug": "kobold-scout",
+"name": "Kobold Scout",
+"level": 1,
+"size": "sm",
+"traits": [
+"humanoid",
+"kobold"
+],
+"strikes": [
+"Shortsword",
+"Crossbow"
+],
+"abilities": [
+"+1 Circumstance to All Defenses vs. Traps",
+"Construct Trap",
+"Scamper",
+"Sneak Attack"
+],
+"speed": 25,
+"other": {}
+},
+{
+"slug": "kobold-warrior",
+"name": "Kobold Warrior",
+"level": -1,
+"size": "sm",
+"traits": [
+"humanoid",
+"kobold"
+],
+"strikes": [
+"Spear",
+"Spear",
+"Sling"
+],
+"abilities": [
+"Scamper",
+"Sneak Attack"
+],
+"speed": 25,
+"other": {}
+},
+{
+"slug": "kraken",
+"name": "Kraken",
+"level": 18,
+"size": "grg",
+"traits": [
+"aquatic",
+"beast"
+],
+"strikes": [
+"Arm",
+"Tentacle",
+"Beak"
+],
+"abilities": [
+"Altered Weather",
+"Constrict",
+"Double Attack",
+"Ink Cloud",
+"Jet",
+"Kraken Ink",
+"Grab"
+],
+"speed": 10,
+"other": {
+"swim": 40
+}
+},
+{
+"slug": "krooth",
+"name": "Krooth",
+"level": 8,
+"size": "lg",
+"traits": [
+"amphibious",
+"animal"
+],
+"strikes": [
+"Jaws",
+"Claw",
+"Tail"
+],
+"abilities": [
+"+4 Status to All Saves vs. Fear",
+"Pain Frenzy",
+"Reactive Strike (Tail Only)",
+"Aquatic Ambush",
+"Poison Tooth"
+],
+"speed": 40,
+"other": {
+"swim": 30
+}
+},
+{
+"slug": "lamia-matriarch",
+"name": "Lamia Matriarch",
+"level": 8,
+"size": "lg",
+"traits": [
+"beast",
+"humanoid"
+],
+"strikes": [
+"Scimitar"
+],
+"abilities": [
+"+1 Status to All Saves vs. Magic",
+"Change Shape",
+"Matriarch's Caress",
+"Scimitar Storm"
+],
+"speed": 30,
+"other": {
+"climb": 30,
+"swim": 30
+}
+},
+{
+"slug": "lamia",
+"name": "Lamia",
+"level": 6,
+"size": "lg",
+"traits": [
+"beast",
+"humanoid"
+],
+"strikes": [
+"Spear",
+"Tail",
+"Spear",
+"Javelin"
+],
+"abilities": [
+"Lamia's Caress",
+"Grab"
+],
+"speed": 40,
+"other": {}
+},
+{
+"slug": "larval-ofalth",
+"name": "Larval Ofalth",
+"level": 4,
+"size": "med",
+"traits": [
+"aberration"
+],
+"strikes": [
+"Claw",
+"Leachate"
+],
+"abilities": [
+"Hide in Filth",
+"Shield Block",
+"Stench",
+"Wretched Weeps"
+],
+"speed": 25,
+"other": {}
+},
+{
+"slug": "lawbringer-warpriest",
+"name": "Lawbringer Warpriest",
+"level": 5,
+"size": "med",
+"traits": [
+"human",
+"humanoid",
+"nephilim"
+],
+"strikes": [
+"Greatsword",
+"Crossbow"
+],
+"abilities": [
+"Responsive Recovery",
+"Channel Smite"
+],
+"speed": 20,
+"other": {}
+},
+{
+"slug": "leaf-leshy",
+"name": "Leaf Leshy",
+"level": 0,
+"size": "sm",
+"traits": [
+"leshy",
+"plant"
+],
+"strikes": [
+"Longspear",
+"Seedpod"
+],
+"abilities": [
+"Constant Spells",
+"Verdant Burst",
+"Change Shape",
+"Deafening Blow",
+"Glide"
+],
+"speed": 25,
+"other": {}
+},
+{
+"slug": "leopard",
+"name": "Leopard",
+"level": 2,
+"size": "med",
+"traits": [
+"animal"
+],
+"strikes": [
+"Jaws",
+"Claw"
+],
+"abilities": [
+"Maul",
+"Pounce",
+"Sneak Attack",
+"Grab"
+],
+"speed": 30,
+"other": {
+"climb": 20
+}
+},
+{
+"slug": "lesser-death",
+"name": "Lesser Death",
+"level": 16,
+"size": "med",
+"traits": [
+"undead",
+"unholy"
+],
+"strikes": [
+"Keen Scythe"
+],
+"abilities": [
+"Death's Grace",
+"Status Sight",
+"Constant Spells",
+"+1 Status to All Saves vs. Magic",
+"Aura of Misfortune",
+"Lurking Death",
+"Void Healing",
+"Infuse Weapon"
+],
+"speed": 50,
+"other": {
+"fly": 40
+}
+},
+{
+"slug": "leukodaemon",
+"name": "Leukodaemon",
+"level": 9,
+"size": "lg",
+"traits": [
+"daemon",
+"fiend",
+"unholy"
+],
+"strikes": [
+"Jaws",
+"Claw",
+"Composite Longbow"
+],
+"abilities": [
+"Telepathy 100 feet",
+"Plaguesense (Imprecise) 60 feet",
+"+1 Status to All Saves vs. Magic",
+"Infectious Aura",
+"Daemonic Pestilence",
+"Plague Breath",
+"Quicken Pestilence"
+],
+"speed": 25,
+"other": {
+"fly": 40
+}
+},
+{
+"slug": "lich",
+"name": "Lich",
+"level": 12,
+"size": "med",
+"traits": [
+"undead",
+"unholy"
+],
+"strikes": [
+"Hand"
+],
+"abilities": [
+"+1 Status to All Saves vs. Vitality",
+"Counterspell",
+"Frightful Presence",
+"Rejuvenation",
+"Void Healing",
+"Drain Soul Cage",
+"Siphon Life",
+"Steady Spellcasting"
+],
+"speed": 25,
+"other": {}
+},
+{
+"slug": "lion",
+"name": "Lion",
+"level": 3,
+"size": "lg",
+"traits": [
+"animal"
+],
+"strikes": [
+"Jaws",
+"Claw"
+],
+"abilities": [
+"Pack Attack",
+"Pounce",
+"Sneak Attack",
+"Grab"
+],
+"speed": 30,
+"other": {}
+},
+{
+"slug": "living-landslide",
+"name": "Living Landslide",
+"level": 5,
+"size": "med",
+"traits": [
+"earth",
+"elemental"
+],
+"strikes": [
+"Fist"
+],
+"abilities": [
+"Tremorsense (Imprecise) 60 feet",
+"Earthbound",
+"Crumble",
+"Earth Glide",
+"Sliding Earth"
+],
+"speed": 25,
+"other": {
+"burrow": 25
+}
+},
+{
+"slug": "living-tar",
+"name": "Living Tar",
+"level": 7,
+"size": "huge",
+"traits": [
+"mindless",
+"ooze"
+],
+"strikes": [
+"Pseudopod"
+],
+"abilities": [
+"Motion Sense",
+"Adhesive Mass",
+"Constrict",
+"Engulf",
+"Grab"
+],
+"speed": 20,
+"other": {
+"climb": 20
+}
+},
+{
+"slug": "living-waterfall",
+"name": "Living Waterfall",
+"level": 5,
+"size": "lg",
+"traits": [
+"aquatic",
+"elemental",
+"water"
+],
+"strikes": [
+"Wave"
+],
+"abilities": [
+"Waterbound",
+"Vortex",
+"Drench",
+"Push or Pull 5 feet"
+],
+"speed": 20,
+"other": {
+"swim": 60
+}
+},
+{
+"slug": "living-whirlwind",
+"name": "Living Whirlwind",
+"level": 5,
+"size": "med",
+"traits": [
+"air",
+"elemental"
+],
+"strikes": [
+"Gust"
+],
+"abilities": [
+"Disperse",
+"High Winds",
+"Swiftness",
+"Forceful Winds"
+],
+"speed": 0,
+"other": {
+"fly": 50
+}
+},
+{
+"slug": "living-wildfire",
+"name": "Living Wildfire",
+"level": 5,
+"size": "med",
+"traits": [
+"elemental",
+"fire"
+],
+"strikes": [
+"Tendril",
+"Fire Mote"
+],
+"abilities": [
+"Smoke Vision",
+"Explosion",
+"Spreading Flames"
+],
+"speed": 50,
+"other": {}
+},
+{
+"slug": "lizardfolk-defender",
+"name": "Lizardfolk Defender",
+"level": 1,
+"size": "med",
+"traits": [
+"humanoid",
+"lizardfolk"
+],
+"strikes": [
+"Flail",
+"Jaws",
+"Tail",
+"Javelin"
+],
+"abilities": [
+"Reactive Strike",
+"Shield Block",
+"Deep Breath",
+"Terrain Advantage"
+],
+"speed": 25,
+"other": {
+"swim": 15
+}
+},
+{
+"slug": "lizardfolk-scout",
+"name": "Lizardfolk Scout",
+"level": 1,
+"size": "med",
+"traits": [
+"humanoid",
+"lizardfolk"
+],
+"strikes": [
+"Jaws",
+"Tail",
+"Blowgun"
+],
+"abilities": [
+"Deep Breath",
+"Giant Centipede Venom",
+"Hidden Movement",
+"Sneak Attack",
+"Terrain Advantage"
+],
+"speed": 25,
+"other": {
+"swim": 20
+}
+},
+{
+"slug": "lizardfolk-stargazer",
+"name": "Lizardfolk Stargazer",
+"level": 2,
+"size": "med",
+"traits": [
+"humanoid",
+"lizardfolk"
+],
+"strikes": [
+"Staff",
+"Jaws",
+"Tail"
+],
+"abilities": [
+"Deep Breath"
+],
+"speed": 25,
+"other": {
+"swim": 20
+}
+},
+{
+"slug": "lustspawn",
+"name": "Lustspawn",
+"level": 2,
+"size": "med",
+"traits": [
+"aberration"
+],
+"strikes": [
+"Jaws",
+"Claw",
+"Guisarme"
+],
+"abilities": [
+"Sin Scent (Imprecise) 30 feet",
+"+1 Status to All Saves vs. Magic",
+"+4 Status to All Saves vs. Mental",
+"Reactive Strike",
+"Sinful Bite"
+],
+"speed": 30,
+"other": {}
+},
+{
+"slug": "lyrakien",
+"name": "Lyrakien",
+"level": 1,
+"size": "tiny",
+"traits": [
+"azata",
+"celestial",
+"holy"
+],
+"strikes": [
+"Fist",
+"Starlight Ray"
+],
+"abilities": [
+"Constant Spells",
+"Starlight Blast"
+],
+"speed": 25,
+"other": {
+"fly": 50
+}
+},
+{
+"slug": "magma-worm",
+"name": "Magma Worm",
+"level": 18,
+"size": "grg",
+"traits": [
+"beast",
+"fire"
+],
+"strikes": [
+"Jaws",
+"Stinger",
+"Body"
+],
+"abilities": [
+"Tremorsense (Imprecise) 100 feet",
+"Fire Healing",
+"Inexorable",
+"Slough Skin",
+"Fast Swallow",
+"Fire Breath",
+"Magma Worm Venom",
+"Rock Tunneler",
+"Swallow Whole",
+"Thrash",
+"Improved Grab"
+],
+"speed": 40,
+"other": {
+"burrow": 40,
+"swim": 20
+}
+},
+{
+"slug": "mammoth",
+"name": "Mammoth",
+"level": 10,
+"size": "huge",
+"traits": [
+"animal"
+],
+"strikes": [
+"Tusk",
+"Trunk",
+"Foot"
+],
+"abilities": [
+"+2 Status to All Saves vs. Cold",
+"Cold Adaptation",
+"Dual Tusks",
+"Trample",
+"Grabbing Trunk"
+],
+"speed": 45,
+"other": {}
+},
+{
+"slug": "manticore-quill-tail",
+"name": "Manticore (Quill Tail)",
+"level": 6,
+"size": "lg",
+"traits": [
+"beast"
+],
+"strikes": [
+"Jaws",
+"Claw",
+"Spike"
+],
+"abilities": [
+"Spike Volley"
+],
+"speed": 25,
+"other": {
+"fly": 40
+}
+},
+{
+"slug": "manticore-scorpion-tail",
+"name": "Manticore (Scorpion Tail)",
+"level": 6,
+"size": "lg",
+"traits": [
+"beast"
+],
+"strikes": [
+"Jaws",
+"Claw",
+"Stinger"
+],
+"abilities": [
+"Manticore Venom"
+],
+"speed": 25,
+"other": {
+"fly": 40
+}
+},
+{
+"slug": "marsh-giant",
+"name": "Marsh Giant",
+"level": 8,
+"size": "lg",
+"traits": [
+"amphibious",
+"giant",
+"humanoid",
+"water"
+],
+"strikes": [
+"Gaff",
+"Fist",
+"Spit"
+],
+"abilities": [
+"Drowning Hook",
+"Twist the Hook"
+],
+"speed": 35,
+"other": {
+"swim": 20
+}
+},
+{
+"slug": "medusa",
+"name": "Medusa",
+"level": 7,
+"size": "med",
+"traits": [
+"humanoid"
+],
+"strikes": [
+"Shortsword",
+"Snake Fangs",
+"Composite Shortbow"
+],
+"abilities": [
+"All-Around Vision",
+"Biting Snakes",
+"Petrifying Gaze",
+"Focus Gaze",
+"Serpent Venom"
+],
+"speed": 25,
+"other": {}
+},
+{
+"slug": "megalodon",
+"name": "Megalodon",
+"level": 9,
+"size": "grg",
+"traits": [
+"animal",
+"aquatic"
+],
+"strikes": [
+"Jaws",
+"Tail"
+],
+"abilities": [
+"Blood Scent",
+"Breach",
+"Savage",
+"Swallow Whole",
+"Improved Grab",
+"Push 15 feet"
+],
+"speed": 0,
+"other": {
+"swim": 80
+}
+},
+{
+"slug": "megaprimatus",
+"name": "Megaprimatus",
+"level": 8,
+"size": "grg",
+"traits": [
+"animal"
+],
+"strikes": [
+"Fist",
+"Jaws"
+],
+"abilities": [
+"Mangling Rend",
+"Terrifying Display"
+],
+"speed": 30,
+"other": {
+"climb": 30
+}
+},
+{
+"slug": "merfolk-warrior",
+"name": "Merfolk Warrior",
+"level": 1,
+"size": "med",
+"traits": [
+"aquatic",
+"humanoid",
+"merfolk"
+],
+"strikes": [
+"Trident",
+"Trident"
+],
+"abilities": [
+"Aquatic Dash"
+],
+"speed": 5,
+"other": {
+"swim": 30
+}
+},
+{
+"slug": "merfolk-wavecaller",
+"name": "Merfolk Wavecaller",
+"level": 2,
+"size": "med",
+"traits": [
+"aquatic",
+"humanoid",
+"merfolk"
+],
+"strikes": [
+"Dagger",
+"Dagger"
+],
+"abilities": [
+"Hydraulic Asphyxiation"
+],
+"speed": 5,
+"other": {
+"swim": 30
+}
+},
+{
+"slug": "minotaur-hunter",
+"name": "Minotaur Hunter",
+"level": 4,
+"size": "lg",
+"traits": [
+"beast",
+"humanoid"
+],
+"strikes": [
+"Greataxe",
+"Horn"
+],
+"abilities": [
+"Perfect Orienteering",
+"Axe Swipe",
+"Hunted Fear",
+"Powerful Charge"
+],
+"speed": 25,
+"other": {}
+},
+{
+"slug": "mirage-dragon-adult-spellcaster",
+"name": "Mirage Dragon (Adult, Spellcaster)",
+"level": 13,
+"size": "huge",
+"traits": [
+"arcane",
+"dragon"
+],
+"strikes": [
+"Jaws",
+"Claws",
+"Tail"
+],
+"abilities": [
+"Camouflage",
+"Illusion Sense",
+"+2 Status to All Saves vs. Arcane",
+"Scintillating Defense",
+"Captivating Display",
+"Hallucinatory Breath",
+"Lunging Bite",
+"Sneak Attack"
+],
+"speed": 50,
+"other": {
+"climb": 30,
+"fly": 150
+}
+},
+{
+"slug": "mirage-dragon-adult",
+"name": "Mirage Dragon (Adult)",
+"level": 13,
+"size": "huge",
+"traits": [
+"arcane",
+"dragon"
+],
+"strikes": [
+"Jaws",
+"Claws",
+"Tail"
+],
+"abilities": [
+"Camouflage",
+"Illusion Sense",
+"+2 Status to All Saves vs. Arcane",
+"Scintillating Defense",
+"Captivating Display",
+"Draconic Frenzy",
+"Draconic Momentum",
+"Hallucinatory Breath",
+"Lunging Bite",
+"Sneak Attack"
+],
+"speed": 50,
+"other": {
+"climb": 30,
+"fly": 150
+}
+},
+{
+"slug": "mirage-dragon-ancient-spellcaster",
+"name": "Mirage Dragon (Ancient, Spellcaster)",
+"level": 18,
+"size": "huge",
+"traits": [
+"arcane",
+"dragon"
+],
+"strikes": [
+"Jaws",
+"Claws",
+"Tail"
+],
+"abilities": [
+"Camouflage",
+"Illusion Sense",
+"+2 Status to All Saves vs. Arcane",
+"Scintillating Defense",
+"Captivating Display",
+"Hallucinatory Breath",
+"Lunging Bite",
+"Sneak Attack"
+],
+"speed": 60,
+"other": {
+"climb": 40,
+"fly": 150
+}
+},
+{
+"slug": "mirage-dragon-ancient",
+"name": "Mirage Dragon (Ancient)",
+"level": 18,
+"size": "huge",
+"traits": [
+"arcane",
+"dragon"
+],
+"strikes": [
+"Jaws",
+"Claws",
+"Tail"
+],
+"abilities": [
+"Camouflage",
+"Illusion Sense",
+"+2 Status to All Saves vs. Arcane",
+"Scintillating Defense",
+"Captivating Display",
+"Draconic Frenzy",
+"Draconic Momentum",
+"Hallucinatory Breath",
+"Lunging Bite",
+"Sneak Attack"
+],
+"speed": 60,
+"other": {
+"climb": 40,
+"fly": 150
+}
+},
+{
+"slug": "mirage-dragon-young-spellcaster",
+"name": "Mirage Dragon (Young, Spellcaster)",
+"level": 9,
+"size": "lg",
+"traits": [
+"arcane",
+"dragon"
+],
+"strikes": [
+"Jaws",
+"Claws",
+"Tail"
+],
+"abilities": [
+"Camouflage",
+"+2 Status to All Saves vs. Arcane",
+"Scintillating Defense",
+"Hallucinatory Breath",
+"Lunging Bite",
+"Sneak Attack"
+],
+"speed": 40,
+"other": {
+"climb": 20,
+"fly": 120
+}
+},
+{
+"slug": "mirage-dragon-young",
+"name": "Mirage Dragon (Young)",
+"level": 9,
+"size": "lg",
+"traits": [
+"arcane",
+"dragon"
+],
+"strikes": [
+"Jaws",
+"Claws",
+"Tail"
+],
+"abilities": [
+"Camouflage",
+"+2 Status to All Saves vs. Arcane",
+"Scintillating Defense",
+"Draconic Frenzy",
+"Draconic Momentum",
+"Hallucinatory Breath",
+"Lunging Bite",
+"Sneak Attack"
+],
+"speed": 40,
+"other": {
+"climb": 20,
+"fly": 120
+}
+},
+{
+"slug": "mitflit",
+"name": "Mitflit",
+"level": -1,
+"size": "sm",
+"traits": [
+"fey",
+"gremlin"
+],
+"strikes": [
+"Shortsword",
+"Dart"
+],
+"abilities": [
+"Self-Loathing",
+"Vengeful Anger"
+],
+"speed": 20,
+"other": {
+"climb": 20
+}
+},
+{
+"slug": "morrigna",
+"name": "Morrigna",
+"level": 15,
+"size": "med",
+"traits": [
+"monitor",
+"psychopomp"
+],
+"strikes": [
+"Bo Staff",
+"Web Wrappings"
+],
+"abilities": [
+"Lifesense 60 feet",
+"Constant Spells",
+"+1 Status to All Saves vs. Magic",
+"Regeneration 20 (Deactivated by Acid or Fire)",
+"Change Shape",
+"Shepherd's Touch",
+"Spider Minions",
+"Wrappings Lash",
+"Grab"
+],
+"speed": 30,
+"other": {
+"climb": 30
+}
+},
+{
+"slug": "mountain-oni",
+"name": "Mountain Oni",
+"level": 8,
+"size": "lg",
+"traits": [
+"giant",
+"humanoid",
+"oni"
+],
+"strikes": [
+"Jaws",
+"Tetsubo"
+],
+"abilities": [
+"Bean Panic",
+"Reactive Strike",
+"Change Shape",
+"Thundering Iron"
+],
+"speed": 30,
+"other": {}
+},
+{
+"slug": "mukradi",
+"name": "Mukradi",
+"level": 15,
+"size": "grg",
+"traits": [
+"beast"
+],
+"strikes": [
+"Acid Maw",
+"Flame Maw",
+"Shock Maw",
+"Leg",
+"Tail Lash"
+],
+"abilities": [
+"Tremorsense (Imprecise) 60 feet",
+"All-Around Vision",
+"Partitioned Anatomy",
+"Spitting Rage",
+"Breathe Energy",
+"Pull Apart",
+"Thrash",
+"Trample",
+"Knockdown"
+],
+"speed": 60,
+"other": {
+"burrow": 60,
+"climb": 60
+}
+},
+{
+"slug": "mummy-guardian",
+"name": "Mummy Guardian",
+"level": 6,
+"size": "med",
+"traits": [
+"mummy",
+"undead",
+"unholy"
+],
+"strikes": [
+"Fist"
+],
+"abilities": [
+"Alchemical Weakness",
+"Blighted Consumption",
+"Void Healing",
+"Choking Pain"
+],
+"speed": 20,
+"other": {}
+},
+{
+"slug": "mummy-pharaoh",
+"name": "Mummy Pharaoh",
+"level": 9,
+"size": "med",
+"traits": [
+"mummy",
+"undead",
+"unholy"
+],
+"strikes": [
+"Fist",
+"Longspear"
+],
+"abilities": [
+"+1 Status to All Saves vs. Vitality",
+"Reactive Strike (Special)",
+"Rejuvenation",
+"Sacred Wrappings",
+"Undead Mastery",
+"Sandstorm Wrath",
+"Veil of Sand"
+],
+"speed": 20,
+"other": {}
+},
+{
+"slug": "naiad-queen",
+"name": "Naiad Queen",
+"level": 7,
+"size": "med",
+"traits": [
+"amphibious",
+"fey",
+"nymph",
+"water"
+],
+"strikes": [
+"Aqueous Fist",
+"Water Orb"
+],
+"abilities": [
+"Animal Empathy",
+"Tied to the Land",
+"Constant Spells",
+"Nymph's Beauty",
+"Water Healing",
+"Change Shape",
+"Focus Beauty",
+"Inspiration"
+],
+"speed": 25,
+"other": {
+"swim": 25
+}
+},
+{
+"slug": "naiad",
+"name": "Naiad",
+"level": 1,
+"size": "med",
+"traits": [
+"amphibious",
+"fey",
+"nymph",
+"water"
+],
+"strikes": [
+"Aqueous Fist",
+"Water Orb"
+],
+"abilities": [
+"Animal Empathy",
+"Constant Spells",
+"Water Dependent",
+"Water Healing"
+],
+"speed": 25,
+"other": {
+"swim": 25
+}
+},
+{
+"slug": "nessari",
+"name": "Nessari",
+"level": 20,
+"size": "lg",
+"traits": [
+"devil",
+"fiend",
+"unholy"
+],
+"strikes": [
+"Jaws",
+"Claw",
+"Tail",
+"Wing"
+],
+"abilities": [
+"Greater Darkvision",
+"Telepathy 100 feet",
+"Constant Spells",
+"+1 Status to All Saves vs. Magic",
+"Regeneration 30 (Deactivated by Holy)",
+"Commander's Aura",
+"Frightful Presence",
+"Reactive Strike (Special)",
+"Constrict",
+"Fast Swoop",
+"Masterful Quickened Casting",
+"Nessari Venom"
+],
+"speed": 35,
+"other": {
+"fly": 50
+}
+},
+{
+"slug": "nightmare",
+"name": "Nightmare",
+"level": 6,
+"size": "lg",
+"traits": [
+"beast",
+"fiend",
+"unholy"
+],
+"strikes": [
+"Jaws",
+"Hoof"
+],
+"abilities": [
+"Smoke",
+"Flaming Gallop"
+],
+"speed": 40,
+"other": {
+"fly": 90
+}
+},
+{
+"slug": "nilith",
+"name": "Nilith",
+"level": 10,
+"size": "med",
+"traits": [
+"aberration"
+],
+"strikes": [
+"Claw",
+"Fangs"
+],
+"abilities": [
+"Telepathy 100 feet",
+"Mind Crush",
+"Grab"
+],
+"speed": 25,
+"other": {
+"climb": 30
+}
+},
+{
+"slug": "norn",
+"name": "Norn",
+"level": 20,
+"size": "lg",
+"traits": [
+"fey"
+],
+"strikes": [
+"Norn Shears",
+"Hand Of Fate"
+],
+"abilities": [
+"Greater Darkvision",
+"Lifesense 120 feet",
+"Sense Fate",
+"Triumvirate",
+"Constant Spells",
+"+1 Status to All Saves vs. Magic",
+"Regeneration 20 (Deactivated by Cold Iron)",
+"Fated",
+"Sever Fate",
+"Shift Fate",
+"Snip Thread"
+],
+"speed": 35,
+"other": {
+"fly": 35
+}
+},
+{
+"slug": "nosoi",
+"name": "Nosoi",
+"level": 1,
+"size": "tiny",
+"traits": [
+"monitor",
+"psychopomp"
+],
+"strikes": [
+"Beak"
+],
+"abilities": [
+"Lifesense 60 feet",
+"Change Shape",
+"Haunting Melody",
+"Shepherd's Touch"
+],
+"speed": 15,
+"other": {
+"fly": 40
+}
+},
+{
+"slug": "noxious-needler",
+"name": "Noxious Needler",
+"level": 9,
+"size": "lg",
+"traits": [
+"alchemical",
+"construct",
+"mindless"
+],
+"strikes": [
+"Syringe",
+"Bomb"
+],
+"abilities": [
+"Alchemical Chambers",
+"Alchemical Rupture",
+"Alchemical Injection",
+"Generate Bomb"
+],
+"speed": 25,
+"other": {}
+},
+{
+"slug": "nuckelavee",
+"name": "Nuckelavee",
+"level": 9,
+"size": "lg",
+"traits": [
+"amphibious",
+"fey"
+],
+"strikes": [
+"Bastard Sword",
+"Jaws",
+"Hoof"
+],
+"abilities": [
+"Frightful Presence",
+"Purity Vulnerability",
+"Reactive Strike",
+"Blight Breath",
+"Mortasheen",
+"Trample"
+],
+"speed": 40,
+"other": {
+"swim": 40
+}
+},
+{
+"slug": "ofalth",
+"name": "Ofalth",
+"level": 10,
+"size": "lg",
+"traits": [
+"aberration"
+],
+"strikes": [
+"Fist",
+"Offal"
+],
+"abilities": [
+"Refuse Pile",
+"Filth Wallow",
+"Stench",
+"Wretched Weeps"
+],
+"speed": 30,
+"other": {}
+},
+{
+"slug": "ogre-boss",
+"name": "Ogre Boss",
+"level": 7,
+"size": "lg",
+"traits": [
+"giant",
+"humanoid"
+],
+"strikes": [
+"Ogre Hook",
+"Javelin"
+],
+"abilities": [
+"Reactive Strike",
+"Bellowing Command",
+"Sweeping Hook"
+],
+"speed": 25,
+"other": {}
+},
+{
+"slug": "ogre-glutton",
+"name": "Ogre Glutton",
+"level": 4,
+"size": "lg",
+"traits": [
+"giant",
+"humanoid"
+],
+"strikes": [
+"Greataxe",
+"Jaws"
+],
+"abilities": [
+"Glutton's Feast",
+"Glutton's Rush",
+"Swallow Whole",
+"Grab"
+],
+"speed": 30,
+"other": {}
+},
+{
+"slug": "ogre-warrior",
+"name": "Ogre Warrior",
+"level": 3,
+"size": "lg",
+"traits": [
+"giant",
+"humanoid"
+],
+"strikes": [
+"Ogre Hook",
+"Javelin"
+],
+"abilities": [],
+"speed": 25,
+"other": {}
+},
+{
+"slug": "omen-dragon-adult-spellcaster",
+"name": "Omen Dragon (Adult, Spellcaster)",
+"level": 11,
+"size": "lg",
+"traits": [
+"dragon",
+"occult"
+],
+"strikes": [
+"Jaws",
+"Claw",
+"Tail",
+"Wing"
+],
+"abilities": [
+"+2 Status to All Saves vs. Occult",
+"Challenge Fate",
+"Untethered to Fate",
+"Destiny Breath",
+"Prophetic Wings",
+"Walk the Timelines"
+],
+"speed": 50,
+"other": {
+"fly": 130
+}
+},
+{
+"slug": "omen-dragon-adult",
+"name": "Omen Dragon (Adult)",
+"level": 11,
+"size": "lg",
+"traits": [
+"dragon",
+"occult"
+],
+"strikes": [
+"Jaws",
+"Claw",
+"Tail",
+"Wing"
+],
+"abilities": [
+"+2 Status to All Saves vs. Occult",
+"Challenge Fate",
+"Untethered to Fate",
+"Destiny Breath",
+"Draconic Frenzy",
+"Draconic Momentum",
+"Prophetic Wings",
+"Walk the Timelines"
+],
+"speed": 50,
+"other": {
+"fly": 130
+}
+},
+{
+"slug": "omen-dragon-ancient-spellcaster",
+"name": "Omen Dragon (Ancient, Spellcaster)",
+"level": 16,
+"size": "huge",
+"traits": [
+"dragon",
+"occult"
+],
+"strikes": [
+"Jaws",
+"Claw",
+"Tail",
+"Wing"
+],
+"abilities": [
+"+2 Status to All Saves vs. Occult",
+"Challenge Fate",
+"Untethered to Fate",
+"Destiny Breath",
+"Impending Fate",
+"Prophetic Wings",
+"Walk the Timelines"
+],
+"speed": 60,
+"other": {
+"fly": 180
+}
+},
+{
+"slug": "omen-dragon-ancient",
+"name": "Omen Dragon (Ancient)",
+"level": 16,
+"size": "huge",
+"traits": [
+"dragon",
+"occult"
+],
+"strikes": [
+"Jaws",
+"Claw",
+"Tail",
+"Wing"
+],
+"abilities": [
+"+2 Status to All Saves vs. Occult",
+"Challenge Fate",
+"Untethered to Fate",
+"Destiny Breath",
+"Draconic Frenzy",
+"Draconic Momentum",
+"Impending Fate",
+"Prophetic Wings",
+"Walk the Timelines"
+],
+"speed": 60,
+"other": {
+"fly": 180
+}
+},
+{
+"slug": "omen-dragon-young-spellcaster",
+"name": "Omen Dragon (Young, Spellcaster)",
+"level": 7,
+"size": "lg",
+"traits": [
+"dragon",
+"occult"
+],
+"strikes": [
+"Jaws",
+"Claw",
+"Tail",
+"Wing"
+],
+"abilities": [
+"+2 Status to All Saves vs. Occult",
+"Challenge Fate",
+"Untethered to Fate",
+"Destiny Breath",
+"Prophetic Wings"
+],
+"speed": 40,
+"other": {
+"fly": 100
+}
+},
+{
+"slug": "omen-dragon-young",
+"name": "Omen Dragon (Young)",
+"level": 7,
+"size": "lg",
+"traits": [
+"dragon",
+"occult"
+],
+"strikes": [
+"Jaws",
+"Claw",
+"Tail",
+"Wing"
+],
+"abilities": [
+"+2 Status to All Saves vs. Occult",
+"Challenge Fate",
+"Untethered to Fate",
+"Destiny Breath",
+"Draconic Frenzy",
+"Draconic Momentum",
+"Prophetic Wings"
+],
+"speed": 40,
+"other": {
+"fly": 100
+}
+},
+{
+"slug": "omox",
+"name": "Omox",
+"level": 12,
+"size": "med",
+"traits": [
+"demon",
+"fiend",
+"ooze",
+"unholy"
+],
+"strikes": [
+"Sludge Tendril",
+"Slime Ball"
+],
+"abilities": [
+"Telepathy 100 feet",
+"Cleanly Vulnerability",
+"+1 Status to All Saves vs. Magic",
+"Absorb Weapon",
+"Liquid Leap",
+"Slime Trap",
+"Smother",
+"Grab"
+],
+"speed": 40,
+"other": {
+"climb": 20,
+"swim": 80
+}
+},
+{
+"slug": "orc-commander",
+"name": "Orc Commander",
+"level": 2,
+"size": "med",
+"traits": [
+"humanoid",
+"orc"
+],
+"strikes": [
+"Greatclub",
+"Fist",
+"Javelin"
+],
+"abilities": [
+"Ferocity",
+"Reactive Strike",
+"Battle Cry"
+],
+"speed": 25,
+"other": {}
+},
+{
+"slug": "orc-scrapper",
+"name": "Orc Scrapper",
+"level": 0,
+"size": "med",
+"traits": [
+"humanoid",
+"orc"
+],
+"strikes": [
+"Orc Knuckle Dagger",
+"Fist",
+"Javelin"
+],
+"abilities": [
+"Ferocity"
+],
+"speed": 25,
+"other": {}
+},
+{
+"slug": "orc-veteran",
+"name": "Orc Veteran",
+"level": 1,
+"size": "med",
+"traits": [
+"humanoid",
+"orc"
+],
+"strikes": [
+"Orc Necksplitter",
+"Shortsword",
+"Fist",
+"Javelin"
+],
+"abilities": [
+"Ferocity",
+"Reactive Strike"
+],
+"speed": 25,
+"other": {}
+},
+{
+"slug": "orca",
+"name": "Orca",
+"level": 5,
+"size": "huge",
+"traits": [
+"animal"
+],
+"strikes": [
+"Jaws"
+],
+"abilities": [
+"Aquatic Echolocation 120 feet",
+"Deep Breath",
+"Aquatic Ambush",
+"Breach",
+"Grab"
+],
+"speed": 0,
+"other": {
+"swim": 60
+}
+},
+{
+"slug": "ort",
+"name": "Ort",
+"level": 0,
+"size": "med",
+"traits": [
+"devil",
+"fiend",
+"mindless",
+"unholy"
+],
+"strikes": [
+"Claw"
+],
+"abilities": [
+"Greater Darkvision",
+"Subservience"
+],
+"speed": 20,
+"other": {}
+},
+{
+"slug": "pachycephalosaurus",
+"name": "Pachycephalosaurus",
+"level": 3,
+"size": "lg",
+"traits": [
+"animal",
+"dinosaur"
+],
+"strikes": [
+"Skull"
+],
+"abilities": [
+"Clobbering Charge",
+"Sudden Shove"
+],
+"speed": 35,
+"other": {}
+},
+{
+"slug": "paleohemoth",
+"name": "Paleohemoth",
+"level": 12,
+"size": "huge",
+"traits": [
+"construct",
+"mindless"
+],
+"strikes": [
+"Jaws"
+],
+"abilities": [
+"Fossilization",
+"Reassemble"
+],
+"speed": 25,
+"other": {}
+},
+{
+"slug": "pegasus",
+"name": "Pegasus",
+"level": 3,
+"size": "lg",
+"traits": [
+"beast"
+],
+"strikes": [
+"Hoof",
+"Wing"
+],
+"abilities": [
+"Buck",
+"Assisted Mount",
+"Gallop"
+],
+"speed": 40,
+"other": {
+"fly": 80
+}
+},
+{
+"slug": "phade",
+"name": "Phade",
+"level": 7,
+"size": "med",
+"traits": [
+"air",
+"elemental"
+],
+"strikes": [
+"Fist"
+],
+"abilities": [
+"Naturally Invisible",
+"Hush",
+"Sneak Attack"
+],
+"speed": 25,
+"other": {
+"fly": 25
+}
+},
+{
+"slug": "phantom-beast",
+"name": "Phantom Beast",
+"level": 8,
+"size": "med",
+"traits": [
+"ethereal",
+"incorporeal",
+"phantom",
+"spirit"
+],
+"strikes": [
+"Phantom Horn"
+],
+"abilities": [
+"Telepathy 100 feet",
+"Walk the Ethereal Line",
+"-1 Status to All Saves vs. Death Effects",
+"Susceptible to Death",
+"Phantom Touch",
+"Grab Item"
+],
+"speed": 0,
+"other": {
+"fly": 35
+}
+},
+{
+"slug": "phantom-knight",
+"name": "Phantom Knight",
+"level": 4,
+"size": "med",
+"traits": [
+"ethereal",
+"incorporeal",
+"phantom",
+"spirit"
+],
+"strikes": [
+"Phantom Sword",
+"Phantom Bow"
+],
+"abilities": [
+"Walk the Ethereal Line",
+"-1 Status to All Saves vs. Death Effects",
+"Susceptible to Death",
+"Phantom Touch"
+],
+"speed": 0,
+"other": {
+"fly": 25
+}
+},
+{
+"slug": "phistophilus",
+"name": "Phistophilus",
+"level": 10,
+"size": "med",
+"traits": [
+"devil",
+"fiend",
+"unholy"
+],
+"strikes": [
+"Binding Contract",
+"Horn"
+],
+"abilities": [
+"Greater Darkvision",
+"Telepathy 100 feet",
+"Constant Spells",
+"+1 Status to All Saves vs. Magic",
+"Ward Contract",
+"Draft Contract",
+"Infernal Investment",
+"Infernal Wound",
+"Grab"
+],
+"speed": 25,
+"other": {}
+},
+{
+"slug": "phoenix",
+"name": "Phoenix",
+"level": 15,
+"size": "grg",
+"traits": [
+"beast",
+"fire",
+"holy"
+],
+"strikes": [
+"Beak",
+"Talon",
+"Flame Jet"
+],
+"abilities": [
+"Constant Spells",
+"+1 Status to All Saves vs. Magic",
+"Regeneration 20 (Deactivated by Cold or Unholy)",
+"Self-Resurrection",
+"Shroud of Flame",
+"Flaming Strafe"
+],
+"speed": 25,
+"other": {
+"fly": 70
+}
+},
+{
+"slug": "pipefox",
+"name": "Pipefox",
+"level": 2,
+"size": "tiny",
+"traits": [
+"beast"
+],
+"strikes": [
+"Jaws"
+],
+"abilities": [
+"Constant Spells",
+"Master of Tongues",
+"Rapid Erudition"
+],
+"speed": 25,
+"other": {
+"climb": 20
+}
+},
+{
+"slug": "pitborn-adept",
+"name": "Pitborn Adept",
+"level": 3,
+"size": "med",
+"traits": [
+"human",
+"humanoid",
+"nephilim"
+],
+"strikes": [
+"Staff"
+],
+"abilities": [
+"Drain Bonded Item"
+],
+"speed": 25,
+"other": {}
+},
+{
+"slug": "pixie",
+"name": "Pixie",
+"level": 4,
+"size": "sm",
+"traits": [
+"fey",
+"sprite"
+],
+"strikes": [
+"Shortsword",
+"Longbow"
+],
+"abilities": [
+"+1 Status to All Saves vs. Magic",
+"Sprinkle Pixie Dust"
+],
+"speed": 15,
+"other": {
+"fly": 45
+}
+},
+{
+"slug": "plague-zombie",
+"name": "Plague Zombie",
+"level": 1,
+"size": "med",
+"traits": [
+"mindless",
+"undead",
+"unholy",
+"zombie"
+],
+"strikes": [
+"Fist",
+"Jaws"
+],
+"abilities": [
+"Slow",
+"Void Healing",
+"Zombie Rot",
+"Grab"
+],
+"speed": 25,
+"other": {}
+},
+{
+"slug": "pleroma",
+"name": "Pleroma",
+"level": 20,
+"size": "lg",
+"traits": [
+"aeon",
+"monitor"
+],
+"strikes": [
+"Touch of Creation",
+"Touch of Destruction"
+],
+"abilities": [
+"Envisioning",
+"Lifesense 120 feet",
+"At-Will Spells",
+"Constant Spells",
+"+1 Status to All Saves vs. Magic",
+"Regeneration 20 (Deactivated by Spirit)",
+"Reality Twist",
+"Generate Sphere",
+"Propel Sphere"
+],
+"speed": 0,
+"other": {
+"fly": 40
+}
+},
+{
+"slug": "poltergeist",
+"name": "Poltergeist",
+"level": 5,
+"size": "med",
+"traits": [
+"incorporeal",
+"spirit",
+"undead",
+"unholy"
+],
+"strikes": [
+"Telekinetic Object"
+],
+"abilities": [
+"Site Bound",
+"Natural Invisibility",
+"Rejuvenation",
+"Telekinetic Defense",
+"Void Healing",
+"Frighten",
+"Telekinetic Storm"
+],
+"speed": 0,
+"other": {
+"fly": 20
+}
+},
+{
+"slug": "poracha",
+"name": "Poracha",
+"level": 4,
+"size": "med",
+"traits": [
+"beast"
+],
+"strikes": [
+"Jaws",
+"Claw"
+],
+"abilities": [
+"Tremorsense (Imprecise) 10 feet",
+"Jaunt",
+"Object Meld"
+],
+"speed": 40,
+"other": {}
+},
+{
+"slug": "pridespawn",
+"name": "Pridespawn",
+"level": 2,
+"size": "med",
+"traits": [
+"aberration"
+],
+"strikes": [
+"Jaws",
+"Claw",
+"Maul"
+],
+"abilities": [
+"Sin Scent (Imprecise) 30 feet",
+"+1 Status to All Saves vs. Magic",
+"+4 Status to All Saves vs. Mental",
+"Reactive Strike",
+"Sinful Bite"
+],
+"speed": 30,
+"other": {}
+},
+{
+"slug": "pteranodon",
+"name": "Pteranodon",
+"level": 2,
+"size": "lg",
+"traits": [
+"animal"
+],
+"strikes": [
+"Beak"
+],
+"abilities": [
+"Swoop"
+],
+"speed": 10,
+"other": {
+"fly": 40
+}
+},
+{
+"slug": "pugwampi",
+"name": "Pugwampi",
+"level": 0,
+"size": "tiny",
+"traits": [
+"fey",
+"gremlin"
+],
+"strikes": [
+"Shortsword",
+"Shortbow"
+],
+"abilities": [
+"-2 Penalty on Perception to Hear things",
+"Unluck Aura"
+],
+"speed": 25,
+"other": {}
+},
+{
+"slug": "pukwudgie",
+"name": "Pukwudgie",
+"level": 7,
+"size": "sm",
+"traits": [
+"fey"
+],
+"strikes": [
+"Hatchet",
+"Hatchet",
+"Shortbow"
+],
+"abilities": [
+"Defensive Quills",
+"Change Shape",
+"Pukwudgie Poison"
+],
+"speed": 25,
+"other": {}
+},
+{
+"slug": "pusk",
+"name": "Pusk",
+"level": 2,
+"size": "sm",
+"traits": [
+"demon",
+"fiend",
+"unholy"
+],
+"strikes": [
+"Jaws",
+"Claw"
+],
+"abilities": [
+"Telepathy 100 feet",
+"Sloth",
+"Cower",
+"Frenzied Slashes",
+"Vicious Criticals"
+],
+"speed": 20,
+"other": {}
+},
+{
+"slug": "python",
+"name": "Python",
+"level": 1,
+"size": "med",
+"traits": [
+"animal"
+],
+"strikes": [
+"Jaws"
+],
+"abilities": [
+"Tighten Coils",
+"Constrict",
+"Wrap in Coils",
+"Grab"
+],
+"speed": 20,
+"other": {
+"climb": 20,
+"swim": 20
+}
+},
+{
+"slug": "qarna",
+"name": "Qarna",
+"level": 4,
+"size": "med",
+"traits": [
+"archon",
+"celestial",
+"holy"
+],
+"strikes": [
+"Horn",
+"Composite Longbow"
+],
+"abilities": [
+"Constant Spells",
+"All-Around Vision",
+"+1 Status to All Saves vs. Magic",
+"Archon's Protection",
+"Archon's Pursuit",
+"Distracting Arrow",
+"Touch of Charity",
+"Push"
+],
+"speed": 35,
+"other": {}
+},
+{
+"slug": "quai-dau-to",
+"name": "Quai Dau To",
+"level": 13,
+"size": "huge",
+"traits": [
+"beast"
+],
+"strikes": [
+"Jaws",
+"Tail",
+"Foot"
+],
+"abilities": [
+"Mist Vision",
+"Frightful Sight",
+"Reflective Scales",
+"Drain Water",
+"Inflate",
+"Mist Breath",
+"Spout Water"
+],
+"speed": 40,
+"other": {
+"swim": 30
+}
+},
+{
+"slug": "quatoid",
+"name": "Quatoid",
+"level": 7,
+"size": "sm",
+"traits": [
+"aquatic",
+"elemental",
+"water"
+],
+"strikes": [
+"Tentacle"
+],
+"abilities": [
+"At-Will Spells",
+"Calming Bioluminescence",
+"Constrict",
+"Grab"
+],
+"speed": 25,
+"other": {
+"swim": 25
+}
+},
+{
+"slug": "quelaunt",
+"name": "Quelaunt",
+"level": 15,
+"size": "lg",
+"traits": [
+"aberration"
+],
+"strikes": [
+"Claw"
+],
+"abilities": [
+"Tremorsense (Imprecise) 60 feet",
+"Telepathy 100 feet",
+"Constant Spells",
+"+2 to Will Saves vs. Emotion",
+"Emotional Focus",
+"Emotional Frenzy",
+"Feed on Emotion",
+"Rapid Strikes",
+"Spiral of Despair"
+],
+"speed": 40,
+"other": {}
+},
+{
+"slug": "quetz-coatl",
+"name": "Quetz Coatl",
+"level": 10,
+"size": "lg",
+"traits": [
+"beast",
+"couatl",
+"holy"
+],
+"strikes": [
+"Jaws"
+],
+"abilities": [
+"Telepathy 100 feet",
+"At-Will Spells",
+"Greater Constrict",
+"Quetz Couatl Venom",
+"Radiant Wings",
+"Wrap in Coils",
+"Grab"
+],
+"speed": 15,
+"other": {
+"fly": 50
+}
+},
+{
+"slug": "quetzalcoatlus",
+"name": "Quetzalcoatlus",
+"level": 7,
+"size": "huge",
+"traits": [
+"animal"
+],
+"strikes": [
+"Beak",
+"Talon"
+],
+"abilities": [
+"Carry",
+"Swoop",
+"Grab"
+],
+"speed": 15,
+"other": {
+"fly": 50
+}
+},
+{
+"slug": "raja-krodha",
+"name": "Raja-Krodha",
+"level": 10,
+"size": "med",
+"traits": [
+"rakshasa",
+"spirit",
+"unholy"
+],
+"strikes": [
+"Fangs",
+"Claw",
+"Taravari"
+],
+"abilities": [
+"+2 Status to All Saves vs. Magic",
+"Knowledge of Delusion",
+"Reassert Fate",
+"Change Shape",
+"Cruel Majesty",
+"Sneak Attack",
+"Swallow Whole",
+"Grab"
+],
+"speed": 35,
+"other": {}
+},
+{
+"slug": "raktavarna",
+"name": "Raktavarna",
+"level": 1,
+"size": "tiny",
+"traits": [
+"rakshasa",
+"spirit",
+"unholy"
+],
+"strikes": [
+"Fangs"
+],
+"abilities": [
+"+2 Status to All Saves vs. Divine Magic",
+"Knowledge of Delusion",
+"Betraying Bite",
+"Change Shape",
+"Designate Master",
+"Raktavarna Venom"
+],
+"speed": 20,
+"other": {
+"climb": 20,
+"swim": 20
+}
+},
+{
+"slug": "rat-swarm",
+"name": "Rat Swarm",
+"level": 1,
+"size": "lg",
+"traits": [
+"animal",
+"swarm"
+],
+"strikes": [],
+"abilities": [
+"Swarm Mind",
+"Putrid Plague",
+"Swarming Bites"
+],
+"speed": 30,
+"other": {
+"climb": 10
+}
+},
+{
+"slug": "ratfolk-grenadier",
+"name": "Ratfolk Grenadier",
+"level": 4,
+"size": "sm",
+"traits": [
+"humanoid",
+"ratfolk"
+],
+"strikes": [
+"Fangs",
+"Alchemical Grenade",
+"Hand Crossbow"
+],
+"abilities": [
+"Alchemical Grenades",
+"Cheek Pouches",
+"Quick Grenadier",
+"Quick Stow",
+"Swarming"
+],
+"speed": 25,
+"other": {}
+},
+{
+"slug": "redcap",
+"name": "Redcap",
+"level": 5,
+"size": "sm",
+"traits": [
+"fey"
+],
+"strikes": [
+"Iron Boot",
+"Halberd"
+],
+"abilities": [
+"Red Cap",
+"Fast Healing 10",
+"Divine Revulsion",
+"Blood Soak",
+"Deadly Cleave",
+"Stomp"
+],
+"speed": 50,
+"other": {}
+},
+{
+"slug": "reefclaw",
+"name": "Reefclaw",
+"level": 1,
+"size": "sm",
+"traits": [
+"aberration",
+"aquatic"
+],
+"strikes": [
+"Claw"
+],
+"abilities": [
+"Death Frenzy",
+"Constrict",
+"Reefclaw Venom",
+"Grab"
+],
+"speed": 5,
+"other": {
+"swim": 30
+}
+},
+{
+"slug": "rekhep",
+"name": "Rekhep",
+"level": 10,
+"size": "lg",
+"traits": [
+"archon",
+"celestial",
+"holy"
+],
+"strikes": [
+"Holy Lance"
+],
+"abilities": [
+"Constant Spells",
+"All-Around Vision",
+"+1 Status to All Saves vs. Magic",
+"Archon's Protection",
+"Archon's Pursuit",
+"Courageous Switch",
+"Holy Armament",
+"Living Shield",
+"Terrifying Smite"
+],
+"speed": 30,
+"other": {
+"fly": 60
+}
+},
+{
+"slug": "revenant",
+"name": "Revenant",
+"level": 6,
+"size": "med",
+"traits": [
+"undead"
+],
+"strikes": [
+"Claw"
+],
+"abilities": [
+"Sense Murderer",
+"Self-Loathing",
+"Undying Vendetta",
+"Void Healing",
+"Baleful Shriek",
+"Constrict",
+"Grab"
+],
+"speed": 25,
+"other": {}
+},
+{
+"slug": "rhinoceros",
+"name": "Rhinoceros",
+"level": 4,
+"size": "lg",
+"traits": [
+"animal"
+],
+"strikes": [
+"Horn",
+"Foot"
+],
+"abilities": [
+"Rhinoceros Charge",
+"Trample"
+],
+"speed": 35,
+"other": {}
+},
+{
+"slug": "rhu-chalik",
+"name": "Rhu-Chalik",
+"level": 6,
+"size": "sm",
+"traits": [
+"aberration"
+],
+"strikes": [
+"Tendril"
+],
+"abilities": [
+"Greater Darkvision",
+"Telepathy 100 feet",
+"Thoughtsense 60 feet",
+"All-Around Vision",
+"No Breath",
+"Excruciating Enzyme",
+"Label Memories",
+"Transmit Memories"
+],
+"speed": 5,
+"other": {
+"fly": 35
+}
+},
+{
+"slug": "riding-dog",
+"name": "Riding Dog",
+"level": 1,
+"size": "med",
+"traits": [
+"animal"
+],
+"strikes": [
+"Jaws"
+],
+"abilities": [
+"Buck",
+"Pack Attack"
+],
+"speed": 35,
+"other": {}
+},
+{
+"slug": "riding-horse",
+"name": "Riding Horse",
+"level": 1,
+"size": "lg",
+"traits": [
+"animal"
+],
+"strikes": [
+"Hoof"
+],
+"abilities": [
+"Buck",
+"Gallop"
+],
+"speed": 40,
+"other": {}
+},
+{
+"slug": "riding-pony",
+"name": "Riding Pony",
+"level": 0,
+"size": "med",
+"traits": [
+"animal"
+],
+"strikes": [
+"Hoof"
+],
+"abilities": [
+"Buck",
+"Gallop"
+],
+"speed": 35,
+"other": {}
+},
+{
+"slug": "river-drake",
+"name": "River Drake",
+"level": 3,
+"size": "med",
+"traits": [
+"amphibious",
+"dragon",
+"water"
+],
+"strikes": [
+"Fangs",
+"Tail"
+],
+"abilities": [
+"Tail Lash",
+"Caustic Mucus",
+"Draconic Frenzy",
+"Speed Surge"
+],
+"speed": 20,
+"other": {
+"fly": 50,
+"swim": 30
+}
+},
+{
+"slug": "roc",
+"name": "Roc",
+"level": 9,
+"size": "grg",
+"traits": [
+"animal"
+],
+"strikes": [
+"Beak",
+"Talon",
+"Wing"
+],
+"abilities": [
+"Wing Rebuff",
+"Carry",
+"Flying Strafe",
+"Snack",
+"Improved Grab",
+"Improved Push 10 feet"
+],
+"speed": 20,
+"other": {
+"fly": 60
+}
+},
+{
+"slug": "rune-giant",
+"name": "Rune Giant",
+"level": 16,
+"size": "grg",
+"traits": [
+"giant",
+"humanoid",
+"unholy"
+],
+"strikes": [
+"Greatsword",
+"Longspear",
+"Fist"
+],
+"abilities": [
+"Constant Spells",
+"Reactive Strike (Special)",
+"Command Giants",
+"Demand",
+"Flashing Runes",
+"Invoke Rune",
+"Wide Swing"
+],
+"speed": 45,
+"other": {}
+},
+{
+"slug": "sargassum-heap",
+"name": "Sargassum Heap",
+"level": 6,
+"size": "lg",
+"traits": [
+"amphibious",
+"plant"
+],
+"strikes": [
+"Tendril"
+],
+"abilities": [
+"Wavesense (Precise) 60 feet",
+"Mirage Spores",
+"Constrict",
+"Grab"
+],
+"speed": 10,
+"other": {
+"climb": 10,
+"swim": 25
+}
+},
+{
+"slug": "sarglagon",
+"name": "Sarglagon",
+"level": 8,
+"size": "lg",
+"traits": [
+"amphibious",
+"devil",
+"fiend",
+"unholy"
+],
+"strikes": [
+"Fangs",
+"Tentacle Arm"
+],
+"abilities": [
+"Greater Darkvision",
+"Telepathy 100 feet",
+"Constant Spells",
+"+1 Status to All Saves vs. Magic",
+"Heavy Aura",
+"Stygian Guardian",
+"Drown",
+"Sarglagon Venom"
+],
+"speed": 25,
+"other": {
+"fly": 25,
+"swim": 30
+}
+},
+{
+"slug": "satyr",
+"name": "Satyr",
+"level": 4,
+"size": "med",
+"traits": [
+"fey"
+],
+"strikes": [
+"Dagger",
+"Dagger",
+"Shortbow"
+],
+"abilities": [
+"Sylvan Wine",
+"Fleet Performer",
+"Play the Pipes"
+],
+"speed": 35,
+"other": {}
+},
+{
+"slug": "scarecrow",
+"name": "Scarecrow",
+"level": 4,
+"size": "med",
+"traits": [
+"construct"
+],
+"strikes": [
+"Claw"
+],
+"abilities": [
+"Scarecrow's Leer",
+"Baleful Glow",
+"Clawing Fear",
+"Mundane Appearance"
+],
+"speed": 20,
+"other": {}
+},
+{
+"slug": "scorpion-swarm",
+"name": "Scorpion Swarm",
+"level": 4,
+"size": "lg",
+"traits": [
+"animal",
+"swarm"
+],
+"strikes": [],
+"abilities": [
+"Scorpion Venom",
+"Swarming Stings"
+],
+"speed": 25,
+"other": {}
+},
+{
+"slug": "sea-hag",
+"name": "Sea Hag",
+"level": 3,
+"size": "med",
+"traits": [
+"amphibious",
+"hag",
+"humanoid"
+],
+"strikes": [
+"Claw"
+],
+"abilities": [
+"Coven",
+"Sea Hag's Bargain",
+"+1 Status to All Saves vs. Magic",
+"Dread Gaze"
+],
+"speed": 25,
+"other": {
+"swim": 35
+}
+},
+{
+"slug": "sea-serpent",
+"name": "Sea Serpent",
+"level": 12,
+"size": "grg",
+"traits": [
+"animal",
+"aquatic"
+],
+"strikes": [
+"Jaws",
+"Tail",
+"Water Spout"
+],
+"abilities": [
+"Undetectable",
+"Capsize",
+"Constrict",
+"Sea Serpent Algae",
+"Spine Rake",
+"Swallow Whole",
+"Grab"
+],
+"speed": 20,
+"other": {
+"swim": 60
+}
+},
+{
+"slug": "sedacthy-marauder",
+"name": "Sedacthy Marauder",
+"level": 4,
+"size": "med",
+"traits": [
+"amphibious",
+"humanoid",
+"sedacthy"
+],
+"strikes": [
+"Claw",
+"Jaws",
+"Spear",
+"Spear"
+],
+"abilities": [
+"Sea Speech",
+"Wavesense (Imprecise) 30 feet",
+"Vengeful Throw",
+"Challenging Shriek",
+"Shared Feast"
+],
+"speed": 20,
+"other": {
+"swim": 40
+}
+},
+{
+"slug": "sedacthy-scout",
+"name": "Sedacthy Scout",
+"level": 2,
+"size": "med",
+"traits": [
+"amphibious",
+"humanoid",
+"sedacthy"
+],
+"strikes": [
+"Jaws",
+"Claw",
+"Spear",
+"Spear"
+],
+"abilities": [
+"Sea Speech",
+"Wavesense (Imprecise) 30 feet",
+"Shared Feast",
+"Wriggling Rush"
+],
+"speed": 20,
+"other": {
+"swim": 40
+}
+},
+{
+"slug": "sedacthy-speaker",
+"name": "Sedacthy Speaker",
+"level": 6,
+"size": "med",
+"traits": [
+"amphibious",
+"humanoid",
+"sedacthy"
+],
+"strikes": [
+"Claw",
+"Jaws",
+"Trident",
+"Trident"
+],
+"abilities": [
+"Sea Speech",
+"Wavesense (Imprecise) 30 feet",
+"Speaker's Privilege",
+"Animal Shield",
+"Exploit Weakness",
+"Painful Cry",
+"Shared Feast",
+"Swim Together"
+],
+"speed": 20,
+"other": {
+"swim": 40
+}
+},
+{
+"slug": "seraptis",
+"name": "Seraptis",
+"level": 15,
+"size": "med",
+"traits": [
+"demon",
+"fiend",
+"unholy"
+],
+"strikes": [
+"Wounding Scimitar",
+"Claw",
+"Caustic Blood"
+],
+"abilities": [
+"Telepathy 100 feet",
+"+1 Status to All Saves vs. Magic",
+"Blood Healing",
+"Recovery Vulnerability",
+"Bloody Dance",
+"Gnawing Arms",
+"Isolating Words",
+"Grab"
+],
+"speed": 40,
+"other": {
+"fly": 40
+}
+},
+{
+"slug": "sewer-ooze",
+"name": "Sewer Ooze",
+"level": 1,
+"size": "med",
+"traits": [
+"mindless",
+"ooze"
+],
+"strikes": [
+"Pseudopod"
+],
+"abilities": [
+"Motion Sense 60 feet",
+"Filth Wave"
+],
+"speed": 10,
+"other": {}
+},
+{
+"slug": "shadow-giant",
+"name": "Shadow Giant",
+"level": 13,
+"size": "lg",
+"traits": [
+"giant",
+"humanoid",
+"shadow"
+],
+"strikes": [
+"Spiked Chain",
+"Fist"
+],
+"abilities": [
+"Reactive Strike",
+"Pall of Shadow",
+"Shadow Chain",
+"Shadowcloak"
+],
+"speed": 35,
+"other": {}
+},
+{
+"slug": "shadow-spawn",
+"name": "Shadow Spawn",
+"level": 4,
+"size": "med",
+"traits": [
+"incorporeal",
+"undead",
+"unholy"
+],
+"strikes": [
+"Shadow Hand"
+],
+"abilities": [
+"Light Vulnerability",
+"Void Healing",
+"Slink in Shadows"
+],
+"speed": 0,
+"other": {
+"fly": 30
+}
+},
+{
+"slug": "shadow",
+"name": "Shadow",
+"level": 4,
+"size": "med",
+"traits": [
+"incorporeal",
+"undead",
+"unholy"
+],
+"strikes": [
+"Shadow Hand"
+],
+"abilities": [
+"Light Vulnerability",
+"Void Healing",
+"Shadow Spawn",
+"Slink in Shadows",
+"Steal Shadow"
+],
+"speed": 0,
+"other": {
+"fly": 30
+}
+},
+{
+"slug": "shemhazian",
+"name": "Shemhazian",
+"level": 16,
+"size": "grg",
+"traits": [
+"demon",
+"fiend",
+"unholy"
+],
+"strikes": [
+"Jaws",
+"Claw",
+"Pincer",
+"Tail"
+],
+"abilities": [
+"Telepathy 100 feet",
+"Constant Spells",
+"+1 Status to All Saves vs. Magic",
+"Paralyzing Gaze",
+"Succor Vulnerability",
+"Tail Whip",
+"Enfeebling Bite",
+"Focused Gaze",
+"Rend",
+"Improved Grab"
+],
+"speed": 35,
+"other": {
+"climb": 20,
+"fly": 35
+}
+},
+{
+"slug": "shining-child",
+"name": "Shining Child",
+"level": 12,
+"size": "med",
+"traits": [
+"astral"
+],
+"strikes": [
+"Fist",
+"Fire Ray"
+],
+"abilities": [
+"Telepathy 120 feet",
+"Radiance Dependence",
+"Blinding Aura",
+"Overwhelming Light"
+],
+"speed": 30,
+"other": {
+"fly": 50
+}
+},
+{
+"slug": "shuln",
+"name": "Shuln",
+"level": 12,
+"size": "huge",
+"traits": [
+"beast"
+],
+"strikes": [
+"Adamantine Claw",
+"Adamantine Fangs"
+],
+"abilities": [
+"Tremorsense (Imprecise) 60 feet",
+"Armor-Rending Strikes",
+"Shuln Saliva",
+"Unstoppable Burrow"
+],
+"speed": 40,
+"other": {
+"burrow": 20
+}
+},
+{
+"slug": "skeletal-champion",
+"name": "Skeletal Champion",
+"level": 2,
+"size": "med",
+"traits": [
+"skeleton",
+"undead",
+"unholy"
+],
+"strikes": [
+"Longsword",
+"Claw",
+"Lance"
+],
+"abilities": [
+"Reactive Strike",
+"Shield Block",
+"Void Healing"
+],
+"speed": 25,
+"other": {}
+},
+{
+"slug": "skeletal-giant",
+"name": "Skeletal Giant",
+"level": 3,
+"size": "lg",
+"traits": [
+"mindless",
+"skeleton",
+"undead",
+"unholy"
+],
+"strikes": [
+"Glaive",
+"Horns"
+],
+"abilities": [
+"Void Healing",
+"Broad Swipe",
+"Terrifying Charge"
+],
+"speed": 30,
+"other": {}
+},
+{
+"slug": "skeletal-horse",
+"name": "Skeletal Horse",
+"level": 2,
+"size": "lg",
+"traits": [
+"mindless",
+"skeleton",
+"undead",
+"unholy"
+],
+"strikes": [
+"Hoof"
+],
+"abilities": [
+"Void Healing",
+"Gallop",
+"Undead Steed"
+],
+"speed": 40,
+"other": {}
+},
+{
+"slug": "skeletal-hulk",
+"name": "Skeletal Hulk",
+"level": 7,
+"size": "huge",
+"traits": [
+"mindless",
+"skeleton",
+"undead",
+"unholy"
+],
+"strikes": [
+"Claw"
+],
+"abilities": [
+"Void Healing",
+"Broad Swipe",
+"Massive Rush"
+],
+"speed": 30,
+"other": {}
+},
+{
+"slug": "skeleton-guard",
+"name": "Skeleton Guard",
+"level": -1,
+"size": "med",
+"traits": [
+"mindless",
+"skeleton",
+"undead",
+"unholy"
+],
+"strikes": [
+"Scimitar",
+"Claw",
+"Shortbow"
+],
+"abilities": [
+"Void Healing"
+],
+"speed": 25,
+"other": {}
+},
+{
+"slug": "skulltaker",
+"name": "Skulltaker",
+"level": 18,
+"size": "huge",
+"traits": [
+"undead",
+"unholy"
+],
+"strikes": [
+"Jaws",
+"Claw",
+"Bone Javelin"
+],
+"abilities": [
+"Skeletal Lore",
+"Constant Spells",
+"+1 Status to All Saves vs. Vitality",
+"Shard Storm",
+"Void Healing",
+"Bonetaker",
+"Splintered Ground",
+"Vitality Drain"
+],
+"speed": 30,
+"other": {
+"fly": 60
+}
+},
+{
+"slug": "slothspawn",
+"name": "Slothspawn",
+"level": 2,
+"size": "med",
+"traits": [
+"aberration"
+],
+"strikes": [
+"Jaws",
+"Claw",
+"Longspear"
+],
+"abilities": [
+"Sin Scent (Imprecise) 30 feet",
+"+1 Status to All Saves vs. Magic",
+"+4 Status to All Saves vs. Mental",
+"Reactive Strike",
+"Sinful Bite"
+],
+"speed": 30,
+"other": {}
+},
+{
+"slug": "slurk",
+"name": "Slurk",
+"level": 2,
+"size": "med",
+"traits": [
+"animal"
+],
+"strikes": [
+"Tusks",
+"Slime Squirt"
+],
+"abilities": [
+"+2 to Fortitude Saves vs. Grapple, Reposition, or Shove",
+"Belly Grease",
+"Entangling Slime"
+],
+"speed": 30,
+"other": {
+"climb": 30
+}
+},
+{
+"slug": "smaranava",
+"name": "Smaranava",
+"level": 7,
+"size": "lg",
+"traits": [
+"beast"
+],
+"strikes": [
+"Fangs",
+"Tail"
+],
+"abilities": [
+"Coils of Knowledge",
+"Constrict",
+"Smaranava Venom"
+],
+"speed": 30,
+"other": {
+"swim": 30
+}
+},
+{
+"slug": "smilodon",
+"name": "Smilodon",
+"level": 6,
+"size": "lg",
+"traits": [
+"animal"
+],
+"strikes": [
+"Fangs",
+"Claw"
+],
+"abilities": [
+"Pierce Armor",
+"Pounce",
+"Sneak Attack",
+"Grab"
+],
+"speed": 30,
+"other": {}
+},
+{
+"slug": "snapping-flytrap",
+"name": "Snapping Flytrap",
+"level": 3,
+"size": "lg",
+"traits": [
+"mindless",
+"plant"
+],
+"strikes": [
+"Leaf"
+],
+"abilities": [
+"Tremorsense (Imprecise) 30 feet",
+"Quick Capture",
+"Focused Assault",
+"Hungry Flurry",
+"Swallow Whole",
+"Improved Grab"
+],
+"speed": 15,
+"other": {}
+},
+{
+"slug": "snow-oni",
+"name": "Snow Oni",
+"level": 13,
+"size": "lg",
+"traits": [
+"cold",
+"giant",
+"humanoid",
+"oni"
+],
+"strikes": [
+"Fist",
+"Jaws",
+"Ice Dart"
+],
+"abilities": [
+"Greater Darkvision",
+"Snow Vision",
+"Bean Panic",
+"Icy Deflection",
+"Reactive Strike",
+"Change Shape",
+"Chilling Combo",
+"Falling Frozen Lightning"
+],
+"speed": 40,
+"other": {
+"fly": 40
+}
+},
+{
+"slug": "sod-hound",
+"name": "Sod Hound",
+"level": 3,
+"size": "sm",
+"traits": [
+"earth",
+"elemental"
+],
+"strikes": [
+"Jaws"
+],
+"abilities": [
+"Crystal Sense (Imprecise) 60 feet",
+"Earth Glide",
+"Knockdown"
+],
+"speed": 30,
+"other": {
+"burrow": 20
+}
+},
+{
+"slug": "soulbound-doll-brave",
+"name": "Soulbound Doll (Brave)",
+"level": 2,
+"size": "tiny",
+"traits": [
+"construct",
+"soulbound"
+],
+"strikes": [
+"Fist"
+],
+"abilities": [
+"Personality Fragments"
+],
+"speed": 20,
+"other": {}
+},
+{
+"slug": "soulbound-doll-calm",
+"name": "Soulbound Doll (Calm)",
+"level": 2,
+"size": "tiny",
+"traits": [
+"construct",
+"soulbound"
+],
+"strikes": [
+"Fist"
+],
+"abilities": [
+"Personality Fragments"
+],
+"speed": 20,
+"other": {}
+},
+{
+"slug": "soulbound-doll-careful",
+"name": "Soulbound Doll (Careful)",
+"level": 2,
+"size": "tiny",
+"traits": [
+"construct",
+"soulbound"
+],
+"strikes": [
+"Fist"
+],
+"abilities": [
+"Personality Fragments"
+],
+"speed": 20,
+"other": {}
+},
+{
+"slug": "soulbound-doll-cruel",
+"name": "Soulbound Doll (Cruel)",
+"level": 2,
+"size": "tiny",
+"traits": [
+"construct",
+"soulbound"
+],
+"strikes": [
+"Fist"
+],
+"abilities": [
+"Personality Fragments"
+],
+"speed": 20,
+"other": {}
+},
+{
+"slug": "soulbound-doll-gentle",
+"name": "Soulbound Doll (Gentle)",
+"level": 2,
+"size": "tiny",
+"traits": [
+"construct",
+"soulbound"
+],
+"strikes": [
+"Fist"
+],
+"abilities": [
+"Personality Fragments"
+],
+"speed": 20,
+"other": {}
+},
+{
+"slug": "soulbound-doll-impish",
+"name": "Soulbound Doll (Impish)",
+"level": 2,
+"size": "tiny",
+"traits": [
+"construct",
+"soulbound"
+],
+"strikes": [
+"Fist"
+],
+"abilities": [
+"Personality Fragments"
+],
+"speed": 20,
+"other": {}
+},
+{
+"slug": "soulbound-doll-jolly",
+"name": "Soulbound Doll (Jolly)",
+"level": 2,
+"size": "tiny",
+"traits": [
+"construct",
+"soulbound"
+],
+"strikes": [
+"Fist"
+],
+"abilities": [
+"Personality Fragments"
+],
+"speed": 20,
+"other": {}
+},
+{
+"slug": "soulbound-doll-kind",
+"name": "Soulbound Doll (Kind)",
+"level": 2,
+"size": "tiny",
+"traits": [
+"construct",
+"soulbound"
+],
+"strikes": [
+"Fist"
+],
+"abilities": [
+"Personality Fragments"
+],
+"speed": 20,
+"other": {}
+},
+{
+"slug": "soulbound-doll-rash",
+"name": "Soulbound Doll (Rash)",
+"level": 2,
+"size": "tiny",
+"traits": [
+"construct",
+"soulbound"
+],
+"strikes": [
+"Fist"
+],
+"abilities": [
+"Personality Fragments"
+],
+"speed": 20,
+"other": {}
+},
+{
+"slug": "soulbound-doll-sassy",
+"name": "Soulbound Doll (Sassy)",
+"level": 2,
+"size": "tiny",
+"traits": [
+"construct",
+"soulbound"
+],
+"strikes": [
+"Fist"
+],
+"abilities": [
+"Personality Fragments"
+],
+"speed": 20,
+"other": {}
+},
+{
+"slug": "soulbound-doll-timid",
+"name": "Soulbound Doll (Timid)",
+"level": 2,
+"size": "tiny",
+"traits": [
+"construct",
+"soulbound"
+],
+"strikes": [
+"Fist"
+],
+"abilities": [
+"Personality Fragments"
+],
+"speed": 20,
+"other": {}
+},
+{
+"slug": "soulbound-homunculus",
+"name": "Soulbound Homunculus",
+"level": 0,
+"size": "tiny",
+"traits": [
+"construct",
+"soulbound"
+],
+"strikes": [
+"Jaws"
+],
+"abilities": [
+"Homunculus Poison"
+],
+"speed": 15,
+"other": {
+"fly": 40
+}
+},
+{
+"slug": "sphinx",
+"name": "Sphinx",
+"level": 8,
+"size": "lg",
+"traits": [
+"beast"
+],
+"strikes": [
+"Claw"
+],
+"abilities": [
+"Bardic Lore",
+"Constant Spells",
+"Claw Rake",
+"Pounce",
+"Riddler's Rune"
+],
+"speed": 35,
+"other": {
+"fly": 40
+}
+},
+{
+"slug": "spider-swarm",
+"name": "Spider Swarm",
+"level": 0,
+"size": "lg",
+"traits": [
+"animal",
+"swarm"
+],
+"strikes": [],
+"abilities": [
+"Web Sense",
+"Swarm Mind",
+"Spider Swarm Venom",
+"Swarming Bites"
+],
+"speed": 20,
+"other": {
+"climb": 20
+}
+},
+{
+"slug": "sprigjack",
+"name": "Sprigjack",
+"level": -1,
+"size": "tiny",
+"traits": [
+"fey",
+"plant",
+"wood"
+],
+"strikes": [
+"Claw",
+"Splinter"
+],
+"abilities": [
+"Bramble Jump"
+],
+"speed": 25,
+"other": {}
+},
+{
+"slug": "sprite",
+"name": "Sprite",
+"level": -1,
+"size": "tiny",
+"traits": [
+"fey",
+"sprite"
+],
+"strikes": [
+"Rapier",
+"Luminous Spark"
+],
+"abilities": [
+"Luminous Fire"
+],
+"speed": 10,
+"other": {
+"fly": 40
+}
+},
+{
+"slug": "stegosaurus",
+"name": "Stegosaurus",
+"level": 7,
+"size": "huge",
+"traits": [
+"animal",
+"dinosaur"
+],
+"strikes": [
+"Tail",
+"Foot"
+],
+"abilities": [
+"Dorsal Deflection",
+"Trample"
+],
+"speed": 25,
+"other": {}
+},
+{
+"slug": "stone-bulwark",
+"name": "Stone Bulwark",
+"level": 11,
+"size": "lg",
+"traits": [
+"construct",
+"mindless"
+],
+"strikes": [
+"Fist",
+"Rock"
+],
+"abilities": [
+"Statuary Aura",
+"Binding Stone",
+"Inexorable March",
+"Throw Rock"
+],
+"speed": 20,
+"other": {}
+},
+{
+"slug": "stone-giant",
+"name": "Stone Giant",
+"level": 8,
+"size": "lg",
+"traits": [
+"earth",
+"giant",
+"humanoid"
+],
+"strikes": [
+"Greatclub",
+"Fist",
+"Rock"
+],
+"abilities": [
+"Swat Projectile",
+"Big Swing",
+"Create Boulder"
+],
+"speed": 35,
+"other": {}
+},
+{
+"slug": "stone-mauler",
+"name": "Stone Mauler",
+"level": 9,
+"size": "lg",
+"traits": [
+"earth",
+"elemental"
+],
+"strikes": [
+"Fist",
+"Rock"
+],
+"abilities": [
+"Tremorsense (Imprecise) 80 feet",
+"Earthbound",
+"Crumble",
+"Spike Stones",
+"Earth Glide",
+"Push 10 feet"
+],
+"speed": 35,
+"other": {
+"burrow": 35
+}
+},
+{
+"slug": "string-slime",
+"name": "String Slime",
+"level": 3,
+"size": "lg",
+"traits": [
+"mindless",
+"ooze"
+],
+"strikes": [
+"Pseudopod"
+],
+"abilities": [
+"Motion Sense",
+"Split",
+"Tag Team",
+"Weak Acid"
+],
+"speed": 20,
+"other": {}
+},
+{
+"slug": "succubus",
+"name": "Succubus",
+"level": 7,
+"size": "med",
+"traits": [
+"demon",
+"fiend",
+"unholy"
+],
+"strikes": [
+"Claw"
+],
+"abilities": [
+"Telepathy 100 feet",
+"Constant Spells",
+"+1 Status to All Saves vs. Magic",
+"Rejection Vulnerability",
+"Seductive Presence",
+"Change Shape",
+"Embrace",
+"Passionate Kiss",
+"Profane Gift"
+],
+"speed": 25,
+"other": {
+"fly": 35
+}
+},
+{
+"slug": "sweet-hag",
+"name": "Sweet Hag",
+"level": 4,
+"size": "med",
+"traits": [
+"hag",
+"humanoid"
+],
+"strikes": [
+"Candy Cane Claw"
+],
+"abilities": [
+"Coven",
+"Constant Spells",
+"+1 Status to All Saves vs. Magic",
+"Betraying Touch",
+"Change Shape",
+"Poisoned Candy",
+"Soporific Touch"
+],
+"speed": 25,
+"other": {}
+},
+{
+"slug": "tabellia",
+"name": "Tabellia",
+"level": 14,
+"size": "med",
+"traits": [
+"angel",
+"celestial",
+"holy"
+],
+"strikes": [
+"Holy Warhammer"
+],
+"abilities": [
+"Constant Spells",
+"+1 Status to All Saves vs. Magic",
+"Messenger's Amnesty",
+"Traveler's Aura",
+"Stunning Strike"
+],
+"speed": 40,
+"other": {
+"fly": 75
+}
+},
+{
+"slug": "tarn-linnorm",
+"name": "Tarn Linnorm",
+"level": 20,
+"size": "grg",
+"traits": [
+"acid",
+"amphibious",
+"dragon"
+],
+"strikes": [
+"Jaws",
+"Claw",
+"Tail"
+],
+"abilities": [
+"Constant Spells",
+"All-Around Vision",
+"+1 Status to All Saves vs. Magic",
+"Regeneration 15 (Deactivated by Cold Iron)",
+"Curse of Death",
+"Reactive Strike (Tail Only)",
+"Constrict",
+"Corrosive Breath",
+"Double Bite",
+"Double Breath",
+"Tarn Linnorm Venom",
+"Improved Grab"
+],
+"speed": 35,
+"other": {
+"fly": 100,
+"swim": 80
+}
+},
+{
+"slug": "tengu-sneak",
+"name": "Tengu Sneak",
+"level": 2,
+"size": "med",
+"traits": [
+"humanoid",
+"tengu"
+],
+"strikes": [
+"Beak",
+"Wakizashi",
+"Shortbow"
+],
+"abilities": [
+"Eat Fortune",
+"Feather Fan Dustup",
+"Sneak Attack",
+"Surprise Attacker"
+],
+"speed": 25,
+"other": {}
+},
+{
+"slug": "terotricus",
+"name": "Terotricus",
+"level": 19,
+"size": "grg",
+"traits": [
+"fungus",
+"unholy"
+],
+"strikes": [
+"Tentacle",
+"Spores"
+],
+"abilities": [
+"Tremorsense (Imprecise) 120 feet",
+"+1 Status to All Saves vs. Magic",
+"Regeneration 25 (Deactivated by Cold)",
+"Spore Cloud",
+"Infest Environs",
+"Spore Blight",
+"Sticky Spores",
+"Improved Grab",
+"Improved Push 20 feet"
+],
+"speed": 35,
+"other": {
+"burrow": 25,
+"climb": 25,
+"swim": 35
+}
+},
+{
+"slug": "thulgant",
+"name": "Thulgant",
+"level": 18,
+"size": "lg",
+"traits": [
+"fiend",
+"qlippoth",
+"unholy"
+],
+"strikes": [
+"Stinger",
+"Tentacle"
+],
+"abilities": [
+"Telepathy 100 feet",
+"Constant Spells",
+"Fast Healing 10",
+"Demon Hunter",
+"Greater Constrict",
+"Mind-Rending Sting",
+"Stunning Display",
+"Thulgant Venom",
+"Grab"
+],
+"speed": 30,
+"other": {
+"climb": 30,
+"fly": 50
+}
+},
+{
+"slug": "tiger",
+"name": "Tiger",
+"level": 4,
+"size": "lg",
+"traits": [
+"animal"
+],
+"strikes": [
+"Jaws",
+"Claw"
+],
+"abilities": [
+"Pounce",
+"Sneak Attack",
+"Wrestle",
+"Grab"
+],
+"speed": 30,
+"other": {}
+},
+{
+"slug": "tomb-jelly",
+"name": "Tomb Jelly",
+"level": 5,
+"size": "lg",
+"traits": [
+"mindless",
+"ooze"
+],
+"strikes": [
+"Pseudopod"
+],
+"abilities": [
+"Motion Sense",
+"Bound in Death",
+"Flesh-dissolving Acid",
+"Tomb Curse"
+],
+"speed": 15,
+"other": {
+"climb": 10
+}
+},
+{
+"slug": "tooth-fairy-swarm",
+"name": "Tooth Fairy Swarm",
+"level": 3,
+"size": "lg",
+"traits": [
+"fey",
+"swarm"
+],
+"strikes": [],
+"abilities": [
+"Swarm Mind",
+"Plaque Burst",
+"Pinch",
+"Pry"
+],
+"speed": 10,
+"other": {
+"fly": 40
+}
+},
+{
+"slug": "tooth-fairy",
+"name": "Tooth Fairy",
+"level": -1,
+"size": "tiny",
+"traits": [
+"fey"
+],
+"strikes": [
+"Pliers"
+],
+"abilities": [
+"Plaque Burst",
+"Tooth Tug"
+],
+"speed": 10,
+"other": {
+"fly": 25
+}
+},
+{
+"slug": "tor-linnorm",
+"name": "Tor Linnorm",
+"level": 21,
+"size": "grg",
+"traits": [
+"dragon",
+"fire"
+],
+"strikes": [
+"Jaws",
+"Claw",
+"Tail"
+],
+"abilities": [
+"Constant Spells",
+"+1 Status to All Saves vs. Magic",
+"Regeneration 20 (Deactivated by Cold Iron)",
+"Curse of Boiling Blood",
+"Lava Affinity",
+"Reactive Strike (Tail Only)",
+"Constrict",
+"Pyroclastic Breath",
+"Slashing Claws",
+"Tor Linnorm Venom",
+"Improved Grab"
+],
+"speed": 35,
+"other": {
+"climb": 35,
+"fly": 100,
+"swim": 60
+}
+},
+{
+"slug": "treerazer",
+"name": "Treerazer",
+"level": 25,
+"size": "huge",
+"traits": [
+"amphibious",
+"demon",
+"fiend",
+"unholy"
+],
+"strikes": [
+"Blackaxe",
+"Jaws"
+],
+"abilities": [
+"Constant Spells",
+"+2 Status to All Saves vs. Magic",
+"Regeneration 50 (Deactivated by Holy)",
+"Aura of Corruption",
+"Reactive Strike",
+"Blackaxe - Owner's Authority",
+"Blackaxe - Owner's Reclamation",
+"Blackaxe - Rejuvenating Deforestation",
+"Defoliation",
+"Dispelling Strike",
+"Staggering Strike"
+],
+"speed": 60,
+"other": {
+"fly": 60,
+"swim": 40
+}
+},
+{
+"slug": "triceratops",
+"name": "Triceratops",
+"level": 8,
+"size": "huge",
+"traits": [
+"animal",
+"dinosaur"
+],
+"strikes": [
+"Horns",
+"Foot"
+],
+"abilities": [
+"Frill Defense",
+"Lumbering Charge",
+"Trample",
+"Vicious Gore",
+"Knockdown"
+],
+"speed": 30,
+"other": {}
+},
+{
+"slug": "troll-warleader",
+"name": "Troll Warleader",
+"level": 10,
+"size": "lg",
+"traits": [
+"giant",
+"humanoid",
+"troll",
+"wood"
+],
+"strikes": [
+"Jaws",
+"Claw",
+"Battle Axe"
+],
+"abilities": [
+"Easily Misled",
+"Regeneration 20 (Deactivated by Electricity or Fire)",
+"Furious Roar",
+"Reactive Strike",
+"Primordial Roar",
+"Shed Armor",
+"Sweeping Axes"
+],
+"speed": 30,
+"other": {}
+},
+{
+"slug": "twigjack",
+"name": "Twigjack",
+"level": 3,
+"size": "tiny",
+"traits": [
+"fey",
+"plant",
+"wood"
+],
+"strikes": [
+"Claw",
+"Splinter"
+],
+"abilities": [
+"Bramble Jump",
+"Splinter Spray"
+],
+"speed": 25,
+"other": {}
+},
+{
+"slug": "tyrannosaurus",
+"name": "Tyrannosaurus",
+"level": 10,
+"size": "grg",
+"traits": [
+"animal",
+"dinosaur"
+],
+"strikes": [
+"Jaws",
+"Foot"
+],
+"abilities": [
+"Fling",
+"Pin Prey",
+"Swallow Whole",
+"Trample",
+"Grab"
+],
+"speed": 40,
+"other": {}
+},
+{
+"slug": "ugothol",
+"name": "Ugothol",
+"level": 4,
+"size": "med",
+"traits": [
+"aberration"
+],
+"strikes": [
+"Longsword",
+"Claw"
+],
+"abilities": [
+"Constant Spells",
+"+2 Status to All Saves vs. Auditory and Visual",
+"Assume Form",
+"Blood Nourishment",
+"Compression",
+"Revert Form",
+"Sneak Attack",
+"Grab"
+],
+"speed": 25,
+"other": {}
+},
+{
+"slug": "umbral-gnome-rockwarden",
+"name": "Umbral Gnome Rockwarden",
+"level": 5,
+"size": "sm",
+"traits": [
+"gnome",
+"humanoid"
+],
+"strikes": [
+"Pick",
+"Sling"
+],
+"abilities": [],
+"speed": 15,
+"other": {}
+},
+{
+"slug": "umbral-gnome-scout",
+"name": "Umbral Gnome Scout",
+"level": 1,
+"size": "sm",
+"traits": [
+"gnome",
+"humanoid"
+],
+"strikes": [
+"Light Pick",
+"Sling"
+],
+"abilities": [
+"Hidden Movement"
+],
+"speed": 20,
+"other": {}
+},
+{
+"slug": "umbral-gnome-warrior",
+"name": "Umbral Gnome Warrior",
+"level": 2,
+"size": "sm",
+"traits": [
+"gnome",
+"humanoid"
+],
+"strikes": [
+"Spear",
+"Heavy Crossbow"
+],
+"abilities": [
+"Reactive Strike",
+"Shield Block"
+],
+"speed": 20,
+"other": {}
+},
+{
+"slug": "unicorn",
+"name": "Unicorn",
+"level": 3,
+"size": "lg",
+"traits": [
+"beast",
+"fey",
+"holy"
+],
+"strikes": [
+"Horn",
+"Hoof"
+],
+"abilities": [
+"Animal Empathy",
+"+2 to Will Saves vs. Mental",
+"Ghost Touch",
+"Powerful Charge"
+],
+"speed": 45,
+"other": {}
+},
+{
+"slug": "vampire-bat-swarm",
+"name": "Vampire Bat Swarm",
+"level": 1,
+"size": "lg",
+"traits": [
+"animal",
+"swarm"
+],
+"strikes": [],
+"abilities": [
+"Echolocation (Precise) 20 feet",
+"Swarm Mind",
+"Blood Feast"
+],
+"speed": 5,
+"other": {
+"fly": 30
+}
+},
+{
+"slug": "vampire-count",
+"name": "Vampire Count",
+"level": 6,
+"size": "med",
+"traits": [
+"undead",
+"unholy",
+"vampire"
+],
+"strikes": [
+"Rapier",
+"Claw"
+],
+"abilities": [
+"Children of the Night",
+"Fast Healing 7",
+"Coffin Restoration",
+"Mist Escape",
+"Vampire Vulnerabilities",
+"Void Healing",
+"Change Shape",
+"Create Servitor",
+"Dominate",
+"Drink Blood",
+"Turn to Mist",
+"Grab"
+],
+"speed": 25,
+"other": {
+"climb": 25
+}
+},
+{
+"slug": "vampire-mastermind",
+"name": "Vampire Mastermind",
+"level": 9,
+"size": "med",
+"traits": [
+"undead",
+"unholy",
+"vampire"
+],
+"strikes": [
+"Claw"
+],
+"abilities": [
+"Children of the Night",
+"Fast Healing 10",
+"Coffin Restoration",
+"Mist Escape",
+"Vampire Vulnerabilities",
+"Void Healing",
+"Change Shape",
+"Create Servitor",
+"Dominate",
+"Drain Bonded Item",
+"Drink Blood",
+"Steady Spellcasting"
+],
+"speed": 25,
+"other": {
+"climb": 25
+}
+},
+{
+"slug": "vampire-servitor",
+"name": "Vampire Servitor",
+"level": 4,
+"size": "med",
+"traits": [
+"undead",
+"unholy",
+"vampire"
+],
+"strikes": [
+"Claw"
+],
+"abilities": [
+"Fast Healing 5",
+"Coffin Restoration",
+"Vampire Vulnerabilities",
+"Void Healing",
+"Drink Blood",
+"Sneak Attack",
+"Grab"
+],
+"speed": 25,
+"other": {
+"climb": 25
+}
+},
+{
+"slug": "vanth",
+"name": "Vanth",
+"level": 7,
+"size": "med",
+"traits": [
+"monitor",
+"psychopomp"
+],
+"strikes": [
+"Scythe",
+"Jaws"
+],
+"abilities": [
+"Lifesense 60 feet",
+"+1 Status to All Saves vs. Magic",
+"Frightful Presence",
+"Reactive Strike",
+"Infuse Weapon",
+"Shepherd's Touch",
+"Vanth's Curse"
+],
+"speed": 25,
+"other": {
+"fly": 40
+}
+},
+{
+"slug": "velociraptor",
+"name": "Velociraptor",
+"level": 1,
+"size": "sm",
+"traits": [
+"animal",
+"dinosaur"
+],
+"strikes": [
+"Jaws",
+"Talon"
+],
+"abilities": [
+"Leaping Charge",
+"Pack Attack"
+],
+"speed": 40,
+"other": {}
+},
+{
+"slug": "venedaemon",
+"name": "Venedaemon",
+"level": 5,
+"size": "med",
+"traits": [
+"daemon",
+"fiend",
+"unholy"
+],
+"strikes": [
+"Tentacle"
+],
+"abilities": [
+"Telepathy 100 feet",
+"Smell Magic (Imprecise) 60 feet",
+"+1 Status to All Saves vs. Magic",
+"Residual Force",
+"Soul Spell",
+"Twisted Whispers"
+],
+"speed": 25,
+"other": {}
+},
+{
+"slug": "vescavor-queen",
+"name": "Vescavor Queen",
+"level": 9,
+"size": "lg",
+"traits": [
+"fiend",
+"unholy"
+],
+"strikes": [
+"Jaws",
+"Claw",
+"Stinger",
+"Spit"
+],
+"abilities": [
+"Chaotic Spawning",
+"Feeding Time",
+"Opportune Snack",
+"Rage Pheromones",
+"Grab"
+],
+"speed": 20,
+"other": {
+"fly": 50
+}
+},
+{
+"slug": "vescavor-swarm",
+"name": "Vescavor Swarm",
+"level": 5,
+"size": "lg",
+"traits": [
+"fiend",
+"swarm",
+"unholy"
+],
+"strikes": [],
+"abilities": [
+"Swarm Mind",
+"Devour All",
+"Maddening Gibbers",
+"Ravenous Bites"
+],
+"speed": 20,
+"other": {
+"fly": 40
+}
+},
+{
+"slug": "vicharamuni",
+"name": "Vicharamuni",
+"level": 10,
+"size": "lg",
+"traits": [
+"beast",
+"holy"
+],
+"strikes": [
+"Fangs",
+"Tail",
+"Spit"
+],
+"abilities": [
+"Coils of Knowledge",
+"Greater Constrict",
+"Spiritual Venom",
+"Vicharamuni Venom"
+],
+"speed": 25,
+"other": {
+"swim": 25
+}
+},
+{
+"slug": "vidileth",
+"name": "Vidileth",
+"level": 14,
+"size": "lg",
+"traits": [
+"aberration",
+"aquatic"
+],
+"strikes": [
+"Claw",
+"Fangs",
+"Tentacle"
+],
+"abilities": [
+"Numbing Lights",
+"Constant Spells",
+"+2 Status to All Saves vs. Magic",
+"Change Shape",
+"Consume Memories",
+"Delayed Suggestion",
+"Shape Flesh",
+"Tentacle Flurry",
+"Thoughtlance"
+],
+"speed": 10,
+"other": {
+"swim": 80
+}
+},
+{
+"slug": "vilderavn",
+"name": "Vilderavn",
+"level": 16,
+"size": "med",
+"traits": [
+"fey"
+],
+"strikes": [
+"Greatsword",
+"Jaws",
+"Talon"
+],
+"abilities": [
+"Greater Darkvision",
+"Constant Spells",
+"Aura of Disquietude",
+"Reactive Strike",
+"Bloodbird",
+"Change Shape",
+"Souleater"
+],
+"speed": 40,
+"other": {
+"fly": 120
+}
+},
+{
+"slug": "viper",
+"name": "Viper",
+"level": -1,
+"size": "tiny",
+"traits": [
+"animal"
+],
+"strikes": [
+"Fangs"
+],
+"abilities": [
+"Slink",
+"Viper Venom"
+],
+"speed": 20,
+"other": {
+"climb": 20,
+"swim": 20
+}
+},
+{
+"slug": "voidworm",
+"name": "Voidworm",
+"level": 1,
+"size": "tiny",
+"traits": [
+"monitor",
+"protean"
+],
+"strikes": [
+"Jaws",
+"Tail"
+],
+"abilities": [
+"Entropy Sense (Imprecise) 30 feet",
+"Constant Spells",
+"Fast Healing 1",
+"Protean Anatomy 5",
+"Change Shape",
+"Confounding Lash"
+],
+"speed": 20,
+"other": {
+"fly": 40
+}
+},
+{
+"slug": "vordine",
+"name": "Vordine",
+"level": 5,
+"size": "med",
+"traits": [
+"devil",
+"fiend",
+"unholy"
+],
+"strikes": [
+"Trident",
+"Whip",
+"Hoof",
+"Trident"
+],
+"abilities": [
+"Greater Darkvision",
+"Telepathy 100 feet",
+"+1 Status to All Saves vs. Magic",
+"Reactive Strike",
+"Burning Hoofprints",
+"Trident of Dis"
+],
+"speed": 25,
+"other": {}
+},
+{
+"slug": "vrolikai",
+"name": "Vrolikai",
+"level": 20,
+"size": "lg",
+"traits": [
+"demon",
+"fiend",
+"unholy"
+],
+"strikes": [
+"Jaws",
+"Black Flame Knife",
+"Stinger"
+],
+"abilities": [
+"Telepathy 100 Feet",
+"Constant Spells",
+"+1 Status to All Saves vs. Magic",
+"Death-Stealing Gaze",
+"Black Flame Knives",
+"Consume Death",
+"Focused Flames",
+"Mindwarping"
+],
+"speed": 35,
+"other": {
+"fly": 50
+}
+},
+{
+"slug": "war-horse",
+"name": "War Horse",
+"level": 2,
+"size": "lg",
+"traits": [
+"animal"
+],
+"strikes": [
+"Hoof"
+],
+"abilities": [
+"Buck",
+"Gallop"
+],
+"speed": 40,
+"other": {}
+},
+{
+"slug": "war-pony",
+"name": "War Pony",
+"level": 1,
+"size": "med",
+"traits": [
+"animal"
+],
+"strikes": [
+"Hoof"
+],
+"abilities": [
+"Buck",
+"Gallop"
+],
+"speed": 35,
+"other": {}
+},
+{
+"slug": "warg",
+"name": "Warg",
+"level": 2,
+"size": "med",
+"traits": [
+"beast"
+],
+"strikes": [
+"Jaws"
+],
+"abilities": [
+"Avenging Bite",
+"Pack Attack",
+"Swallow Whole",
+"Grab"
+],
+"speed": 40,
+"other": {}
+},
+{
+"slug": "warsworn",
+"name": "Warsworn",
+"level": 16,
+"size": "grg",
+"traits": [
+"undead",
+"unholy"
+],
+"strikes": [
+"Corpse Wave",
+"Animated Weapon",
+"Scrap Ball"
+],
+"abilities": [
+"+1 Status to All Saves vs. Vitality",
+"Frightful Presence",
+"Reactive Strike",
+"Void Healing",
+"Absorb",
+"Animated Weapons",
+"Energy Drain",
+"Plummet",
+"Trample"
+],
+"speed": 30,
+"other": {}
+},
+{
+"slug": "wasp-swarm",
+"name": "Wasp Swarm",
+"level": 4,
+"size": "lg",
+"traits": [
+"animal",
+"swarm"
+],
+"strikes": [],
+"abilities": [
+"Swarm Mind",
+"Swarming Stings",
+"Wasp Venom"
+],
+"speed": 20,
+"other": {
+"fly": 40
+}
+},
+{
+"slug": "water-scamp",
+"name": "Water Scamp",
+"level": 1,
+"size": "sm",
+"traits": [
+"amphibious",
+"elemental",
+"water"
+],
+"strikes": [
+"Claw"
+],
+"abilities": [
+"Fast Healing 2 (While Underwater)",
+"Acid Breath",
+"Drench"
+],
+"speed": 20,
+"other": {
+"fly": 25,
+"swim": 25
+}
+},
+{
+"slug": "werebear",
+"name": "Werebear",
+"level": 4,
+"size": "lg",
+"traits": [
+"beast",
+"human",
+"humanoid",
+"werecreature"
+],
+"strikes": [
+"Greataxe",
+"Hatchet",
+"Hatchet"
+],
+"abilities": [
+"Bear Empathy",
+"Change Shape",
+"Curse of the Werebear",
+"Hunt Prey",
+"Mauler",
+"Moon Frenzy"
+],
+"speed": 25,
+"other": {}
+},
+{
+"slug": "wererat",
+"name": "Wererat",
+"level": 2,
+"size": "med",
+"traits": [
+"beast",
+"human",
+"humanoid",
+"werecreature"
+],
+"strikes": [
+"Shortsword",
+"Hand Crossbow"
+],
+"abilities": [
+"Rat Empathy",
+"Nimble Dodge",
+"Change Shape",
+"Curse of the Wererat",
+"Moon Frenzy",
+"Sneak Attack"
+],
+"speed": 25,
+"other": {}
+},
+{
+"slug": "weretiger",
+"name": "Weretiger",
+"level": 4,
+"size": "lg",
+"traits": [
+"beast",
+"human",
+"humanoid",
+"werecreature"
+],
+"strikes": [],
+"abilities": [
+"Tiger Empathy",
+"Reactive Strike",
+"Change Shape",
+"Curse of the Weretiger",
+"Moon Frenzy",
+"Pounce",
+"Rend",
+"Wrestle"
+],
+"speed": 25,
+"other": {}
+},
+{
+"slug": "werewolf",
+"name": "Werewolf",
+"level": 3,
+"size": "med",
+"traits": [
+"beast",
+"human",
+"humanoid",
+"werecreature"
+],
+"strikes": [
+"Battle Axe",
+"Composite Shortbow"
+],
+"abilities": [
+"Wolf Empathy",
+"Reactive Strike",
+"Change Shape",
+"Curse of the Werewolf",
+"Moon Frenzy",
+"Pack Attack",
+"Knockdown (Animal Shape)"
+],
+"speed": 25,
+"other": {}
+},
+{
+"slug": "wight",
+"name": "Wight",
+"level": 3,
+"size": "med",
+"traits": [
+"undead",
+"unholy",
+"wight"
+],
+"strikes": [
+"Claw",
+"Dagger",
+"Dagger"
+],
+"abilities": [
+"Grave Weapon",
+"Final Spite",
+"Fueled by Spite",
+"Void Healing",
+"Corrupting Spite"
+],
+"speed": 25,
+"other": {}
+},
+{
+"slug": "will-o-wisp",
+"name": "Will-o'-Wisp",
+"level": 6,
+"size": "sm",
+"traits": [
+"aberration",
+"air"
+],
+"strikes": [
+"Shock"
+],
+"abilities": [
+"Glow",
+"Magic Immunity",
+"Feed on Fear",
+"Go Dark"
+],
+"speed": 0,
+"other": {
+"fly": 50
+}
+},
+{
+"slug": "winged-chupacabra",
+"name": "Winged Chupacabra",
+"level": 3,
+"size": "sm",
+"traits": [
+"beast"
+],
+"strikes": [
+"Jaws",
+"Claw"
+],
+"abilities": [
+"Pounce",
+"Suck Blood",
+"Grab"
+],
+"speed": 25,
+"other": {
+"fly": 50
+}
+},
+{
+"slug": "witchwarg",
+"name": "Witchwarg",
+"level": 5,
+"size": "lg",
+"traits": [
+"beast",
+"cold"
+],
+"strikes": [
+"Jaws"
+],
+"abilities": [
+"Avenging Bite",
+"Buck",
+"Pack Attack",
+"Winter Breath",
+"Knockdown"
+],
+"speed": 40,
+"other": {}
+},
+{
+"slug": "wolf",
+"name": "Wolf",
+"level": 1,
+"size": "med",
+"traits": [
+"animal"
+],
+"strikes": [
+"Jaws"
+],
+"abilities": [
+"Pack Attack",
+"Knockdown"
+],
+"speed": 35,
+"other": {}
+},
+{
+"slug": "woolly-rhinoceros",
+"name": "Woolly Rhinoceros",
+"level": 6,
+"size": "lg",
+"traits": [
+"animal"
+],
+"strikes": [
+"Horn",
+"Foot"
+],
+"abilities": [
+"+2 Status to All Saves vs. Cold",
+"Cold Adaptation",
+"Ferocity",
+"Rhinoceros Charge",
+"Trample"
+],
+"speed": 35,
+"other": {}
+},
+{
+"slug": "wraith",
+"name": "Wraith",
+"level": 6,
+"size": "med",
+"traits": [
+"incorporeal",
+"undead",
+"unholy",
+"wraith"
+],
+"strikes": [
+"Wraith Touch"
+],
+"abilities": [
+"Lifesense 60 feet",
+"Sunlight Powerlessness",
+"Void Healing",
+"Grip of Fear",
+"Robes of Welcome",
+"Void's Embrace"
+],
+"speed": 0,
+"other": {
+"fly": 40
+}
+},
+{
+"slug": "wrathspawn",
+"name": "Wrathspawn",
+"level": 2,
+"size": "med",
+"traits": [
+"aberration"
+],
+"strikes": [
+"Jaws",
+"Claw",
+"Ranseur"
+],
+"abilities": [
+"Sin Scent (Imprecise) 30 feet",
+"+1 Status to All Saves vs. Magic",
+"+4 Status to All Saves vs. Mental",
+"Reactive Strike",
+"Sinful Bite"
+],
+"speed": 30,
+"other": {}
+},
+{
+"slug": "wyvern",
+"name": "Wyvern",
+"level": 6,
+"size": "lg",
+"traits": [
+"dragon"
+],
+"strikes": [
+"Fangs",
+"Claw",
+"Stinger"
+],
+"abilities": [
+"Reactive Strike",
+"Savage",
+"Powerful Dive",
+"Punishing Momentum",
+"Wyvern Venom",
+"Grab"
+],
+"speed": 20,
+"other": {
+"fly": 60
+}
+},
+{
+"slug": "xoarian",
+"name": "Xoarian",
+"level": 8,
+"size": "sm",
+"traits": [
+"aberration"
+],
+"strikes": [
+"Tentacle"
+],
+"abilities": [
+"Tremorsense 60 feet",
+"Telepathy 100 feet",
+"Stolen Identity",
+"Thoughtsense 60 feet",
+"Body Thief",
+"Exit Body",
+"Ravage"
+],
+"speed": 35,
+"other": {
+"climb": 20
+}
+},
+{
+"slug": "xulgath-leader",
+"name": "Xulgath Leader",
+"level": 3,
+"size": "med",
+"traits": [
+"humanoid",
+"xulgath"
+],
+"strikes": [
+"Greataxe",
+"Jaws",
+"Claw",
+"Javelin"
+],
+"abilities": [
+"Stench",
+"Weakening Strike"
+],
+"speed": 25,
+"other": {}
+},
+{
+"slug": "xulgath-skulker",
+"name": "Xulgath Skulker",
+"level": 2,
+"size": "med",
+"traits": [
+"humanoid",
+"xulgath"
+],
+"strikes": [
+"Dagger",
+"Jaws",
+"Claw",
+"Dagger"
+],
+"abilities": [
+"Stench",
+"Hidden Movement",
+"Mask Stench",
+"Sneak Attack"
+],
+"speed": 25,
+"other": {}
+},
+{
+"slug": "xulgath-warrior",
+"name": "Xulgath Warrior",
+"level": 1,
+"size": "med",
+"traits": [
+"humanoid",
+"xulgath"
+],
+"strikes": [
+"Club",
+"Jaws",
+"Claw",
+"Club",
+"Javelin"
+],
+"abilities": [
+"Stench"
+],
+"speed": 25,
+"other": {}
+},
+{
+"slug": "yamaraj",
+"name": "Yamaraj",
+"level": 20,
+"size": "huge",
+"traits": [
+"monitor",
+"psychopomp"
+],
+"strikes": [
+"Jaws",
+"Claw",
+"Tail"
+],
+"abilities": [
+"Telepathy 120 feet",
+"Lifesense 240 feet",
+"Constant Spells",
+"+1 Status to All Saves vs. Magic",
+"Fast Healing 20",
+"Frightful Presence",
+"Lightning Drinker",
+"Beetle Breath",
+"Final Judgment",
+"Shepherd's Touch",
+"Yamaraj Venom",
+"Improved Grab"
+],
+"speed": 35,
+"other": {
+"fly": 50,
+"swim": 30
+}
+},
+{
+"slug": "yeti",
+"name": "Yeti",
+"level": 5,
+"size": "lg",
+"traits": [
+"humanoid"
+],
+"strikes": [
+"Claw"
+],
+"abilities": [
+"Snowblind",
+"Nightmare Guardian",
+"Vanish",
+"Arctic Passage",
+"Grizzly Arrival",
+"Rend"
+],
+"speed": 35,
+"other": {
+"climb": 20
+}
+},
+{
+"slug": "zecui",
+"name": "Zecui",
+"level": 6,
+"size": "med",
+"traits": [
+"aberration"
+],
+"strikes": [
+"Shortsword",
+"Mandibles",
+"Claws",
+"Spit"
+],
+"abilities": [
+"Preserve Prey",
+"Dual Stab",
+"Harden Chitin",
+"Spit Mucus",
+"Zecui Larvae"
+],
+"speed": 30,
+"other": {
+"burrow": 20,
+"climb": 20
+}
+},
+{
+"slug": "zephyr-hawk",
+"name": "Zephyr Hawk",
+"level": 3,
+"size": "sm",
+"traits": [
+"air",
+"elemental"
+],
+"strikes": [
+"Wing"
+],
+"abilities": [
+"Circling Attack"
+],
+"speed": 0,
+"other": {
+"fly": 50
+}
+},
+{
+"slug": "zoaem",
+"name": "Zoaem",
+"level": 1,
+"size": "sm",
+"traits": [
+"archon",
+"celestial",
+"holy"
+],
+"strikes": [
+"Eye Ray"
+],
+"abilities": [
+"All-Around Vision",
+"Archon's Protection",
+"Behold!",
+"Light of Truth"
+],
+"speed": 0,
+"other": {
+"fly": 40
+}
+},
+{
+"slug": "zombie-brute",
+"name": "Zombie Brute",
+"level": 2,
+"size": "lg",
+"traits": [
+"mindless",
+"undead",
+"unholy",
+"zombie"
+],
+"strikes": [
+"Fist"
+],
+"abilities": [
+"Slow",
+"Void Healing",
+"Improved Push"
+],
+"speed": 25,
+"other": {}
+},
+{
+"slug": "zombie-hulk",
+"name": "Zombie Hulk",
+"level": 6,
+"size": "huge",
+"traits": [
+"mindless",
+"undead",
+"unholy",
+"zombie"
+],
+"strikes": [
+"Hunk Of Meat",
+"Corpse"
+],
+"abilities": [
+"Slow",
+"Void Healing",
+"Corpse Throwing",
+"Wide Swing"
+],
+"speed": 25,
+"other": {}
+},
+{
+"slug": "zombie-shambler",
+"name": "Zombie Shambler",
+"level": -1,
+"size": "med",
+"traits": [
+"mindless",
+"undead",
+"unholy",
+"zombie"
+],
+"strikes": [
+"Fist",
+"Jaws"
+],
+"abilities": [
+"Slow",
+"Void Healing",
+"Grab"
+],
+"speed": 25,
+"other": {}
+},
+{
+"slug": "zyss-serpentfolk",
+"name": "Zyss Serpentfolk",
+"level": 2,
+"size": "med",
+"traits": [
+"humanoid",
+"serpentfolk"
+],
+"strikes": [
+"Fangs",
+"Dagger",
+"Shortbow"
+],
+"abilities": [
+"Telepathy 100 feet",
+"+1 Status to All Saves vs. Magic",
+"+4 Status to Will Saves vs. Mental",
+"Thin of Blood",
+"Serpentfolk Venom"
+],
+"speed": 25,
+"other": {}
+}
+]

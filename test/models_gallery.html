@@ -1,0 +1,171 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Model Gallery</title>
+<style>
+html,body{margin:0;background:#0d1214;color:#ddd;font:12px system-ui,sans-serif;overflow:hidden}
+#labels{position:absolute;left:0;top:0;pointer-events:none}
+.lb{position:absolute;transform:translate(-50%,0);white-space:nowrap;background:rgba(0,0,0,.55);padding:1px 4px;border-radius:3px;font-size:11px}
+#info{position:absolute;right:6px;top:4px;background:rgba(0,0,0,.6);padding:4px 8px;border-radius:4px;max-width:520px}
+</style></head>
+<body>
+<div id="labels"></div><div id="info">loading…</div>
+<script src="../vendor/three.min.js"></script>
+<script src="../src/models.js"></script>
+<script src="mc_list.js"></script>
+<script>
+(function () {
+'use strict';
+const Q = new URLSearchParams(location.search);
+const mode = Q.get('mode') || 'heroes';
+const W = +(Q.get('w') || 1600), H = +(Q.get('h') || 1000);
+const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+renderer.setSize(W, H); renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap; renderer.outputEncoding = THREE.sRGBEncoding;
+document.body.appendChild(renderer.domElement);
+const scene = new THREE.Scene(); scene.background = new THREE.Color('#1a2226');
+const camera = new THREE.PerspectiveCamera(+(Q.get('fov') || 38), W / H, 0.1, 400);
+scene.add(new THREE.HemisphereLight('#cfe3ff', '#3a2f22', 0.75));
+const sun = new THREE.DirectionalLight('#ffe9c4', 0.95); sun.castShadow = true; sun.shadow.mapSize.set(4096, 4096); sun.shadow.bias = -0.0008; sun.shadow.normalBias = 0.02;
+scene.add(sun); scene.add(sun.target);
+const ground = new THREE.Mesh(new THREE.PlaneGeometry(400, 400), new THREE.MeshStandardMaterial({ color: '#5b7340', roughness: 0.95 }));
+ground.rotation.x = -Math.PI / 2; ground.receiveShadow = true; scene.add(ground);
+const grid = new THREE.GridHelper(400, 400, 0x000000, 0x000000); grid.material.opacity = 0.18; grid.material.transparent = true; grid.position.y = 0.005; scene.add(grid);
+const M = PF.Models; const figs = []; const labels = [];
+const errors = []; window.addEventListener('error', e => errors.push(String(e.message)));
+function base(x, z, sq, col) {
+  const r = 0.44 * sq; const b = new THREE.Mesh(new THREE.CylinderGeometry(r, r * 1.04, 0.07, 28), new THREE.MeshStandardMaterial({ color: '#1b2226', roughness: 0.6 }));
+  b.position.set(x, 0.035, z); b.receiveShadow = true; scene.add(b);
+  const rim = new THREE.Mesh(new THREE.TorusGeometry(r, 0.035, 6, 32), new THREE.MeshStandardMaterial({ color: col, emissive: col, emissiveIntensity: 0.55 })); rim.rotation.x = Math.PI / 2; rim.position.set(x, 0.075, z); scene.add(rim);
+}
+function place(desc, x, z, label, opts) {
+  opts = opts || {};
+  let f;
+  try { f = M.create(desc); } catch (e) { errors.push(label + ': ' + e.message); console.error(e); return null; }
+  const sq = { tiny: 1, small: 1, medium: 1, large: 2, huge: 3, gargantuan: 4 }[desc.size || 'medium'] || 1;
+  f.group.position.set(x, opts.noBase ? 0 : 0.07, z); f.group.rotation.y = opts.ry != null ? opts.ry : 0.35;
+  scene.add(f.group); f.group.traverse(o => { if (o.isMesh) { o.castShadow = o.castShadow !== false; } });
+  if (!opts.noBase) base(x, z, sq, opts.color || '#e0524a');
+  figs.push(f); labels.push({ f, text: label, x, z }); f._label = label; return f;
+}
+const HEROES = [
+  ['fighter', 'human', 'longsword', 'sword', 'melee', 'steel', '#7f93a8', '#c8a24a', 'helm'], ['fighter', 'dwarf', 'greataxe', 'axe', 'melee', null, '#8a5a3a', '#c8a24a', 'helm'],
+  ['champion', 'human', 'longsword', 'sword', 'melee', 'steel', '#d8d0c0', '#c8a24a', 'helm'], ['champion', 'elf', 'greatsword', 'sword', 'melee', null, '#3a4a8a', '#d0d0e0', 'none'],
+  ['barbarian', 'orc', 'greataxe', 'axe', 'melee', null, '#6b4a30', '#a03020', 'none'], ['barbarian', 'human', 'maul', 'hammer', 'melee', null, '#5a6a40', '#c8a24a', 'helm'],
+  ['rogue', 'elf', 'rapier', 'sword', 'melee', null, '#4b3a5c', '#a8b3b0', 'hood'], ['rogue', 'halfling', 'shortsword', 'sword', 'melee', null, '#3a3a3a', '#a03030', 'none'],
+  ['ranger', 'elf', 'longbow', 'bow', 'ranged', null, '#3a5a3a', '#c8a24a', 'hood'], ['ranger', 'human', 'crossbow', 'bow', 'ranged', null, '#5a4a3a', '#8fc49a', 'hat'],
+  ['monk', 'human', 'fist', 'brawling', 'melee', null, '#c87a2a', '#3a2a1a', 'none'], ['monk', 'dwarf', 'staff', 'club', 'melee', null, '#8a2a2a', '#d8c070', 'none'],
+  ['bard', 'gnome', 'rapier', 'sword', 'melee', null, '#6a2a5a', '#e0c050', 'hat'], ['bard', 'human', 'shortsword', 'sword', 'melee', null, '#2a5a6a', '#d6825a', 'hat'],
+  ['cleric', 'human', 'mace', 'club', 'melee', 'steel', '#d8c48e', '#d9813a', 'hood'], ['cleric', 'dwarf', 'warhammer', 'hammer', 'melee', 'steel', '#8a8a9a', '#c8a24a', 'helm'],
+  ['wizard', 'human', 'staff', 'club', 'melee', null, '#3c5a8a', '#cfa64a', 'hat'], ['wizard', 'gnome', 'staff', 'club', 'melee', null, '#6a3a8a', '#e0c050', 'hood'],
+  ['sorcerer', 'elf', 'staff', 'club', 'melee', null, '#5a2a6a', '#e0a0ff', 'none'], ['sorcerer', 'goblin', 'dagger', 'knife', 'melee', null, '#8a3a2a', '#f0c060', 'none'],
+  ['druid', 'halfling', 'sickle', 'knife', 'melee', null, '#4a5a2a', '#8a6a3a', 'none'], ['druid', 'orc', 'staff', 'club', 'melee', null, '#5a4a2a', '#7a9a4a', 'hood'],
+  ['fighter', 'goblin', 'dogslicer', 'sword', 'melee', null, '#7a4a2a', '#c8a24a', 'none'], ['fighter', 'orc', 'glaive', 'polearm', 'melee', null, '#5a5a6a', '#c04020', 'helm'],
+  ['ranger', 'halfling', 'shortbow', 'bow', 'ranged', null, '#4a6a3a', '#c8a24a', 'none'], ['champion', 'dwarf', 'warhammer', 'hammer', 'melee', 'tower', '#8a3030', '#e0c060', 'helm'],
+  ['fighter', 'elf', 'spear', 'spear', 'melee', null, '#4a6a8a', '#c0c0c0', 'none'], ['cleric', 'gnome', 'morningstar', 'club', 'melee', null, '#f0e0c0', '#4a8ac0', 'none']
+];
+function heroUnit(h, i) {
+  const [cls, anc, wid, group, kind, sh, body, trim, acc] = h;
+  return { kind: 'pc', id: 'h' + i, name: cls + ' ' + anc, cls, anc, size: ['gnome', 'goblin', 'halfling'].includes(anc) ? 'small' : 'medium', look: { body, trim, acc }, strikes: [{ wid, group, kind, name: wid }], shield: sh ? { name: sh === 'tower' ? 'Tower Shield' : 'Steel Shield', tower: sh === 'tower' } : null };
+}
+let MC = null;
+function mc(name) { return MC.find(c => c.name === name); }
+function mcDesc(c) { return M.descForCreature(c.name, c.traits, c.size, c.strikes, Object.assign({ land: c.speed }, c.other || {})); }
+const MONS = ['Goblin Warrior', 'Kobold Scout', 'Hobgoblin Soldier', 'Orc Veteran', 'Lizardfolk Defender', 'Boggard Warrior', 'Catfolk Pouncer', 'Ratfolk Grenadier', 'Tengu Sneak', 'Kholo Hunter', 'Bugbear Prowler', 'Aapoph Serpentfolk',
+  'Skeleton Guard', 'Zombie Shambler', 'Ghoul Stalker', 'Mummy Guardian', 'Vampire Count', 'Lich', 'Wight', 'Wraith', 'Banshee', 'Ghost Commoner', 'Shadow', 'Grim Reaper',
+  'Imp', 'Succubus', 'Nessari', 'Balisse', 'Sprite', 'Pixie', 'Dryad', 'Redcap', 'Satyr', 'Cuckoo Hag', 'Medusa', 'Harpy', 'Lamia', 'Merfolk Warrior', 'Centaur Herbalist', 'Minotaur Hunter',
+  'Ogre Warrior', 'Forest Troll', 'Cyclops', 'Fire Giant', 'Frost Giant', 'Stone Giant', 'Mountain Oni', 'Animated Armor', 'Animated Statue', 'Iron Warden', 'Clay Effigy', 'Scarecrow', 'Soulbound Doll (Brave)', 'Leaf Leshy', 'Fungus Leshy', 'Gourd Leshy',
+  'Living Wildfire', 'Living Landslide', 'Living Whirlwind', 'Living Waterfall', 'Fire Scamp', 'Ifrit', 'Wolf', 'Dire Wolf', 'Warg', 'Hell Hound', 'Hyena', 'Grizzly Bear', 'Cave Bear', 'Boar', 'Lion', 'Tiger', 'Leopard', 'Smilodon', 'Riding Horse', 'War Pony', 'Unicorn', 'Pegasus', 'Nightmare', 'Rhinoceros', 'Elephant', 'Mammoth', 'Gorilla', 'Giant Rat', 'Guard Dog',
+  'Crocodile', 'Giant Gecko', 'Giant Monitor Lizard', 'Basilisk', 'Velociraptor', 'Deinonychus', 'Tyrannosaurus', 'Triceratops', 'Stegosaurus', 'Ankylosaurus', 'Brontosaurus', 'Hadrosaurid', 'Pteranodon', 'Quetzalcoatlus',
+  'Adamantine Dragon (Young)', 'Diabolic Dragon (Adult)', 'Empyreal Dragon (Young)', 'Horned Dragon (Young)', 'Omen Dragon (Young)', 'Fortune Dragon (Young)', 'Mirage Dragon (Young)', 'Conspirator Dragon (Young)', 'Flame Drake', 'Frost Drake', 'Wyvern', 'Crag Linnorm', 'Hydra',
+  'Sphinx', 'Chimera', 'Manticore (Scorpion Tail)', 'Griffon', 'Hippogriff', 'Eagle', 'Roc', 'Phoenix', 'Cockatrice', 'Giant Bat', 'Hunting Spider', 'Giant Tarantula', 'Giant Scorpion', 'Giant Ant', 'Giant Stag Beetle', 'Giant Mantis', 'Giant Wasp', 'Giant Centipede',
+  'Giant Viper', 'Python', 'Giant Anaconda', 'Sea Serpent', 'Cave Worm', 'Great White Shark', 'Bottlenose Dolphin', 'Orca', 'Giant Moray Eel', 'Giant Octopus', 'Kraken', 'Reefclaw', 'Sewer Ooze', 'Living Tar', 'Tomb Jelly',
+  'Rat Swarm', 'Spider Swarm', 'Vampire Bat Swarm', 'Wasp Swarm', 'Awakened Tree', 'Giant Flytrap', 'Sargassum Heap', 'Bogwid', 'Will-o\'-Wisp', 'Crawling Hand', 'Gargoyle', 'Owlbear', 'Dragon Turtle', 'Hippocampus', 'Animated Broom', 'Yeti', 'Werewolf', 'Gogiteth', 'Xoarian'];
+const OWLBEAR = { plan: 'quadruped', name: 'Owlbear', size: 'large', variant: 'owlbear', palette: { body: '#7a5a3a', head: '#c9a874' }, f: {} };
+
+async function setup() {
+  MC = window.MC_LIST || []; if (!MC.length) errors.push('mc_list.js missing');
+  let cx = 0, cz = 0, span = 10;
+  if (mode === 'heroes') {
+    const cols = 7; HEROES.forEach((h, i) => { const x = (i % cols) * 1.6, z = Math.floor(i / cols) * 2.0; place(M.descForUnit(heroUnit(h, i)), x, z, h[0] + '/' + h[1], { color: '#4fa8e0' }); });
+    cx = 4.8; cz = 3; span = 9;
+  } else if (mode === 'monsters' || mode === 'monsters2' || mode === 'monsters3' || mode === 'monsters4') {
+    const page = mode === 'monsters' ? 0 : +mode.slice(-1) - 1; const per = 45;
+    const names = MONS.slice(page * per, page * per + per);
+    let x = 0, z = 0, rowH = 0; const rowW = +(Q.get('roww') || 22);
+    names.forEach(n => {
+      const c = n === 'Owlbear' ? null : mc(n); const d = c ? mcDesc(c) : n === 'Owlbear' ? OWLBEAR : null; if (!d) { errors.push('missing ' + n); return; }
+      const sq = { tiny: 1, small: 1, medium: 1, large: 2, huge: 3, gargantuan: 4 }[d.size] || 1;
+      if (x + sq > rowW) { x = 0; z += rowH + 1.2; rowH = 0; }
+      place(d, x + sq / 2, z + sq / 2, n + ' [' + d.plan + ']'); x += sq + 0.6; rowH = Math.max(rowH, sq);
+    });
+    cx = rowW / 2; cz = z / 2 + 1; span = Math.max(rowW, z) * 0.62;
+  } else if (mode === 'plans') {
+    const P = Q.get('only') ? Q.get('only').split(',') : M.plans; let i = 0; const cols = 8;
+    P.forEach(p => { const d = PLAN_EX[p] ? PLAN_EX[p]() : { plan: p, size: 'medium' }; if (!Q.get('native')) d.size = ({ huge: 'large', gargantuan: 'large' })[d.size] || d.size; const f = place(d, (i % cols) * 3.0, Math.floor(i / cols) * 3.4, p + ': ' + (d.name || '')); i++; });
+    cx = (cols - 1) * 1.5; cz = Math.floor((P.length - 1) / cols) * 1.7; span = 11;
+  } else if (mode === 'closeup') {
+    const which = (Q.get('which') || 'fighter/human,wizard/human,ranger/elf,barbarian/orc,cleric/dwarf').split(',');
+    which.forEach((w, i) => {
+      let d; const [a, b] = w.split('/');
+      if (b) { const h = HEROES.find(h => h[0] === a && h[1] === b) || HEROES[0]; d = M.descForUnit(heroUnit(h, i)); }
+      else if (w.includes('.')) { const [pl, va, sz] = w.split('.'); d = PLAN_EX[pl] ? PLAN_EX[pl](va) : { plan: pl, variant: va, size: sz || 'medium', palette: {}, f: {} }; if (va) d.variant = va; if (sz) d.size = sz; }
+      else { const c = mc(w.replace(/_/g, ' ')); d = c ? mcDesc(c) : (w === 'Owlbear' ? OWLBEAR : PLAN_EX[w] ? PLAN_EX[w]() : { plan: w }); }
+      const sq = { tiny: 1, small: 1, medium: 1, large: 2, huge: 3, gargantuan: 4 }[d.size] || 1;
+      const gap = (Q.get('gap') ? +Q.get('gap') : 1.2); const prev = figs.length ? figs[figs.length - 1] : null; const px = prev ? prev.group.position.x + gap * Math.max(1, (prev._sq || 1) * 0.5 + sq * 0.5) : 0;
+      const ff = place(d, px, 0, w, { ry: +(Q.get('ry') || 0.5) }); if (ff) ff._sq = sq;
+    });
+    const xs = figs.map(f => f.group.position.x); cx = (Math.min(...xs) + Math.max(...xs)) / 2; cz = 0; span = +(Q.get('span') || ((Math.max(...xs) - Math.min(...xs)) / 2 + 1.2));
+  } else if (mode === 'poses') {
+    const who = Q.get('who') || 'fighter/human';
+    const clips = (Q.get('clips') || 'melee,ranged,cast,hit,block,die').split(',');
+    const fr = (Q.get('fr') || '0.2,0.4,0.55,0.7,1').split(',').map(Number);
+    const mk = () => { const [a, b] = who.split('/'); if (b) { const h = HEROES.find(h => h[0] === a && h[1] === b) || HEROES[0]; return M.descForUnit(heroUnit(h, 0)); } const c = mc(who.replace(/_/g, ' ')); return c ? mcDesc(c) : (who === 'Owlbear' ? OWLBEAR : { plan: who }); };
+    const d0 = mk(); const sq = { tiny: 1, small: 1, medium: 1, large: 2, huge: 3, gargantuan: 4 }[d0.size] || 1; const g = Math.max(+(Q.get('g') || 1.3), sq * 1.15);
+    clips.forEach((c, ci) => fr.forEach((t, ti) => {
+      const [cn, st] = c.split(':');
+      const f = place(mk(), ti * g, ci * g * 1.25, cn + (st ? ':' + st : '') + ' ' + t, { ry: +(Q.get('ry') || 0.9) }); if (!f) return;
+      if (cn === 'walk') { f.setMoving(true, 4); for (let k = 0; k < Math.round(t * 30); k++) f.update(1 / 60); f._frozen = true; return; }
+      if (['prone', 'down', 'dead'].includes(cn)) { f.setPose(cn, true); f.update(0.016); f._frozen = true; return; }
+      if (cn === 'fly') { f.setFlying(true, true); for (let k = 0; k < Math.round(t * 30); k++) f.update(1 / 60); f._frozen = true; return; }
+      if (cn === 'shield') { f.setShield(true); for (let k = 0; k < 40; k++) f.update(1 / 60); f._frozen = true; return; }
+      if (cn === 'stand') { f.setPose('prone', true); f.update(0.01); }
+      f.play(cn, { style: st, color: '#ff8a2a', variant: st }); const dur = f.active ? f.active.dur : 1;
+      const steps = Math.max(1, Math.round(t * dur / (1 / 120))); for (let k = 0; k < steps; k++) f.update(t * dur / steps); f._frozen = true;
+    }));
+    cx = (fr.length - 1) * g / 2; cz = (clips.length - 1) * g * 1.25 / 2; span = Math.max(fr.length * g, clips.length * g * 1.25) * 0.55;
+  } else if (mode === 'check') {
+    const plans = {}; let ok = 0, fail = 0, maxMesh = 0; const fails = [];
+    MC.forEach(c => { try { const d = mcDesc(c); if (!M.plans.includes(d.plan)) throw new Error('plan ' + d.plan); plans[d.plan] = (plans[d.plan] || 0) + 1; const f = M.create(d); f.update(0.016); f.play('melee'); f.update(0.3); maxMesh = Math.max(maxMesh, f.meshCount); f.dispose(); ok++; } catch (e) { fail++; fails.push(c.name + ': ' + e.message); } });
+    window.CHECK = { total: MC.length, ok, fail, plans, maxMesh, fails };
+    document.getElementById('info').textContent = JSON.stringify(window.CHECK);
+    window.READY = true; return;
+  }
+  const yaw = +(Q.get('yaw') || 0.0), pitch = +(Q.get('pitch') || 0.9), dist = +(Q.get('dist') || span * 2.1);
+  cx = Q.get('cx') ? +Q.get('cx') : cx; cz = Q.get('cz') ? +Q.get('cz') : cz;
+  const ty = +(Q.get('ty') || 0.5);
+  camera.position.set(cx + Math.sin(yaw) * Math.cos(pitch) * dist, ty + Math.sin(pitch) * dist, cz + Math.cos(yaw) * Math.cos(pitch) * dist); camera.lookAt(cx, ty, cz);
+  sun.position.set(cx - 12, 22, cz + 6); sun.target.position.set(cx, 0, cz);
+  const sc = sun.shadow.camera; const sp = span * 1.6 + 6; sc.left = -sp; sc.right = sp; sc.top = sp; sc.bottom = -sp; sc.near = 1; sc.far = 80; sc.updateProjectionMatrix();
+  // animate a little (unless frozen)
+  const anim = Q.get('anim');
+  figs.forEach((f, i) => { if (anim === 'walk' && !f._frozen) f.setMoving(true, 4); for (let k = 0; k < 20; k++) if (!f._frozen) f.update(1 / 60); });
+  renderer.render(scene, camera);
+  drawLabels();
+  let tris = 0, calls = 0; renderer.info.autoReset = true; renderer.render(scene, camera); calls = renderer.info.render.calls; tris = renderer.info.render.triangles;
+  document.getElementById('info').textContent = mode + ' figs=' + figs.length + ' drawcalls=' + calls + ' tris=' + tris + ' meshes/fig max=' + Math.max(0, ...figs.map(f => f.meshCount)) + (errors.length ? ' ERR ' + errors.join('; ') : '');
+  window.READY = true; window.ERRS = errors;
+  if (Q.get('live')) { let last = performance.now(); const loop = n => { const dt = (n - last) / 1000; last = n; figs.forEach(f => f._frozen || f.update(dt)); renderer.render(scene, camera); drawLabels(); requestAnimationFrame(loop); }; requestAnimationFrame(loop); }
+}
+function drawLabels() {
+  if (Q.get('nolabels')) return;
+  const el = document.getElementById('labels'); el.innerHTML = '';
+  labels.forEach(l => { const v = new THREE.Vector3(l.f.group.position.x, l.f.group.position.y - 0.05, l.f.group.position.z + 0.5).project(camera); const d = document.createElement('div'); d.className = 'lb'; d.textContent = l.text; d.style.left = ((v.x + 1) / 2 * W) + 'px'; d.style.top = ((1 - v.y) / 2 * H) + 'px'; el.appendChild(d); });
+}
+const PLAN_EX = {};
+window.PLAN_EX = PLAN_EX;
+// one representative creature per body plan (Monster Core names, or hand-built descs)
+const PLAN_MC = { humanoid: 'Hobgoblin Soldier', quadruped: 'Grizzly Bear', dragon: 'Diabolic Dragon (Young)', drake: 'Flame Drake', linnorm: 'Ice Linnorm', biped: 'Velociraptor', bird: 'Giant Eagle', bat: 'Giant Bat', hydra: 'Hydra', centaur: 'Centaur Herbalist',
+  spider: 'Hunting Spider', scorpion: 'Giant Scorpion', crab: 'Reefclaw', insect: 'Giant Ant', centipede: 'Giant Centipede', serpent: 'Python', worm: 'Cave Worm', fish: 'Great White Shark', octopus: 'Giant Octopus',
+  ooze: 'Sewer Ooze', aberration: 'Irnakurse', plant: 'Giant Flytrap', wisp: "Will-o'-Wisp", hand: 'Giant Crawling Hand', object: 'Animated Broom', swarm: 'Rat Swarm', ghost: 'Ghost Commoner', elemental: 'Living Wildfire', tree: 'Awakened Tree' };
+Object.keys(PLAN_MC).forEach(k => { PLAN_EX[k] = (va) => { const c = (window.MC_LIST || []).find(c => c.name === PLAN_MC[k]); const d = c ? PF.Models.descForCreature(c.name, c.traits, c.size, c.strikes, Object.assign({ land: c.speed }, c.other || {})) : { plan: k }; if (va) d.variant = va; if (d.plan !== k) d.plan = k; return d; }; });
+setup().catch(e => { errors.push(String(e.stack || e)); document.getElementById('info').textContent = 'ERR ' + e.stack; window.READY = true; });
+})();
+</script></body></html>
