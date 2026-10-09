@@ -904,6 +904,33 @@ details[open] summary { margin-bottom: 8px; }
 .maps { grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); }
 .flyout { background: var(--sheen), linear-gradient(180deg, #0f2129, #070f13) !important; box-shadow: -20px 0 60px rgba(0, 0, 0, .6); }
 .spellbook, .result, .inspect, .help, .modal-card { background: var(--sheen), linear-gradient(180deg, #10212a, #070f13); }
+.shot, .spellbook { bottom: calc(var(--hudb, 228px) + 8px); }
+.log { bottom: calc(var(--hudb, 228px) + 8px); }
+.ainfo { overflow: hidden; max-width: min(760px, 100%); }
+@media (max-width: 760px) { .shot { max-height: calc(100% - var(--hudb, 260px) - 120px); } .log { bottom: 0; } .spellbook { max-height: calc(100% - var(--hudb, 260px) - 120px); } }
+@media (max-width: 760px) {
+  .bar .bar-title { flex: 1; min-width: 0; }
+  .bar .bar-title small { display: none; }
+  .bar h2 { font-size: 17px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .bar .grow { display: none; }
+  .bar .btn { min-height: 40px; padding: 6px 10px; }
+  .bar-sum .pill:nth-child(n+4) { display: none; }
+  .roster-list { display: flex; overflow-x: auto; gap: 6px; padding-bottom: 4px; }
+  .roster-list .sec-label { display: none; }
+  .roster-list .empty { display: none; }
+  .roster-list .rchar { flex: 0 0 auto; width: auto; max-width: 180px; border-color: var(--line); background: rgba(5, 12, 15, .6); }
+  #roster .bar .btn.ghost:not([data-go]) { padding: 6px 8px; }
+  .item.foe .ctl .seg button { padding: 3px 6px; }
+}
+@media (max-width: 760px) {
+  .roster-list { min-height: 62px; align-items: stretch; }
+  .roster-list .rchar { min-height: 52px; }
+  #btnNewChar, #btnRandChar { font-size: 0; gap: 0; min-width: 44px; }
+  #btnNewChar svg, #btnRandChar svg { width: 20px; height: 20px; }
+  .bf-head .btn { flex: 1 1 auto; }
+}
+@media (max-width: 760px) { .bf-head h3 { flex-basis: 100%; } }
+.agroup { flex: 0 0 auto; }
 
 </style>
 <div id="app">
@@ -6692,6 +6719,7 @@ BC.markPlates = () => {
 BC.frame = () => {
   if (!BC.B) return;
   const R = App.R;
+  const hb = $('#hudBottom').offsetHeight; if (hb !== BC._hb) { BC._hb = hb; $('#battle').style.setProperty('--hudb', hb + 'px'); }
   Object.keys(BC.plates).forEach(id => { const p = BC.plates[id]; const sc = R.unitScreen(id); if (!sc || sc.behind) { p.el.style.display = 'none'; return; } p.el.style.display = ''; p.el.style.left = sc.x + 'px'; p.el.style.top = sc.y + 'px'; });
   const t = performance.now() / 1000;
   Object.values(BC.rings).forEach(r => { if (!r.visible) return; const ru = R.units[r.userData.id]; if (!ru || ru.dead) { r.visible = false; return; } const pz = ru.g.position; r.position.set(pz.x, pz.y + 0.07, pz.z); const s = (ru.sq || 1) * (1 + (reduced() ? 0 : 0.05 * Math.sin(t * 5))); r.scale.set(s, s, s); r.rotation.y = reduced() ? 0 : t * 0.6; });
