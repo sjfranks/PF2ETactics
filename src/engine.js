@@ -41,8 +41,15 @@ PF.COND = {
   unconscious: { n: 'Unconscious', bad: 1, d: '−4 status penalty to AC, Perception and Reflex; off-guard, prone, can’t act.' },
   dying: { n: 'Dying', v: 1, bad: 1, d: 'You die at dying 4. Recovery check (DC 10 + dying) each turn.' },
   wounded: { n: 'Wounded', v: 1, bad: 1, d: 'Gaining dying adds your wounded value.' },
-  quickened: { n: 'Quickened', d: 'An extra action each turn (limited by the source).' }
+  quickened: { n: 'Quickened', d: 'An extra action each turn (limited by the source).' },
+  fascinated: { n: 'Fascinated', bad: 1, d: '−2 status penalty to Perception and skill checks. Ends if anyone acts hostile toward you.' },
+  confused: { n: 'Confused', bad: 1, d: 'Off-guard, no reactions; you attack or wander at random. Each time you take damage, a DC 11 flat check ends it.' },
+  doomed: { n: 'Doomed', v: 1, bad: 1, d: 'You die at a lower dying value (4 minus doomed).' },
+  petrified: { n: 'Petrified', bad: 1, d: 'Turned to stone: you can’t act and are off-guard.' },
+  controlled: { n: 'Controlled', bad: 1, d: 'Another creature dictates your actions (here: you can’t act).' }
 };
+// condition keys that a creature's immunity list can block (immunity names as in Monster Core)
+const COND_IMM = { offguard: 'off-guard', frightened: 'fear', paralyzed: 'paralyzed', unconscious: 'unconscious', blinded: 'blinded', dazzled: 'dazzled', deafened: 'deafened', confused: 'confused', fascinated: 'fascinated', doomed: 'doomed', drained: 'drained', petrified: 'petrified', controlled: 'controlled', stunned: 'stunned', slowed: 'slowed', sickened: 'sickened', fatigued: 'fatigued', enfeebled: 'enfeebled', clumsy: 'clumsy', stupefied: 'stupefied', grabbed: 'grabbed', restrained: 'restrained', immobilized: 'immobilized', prone: 'prone', fleeing: 'fleeing' };
 const SAVES = ['fort', 'ref', 'will'];
 const CHECKS = ['atk', 'ac', 'fort', 'ref', 'will', 'per', 'spellatk', 'spelldc', 'classdc'];
 
@@ -105,10 +112,12 @@ PF.Battle = function (cfg) {
   B.get = id => B.units.find(u => u.id === id) || null;
   B.alive = u => !!u && !u.dead;
   B.conscious = u => B.alive(u) && !B.cv(u, 'unconscious') && u.hp > 0;
-  B.canAct = u => B.conscious(u) && !B.cv(u, 'paralyzed');
+  B.canAct = u => B.conscious(u) && !B.cv(u, 'paralyzed') && !B.cv(u, 'petrified') && !B.cv(u, 'controlled');
   B.isUndead = u => u.traits.includes('undead');
-  B.isLiving = u => !B.isUndead(u) && !u.traits.includes('construct');
-  B.immuneTo = (u, trait) => (u.immune || []).includes(trait) || (trait === 'mental' && u.traits.includes('mindless'));
+  // void healing: undead and creatures with the Void Healing ability are healed by void and harmed by vitality
+  B.voidHealing = u => B.isUndead(u) || !!(u.flags && u.flags.voidHealing);
+  B.isLiving = u => !B.voidHealing(u) && !u.traits.includes('construct');
+  B.immuneTo = (u, trait) => (u.immune || []).includes(trait) || (trait === 'mental' && u.traits.includes('mindless')) || (trait === 'fear' && (u.immune || []).includes('mental') && false);
   B.foesOf = u => B.units.filter(t => t.team !== u.team && B.alive(t));
   B.alliesOf = u => B.units.filter(t => t.team === u.team && B.alive(t) && t !== u);
   B.maxHP = u => Math.max(1, u.maxHP - (B.cv(u, 'drained') * Math.max(1, u.level)));
@@ -252,6 +261,7 @@ PF.Battle = function (cfg) {
     if (k === 'frightened' && (t.flags.auraOfCourage)) v = Math.max(0, v - 1);
     if (k === 'paralyzed' && B.immuneTo(t, 'paralyzed')) { B.log(B.nm(t) + ' is immune to paralysis.', 'dim'); return; }
     if ((k === 'unconscious') && B.immuneTo(t, 'sleep') && extra && extra.sleep) return;
+    if (COND_IMM[k] && k !== 'paralyzed' && B.immuneTo(t, COND_IMM[k]) && !(k === 'unconscious' && t.hp <= 0)) { if (src) B.log(B.nm(t) + ' is immune to ' + (PF.COND[k] ? PF.COND[k].n.toLowerCase() : k) + '.', 'dim'); return; }
     if (v <= 0) return;
     const cur = t.cond[k];
     if (cur && (cur.v || 1) >= v && !(exp && cur.exp && false)) { if (!cur.exp || !exp) { if (!exp) cur.exp = null; } return; }
@@ -260,7 +270,7 @@ PF.Battle = function (cfg) {
     if (k === 'stunned' || k === 'paralyzed' || k === 'unconscious') { t.fx = t.fx.filter(f => f.key !== 'takeCover'); }
     B.touch(t);
   };
-  B.clrC = (t, k) => { if (t.cond[k]) { delete t.cond[k]; if (k === 'prone') B.emit({ t: 'prone', u: t.id, v: false }); B.touch(t); } };
+  B.clrC = (t, k) => { if (t.cond[k]) { delete t.cond[k]; if (k === 'prone') B.emit({ t: 'prone', u: t.id, v: false }); if (k === 'sickened' && t.cond.slowed && t.cond.slowed.whileSick) delete t.cond.slowed; B.touch(t); } };
   B.decC = (t, k, by = 1) => { const c = t.cond[k]; if (!c) return; c.v = (c.v || 1) - by; if (c.v <= 0) B.clrC(t, k); else B.touch(t); };
   B.condList = u => {
     const out = [];
@@ -332,6 +342,7 @@ PF.Battle = function (cfg) {
     if (c('fatigued') && (sel === 'ac' || SAVES.includes(sel))) list.push({ t: 'status', v: -1, s: 'fatigued' });
     if (c('unconscious') && ['ac', 'per', 'ref'].includes(sel)) list.push({ t: 'status', v: -4, s: 'unconscious' });
     if (c('deafened') && sel === 'per') list.push({ t: 'status', v: -2, s: 'deafened' });
+    if (c('fascinated') && (sel === 'per' || isSkill)) list.push({ t: 'status', v: -2, s: 'fascinated' });
     if (sel === 'atk' && c('prone')) list.push({ t: 'circ', v: -2, s: 'prone' });
     if (sel === 'ac' && u.flags.formation && B.alliesOf(u).some(a => a.flags.formation && B.inReach(u, a, 5))) list.push({ t: 'circ', v: 1, s: 'formation' });
     if (sel === 'ac' && u.prey == null && false) list.push();
@@ -343,8 +354,8 @@ PF.Battle = function (cfg) {
     if (sel === 'ac') { base.push({ t: 'unt', v: u.st.ac.base, s: 'base' }); if (u.st.ac.item) base.push({ t: 'item', v: u.st.ac.item, s: 'armor' }); if (u.shield && u.shield.raised && !u.shield.broken) base.push({ t: 'circ', v: u.shield.ac, s: 'shield raised' }); }
     else if (SAVES.includes(sel) || sel === 'per') { const s = u.st[sel]; base.push({ t: 'unt', v: s.base, s: 'base' }); if (s.item) base.push({ t: 'item', v: s.item, s: 'item' }); }
     else if (sel.startsWith('skill:')) { const s = u.st.skills[sel.slice(6)] || { base: 0, item: 0 }; base.push({ t: 'unt', v: s.base, s: 'base' }); if (s.item) base.push({ t: 'item', v: s.item, s: 'item' }); }
-    else if (sel === 'spelldc') base.push({ t: 'unt', v: u.st.spellDC || u.st.classDC || 10, s: 'base' });
-    else if (sel === 'spellatk') base.push({ t: 'unt', v: u.st.spellAtk != null ? u.st.spellAtk : (u.st.classDC || 10) - 10, s: 'base' });
+    else if (sel === 'spelldc') base.push({ t: 'unt', v: u._entry ? u._entry.dc : (u.st.spellDC || u.st.classDC || 10), s: 'base' });
+    else if (sel === 'spellatk') base.push({ t: 'unt', v: u._entry ? u._entry.atk : (u.st.spellAtk != null ? u.st.spellAtk : (u.st.classDC || 10) - 10), s: 'base' });
     else if (sel === 'classdc') base.push({ t: 'unt', v: u.st.classDC || 10, s: 'base' });
     return base.concat(B.mods(u, sel, ctx));
   };
@@ -378,7 +389,8 @@ PF.Battle = function (cfg) {
     if (c('offguard')) return 'off-guard';
     if (c('prone')) return 'prone';
     if (c('grabbed') || c('restrained')) return 'grabbed';
-    if (c('paralyzed')) return 'paralyzed';
+    if (c('paralyzed') || c('petrified')) return 'paralyzed';
+    if (c('confused')) return 'confused';
     if (c('unconscious')) return 'unconscious';
     if (c('blinded')) return 'blinded';
     if (t.fx.some(f => f.offGuard && (!f.vs || (a && f.vs === a.id)) && (!f.melee || (a && a._meleeNow)))) return 'feinted';
@@ -422,8 +434,17 @@ PF.Battle = function (cfg) {
   B.fmtCheck = (c, label) => (label ? label + ': ' : '') + 'd20 ' + c.txt + ' ' + U.sgn(c.mod) + ' = ' + c.total + ' vs ' + c.dc + ' → ' + PF.DEG[c.deg] + (c.used && PF.modText(c.used) ? ' (' + PF.modText(c.used) + ')' : '');
 
   // saving throw by t vs dc; returns degree. o: {basic, src, origin (pt or unit), fear, mental, incap, rank, spell, area}
+  // tags describing the effect a save is against (for "+1 status to all saves vs. magic" and similar)
+  B.saveTags = (o = {}) => {
+    const tags = new Set(o.tags || []); (o.traits || []).forEach(x => tags.add(x));
+    if (o.spell) { tags.add('magical'); tags.add('spell'); } if (o.trad) tags.add(o.trad); if (o.magical) tags.add('magical');
+    if (o.fear) tags.add('fear'); if (o.mental) tags.add('mental'); if (o.emotion) tags.add('emotion'); if (o.area) tags.add('area-effect');
+    ['arcane', 'divine', 'occult', 'primal'].forEach(tr => { if (tags.has(tr)) tags.add('magical'); });
+    return tags;
+  };
   B.save = (t, kind, dc, o = {}) => {
     const mods = [];
+    if (t.saveMods && t.saveMods.length) { const tags = B.saveTags(o); t.saveMods.forEach(m => { if ((m.sel === 'save' || m.sel === kind) && (!m.vs || !m.vs.length || m.vs.some(v => tags.has(v)))) mods.push({ t: m.t || 'status', v: m.v, s: m.s || ('vs ' + (m.vs || []).join('/')) }); }); }
     if (o.area && kind === 'ref') { const c = B.coverVs(t, o.origin || o.src); const m = B.coverMod(c); if (m) mods.push({ t: 'circ', v: m, s: B.COVERN[c] }); }
     if (o.spell && t.flags.divineGrace && t.react > 0 && !B.cv(t, 'unconscious')) { /* used only if it matters (below) */ }
     const ctx = { fear: !!o.fear, mental: !!o.mental };
@@ -444,15 +465,30 @@ PF.Battle = function (cfg) {
 
   /* ===== damage ===== */
   const PHYS = ['bludgeoning', 'piercing', 'slashing'];
-  B.resistOf = (t, type) => {
-    let r = 0; const R = Object.assign({}, t.resist);
+  // resistance to one damage type; o: {magical, spell, traits, mat}. t.resistX[key] = {except:[...], double:[...]}
+  const exceptHit = (X, type, o) => X && X.except && X.except.some(e => e === type || (o.traits && o.traits.includes(e)) || (o.mat && o.mat === e) || (e === 'magical' && o.magical));
+  B.resistOf = (t, type, o = {}) => {
+    let r = 0; const R = Object.assign({}, t.resist); const RX = t.resistX || {};
     t.fx.forEach(f => { if (f.resist) Object.keys(f.resist).forEach(k => { R[k] = Math.max(R[k] || 0, f.resist[k]); }); });
-    if (R[type]) r = Math.max(r, R[type]);
-    if (PHYS.includes(type) && R.physical) r = Math.max(r, R.physical);
-    if (R.all && type !== 'untyped') r = Math.max(r, R.all);
+    const val = k => { if (!R[k] || exceptHit(RX[k], type, o)) return 0; let v = R[k]; if (RX[k] && RX[k].double && RX[k].double.some(d => d === 'non-magical' ? !o.magical : (o.traits || []).includes(d))) v *= 2; return v; };
+    r = Math.max(r, val(type));
+    if (PHYS.includes(type)) r = Math.max(r, val('physical'));
+    if (type !== 'untyped' || true) r = Math.max(r, val('all'));
+    if (o.spell) r = Math.max(r, val('spells'));
+    if (type === 'void' || type === 'vitality' || type === 'spirit') r = Math.max(r, val(type));
+    (o.traits || []).forEach(tr => { if (['air', 'earth', 'metal', 'water', 'wood', 'holy', 'unholy'].includes(tr)) r = Math.max(r, val(tr)); });
     return r;
   };
-  B.weakOf = (t, type) => { const W = t.weak || {}; let w = W[type] || 0; if (PHYS.includes(type) && W.physical) w = Math.max(w, W.physical); return w; };
+  B.weakOf = (t, type, o = {}) => { const W = t.weak || {}; let w = W[type] || 0; if (PHYS.includes(type) && W.physical) w = Math.max(w, W.physical); return w; };
+  // weaknesses triggered by the effect rather than by a damage type (holy/unholy traits, area, splash, axe…)
+  B.traitWeak = (t, o = {}) => {
+    const W = t.weak || {}; let w = 0, why = '';
+    const chk = (k, cond) => { if (W[k] && cond && W[k] > w) { w = W[k]; why = k; } };
+    const tr = o.traits || [];
+    ['holy', 'unholy', 'earth', 'water', 'air', 'metal', 'wood', 'fire', 'cold'].forEach(k => chk(k, tr.includes(k) && !['fire', 'cold'].includes(k)));
+    chk('area-damage', o.area); chk('splash-damage', o.splash); chk('axe-vulnerability', o.strike && o.strike.group === 'axe');
+    return { w, why };
+  };
 
   // parts: rolled parts [{type,total,precision}] ; o: {src, crit, spell, strike, nonlethal, persistent, noReact, label}
   B.dealDamage = (t, parts, o = {}) => {
@@ -471,18 +507,22 @@ PF.Battle = function (cfg) {
       champ = B.units.find(c => c !== t && c.team === t.team && c.flags.championReaction && B.conscious(c) && c.react > 0 && !c.flags.noReactions && !B.fxBlocksReact(c) && B.dist(c, t) <= 15 && B.dist(c, src) <= 15);
       if (champ) { champ.react--; champRes = 2 + champ.level; notes.push(champ.name + "'s reaction: resistance " + champRes); }
     }
-    let total = 0; const typeTxt = [];
+    let total = 0; const typeTxt = []; let voidHeal = 0;
+    const tw = B.traitWeak(t, o); let twUsed = false;
     Object.keys(byType).forEach(type => {
       let v = byType[type];
-      if (type === 'vitality' && !B.isUndead(t) && !t.traits.includes('void')) { notes.push('vitality harms only undead'); return; }
-      if (type === 'void' && !B.isLiving(t)) { notes.push('void doesn\'t harm the undead'); return; }
+      if (type === 'vitality' && !B.voidHealing(t) && !t.traits.includes('void')) { notes.push('vitality harms only undead'); return; }
+      if (type === 'void' && !B.isLiving(t)) { if (B.voidHealing(t) && !o.persistent) { voidHeal += v; } notes.push(B.voidHealing(t) ? 'void heals it' : 'void doesn\'t harm it'); return; }
       if (type === 'bleed' && !B.isLiving(t)) { notes.push('no blood to bleed'); return; }
-      if (B.immuneTo(t, type)) { notes.push('immune to ' + type); return; }
-      const w = B.weakOf(t, type); if (w) { v += w; notes.push('weakness ' + type + ' ' + w); }
-      const r = B.resistOf(t, type) + champRes; if (r) { const before = v; v = Math.max(0, v - r); notes.push('resist ' + type + ' ' + Math.min(r, before)); }
+      if (B.immuneTo(t, type) || (type === 'bleed' && B.immuneTo(t, 'bleed'))) { notes.push('immune to ' + type); return; }
+      const ro = { magical: o.magical || o.spell, spell: o.spell, traits: o.traits, mat: o.mat };
+      const w = B.weakOf(t, type, ro); if (w && (!tw.w || w > tw.w || true)) { v += w; notes.push('weakness ' + type + ' ' + w); }
+      if (tw.w && !twUsed) { twUsed = true; v += tw.w; notes.push('weakness ' + tw.why + ' ' + tw.w); }
+      const r = B.resistOf(t, type, ro) + champRes; if (r) { const before = v; v = Math.max(0, v - r); notes.push('resist ' + type + ' ' + Math.min(r, before)); }
       if (v > 0) { total += v; typeTxt.push(v + ' ' + type); }
-      if (t.regen && t.regen.off.includes(type) && v > 0) { t.regen.disabled = true; t.regen.until = B.round + 1; notes.push('regeneration off'); }
+      if (t.regen && v > 0 && (t.regen.off.includes(type) || (o.traits || []).some(x => t.regen.off.includes(x)))) { t.regen.disabled = true; t.regen.until = B.round + 1; t.regen.untilU = true; notes.push('regeneration off'); }
     });
+    if (voidHeal > 0 && B.alive(t)) { const b0 = t.hp; t.hp = Math.min(B.maxHP(t), t.hp + voidHeal); if (t.hp > b0) { B.log(B.nm(t) + ' is healed ' + (t.hp - b0) + ' HP by void energy.', 'heal'); B.emit({ t: 'float', u: t.id, text: '+' + (t.hp - b0), c: 'heal' }); } }
     // shield block
     const physTotal = Object.keys(byType).filter(k => PHYS.includes(k) || k === 'force').reduce((a, k) => a + byType[k], 0);
     if (total > 0 && physTotal > 0 && !o.persistent) {
@@ -511,6 +551,8 @@ PF.Battle = function (cfg) {
       B.log(lbl, 'dmg');
       B.emit({ t: 'float', u: t.id, text: '−' + dealt, c: o.crit ? 'crit' : 'dmg' });
       if (t.sleepWake && B.cv(t, 'unconscious') && t.hp > 0) { B.clrC(t, 'unconscious'); t.sleepWake = false; B.log(B.nm(t) + ' wakes up.'); }
+      if (B.cv(t, 'fascinated') && src && src.team !== t.team) B.clrC(t, 'fascinated');
+      if (B.cv(t, 'confused') && t.hp > 0) { const f = B.flat(11, 'Shake off confusion'); if (f.ok) { B.clrC(t, 'confused'); B.log(B.nm(t) + ' shakes off the confusion.', 'good'); } }
       if (t.hp <= 0 && before > 0) B.drop(t, src, o);
       else if (t.hp <= 0 && t.dying) { B.addDying(t, o.crit ? 2 : 1, src); }
     } else {
@@ -523,7 +565,7 @@ PF.Battle = function (cfg) {
     if (dealt > 0 && src && src.team !== t.team && t.flags.youreNext === undefined) { /* placeholder */ }
     return dealt;
   };
-  B.fxBlocksReact = u => u.fx.some(f => f.noReactions) || u.flags.noReactions || B.cv(u, 'stunned') > 0 && false;
+  B.fxBlocksReact = u => u.fx.some(f => f.noReactions) || u.flags.noReactions || !!B.cv(u, 'confused') || !!B.cv(u, 'petrified');
   B.canReact = (u, kind) => {
     if (!B.conscious(u) || B.cv(u, 'paralyzed') || B.fxBlocksReact(u)) return false;
     if (u.react > 0) return true;
@@ -571,7 +613,7 @@ PF.Battle = function (cfg) {
   B.addDying = (t, n, src, fresh) => {
     if (fresh) { n += B.cv(t, 'wounded'); B.setC(t, 'unconscious', 1); B.setC(t, 'prone', 1); B.emit({ t: 'down', u: t.id }); B.clearHidden(t); }
     t.dying = (t.dying || 0) + n;
-    const lim = t.flags.diehard ? 5 : 4;
+    const lim = Math.max(1, (t.flags.diehard ? 5 : 4) - B.cv(t, 'doomed'));
     B.log(B.nm(t) + (fresh ? ' falls unconscious — dying ' : ' is dying ') + t.dying + '.', 'kill');
     if (t.dying >= lim) {
       if (t.hero > 0) { t.hero = 0; t.dying = 0; B.setC(t, 'wounded', B.cv(t, 'wounded') + 1); B.log(B.nm(t) + ' spends their Hero Point to cling to life (stable at 0 HP).', 'good'); B.emit({ t: 'float', u: t.id, text: 'Hero Point!', c: 'good' }); }
@@ -617,10 +659,11 @@ PF.Battle = function (cfg) {
   // Dijkstra over feet with PF2e alternating diagonals. Returns {cost: Map key->ft, prev}
   B.moveCostInto = (u, fx, fy, x, y) => {
     if (B.flies(u)) return 0;
-    let extra = 0; let hMax = -1, hFrom = null;
+    let extra = 0; let hMax = -1, hFrom = null; const swim = !!(u.speed && u.speed.swim);
     for (const [cx, cy] of B.cellsOf(u, x, y)) {
       const t = B.tile(cx, cy); if (!t) return Infinity;
-      extra = Math.max(extra, t.diff);
+      extra = Math.max(extra, swim && t.water ? 0 : t.diff);
+      if (u.aquatic && !t.water) extra = Math.max(extra, 3);
       if (B.terrainAt(cx, cy).some(f => f.kind === 'grease')) extra = Math.max(extra, 1);
       hMax = Math.max(hMax, t.h);
     }
@@ -667,12 +710,12 @@ PF.Battle = function (cfg) {
   };
   B.canEnd = (u, x, y) => B.fits(u, x, y) && !B.units.some(o => o !== u && B.alive(o) && B.cellsOf(u, x, y).some(([cx, cy]) => cx >= o.x && cx < o.x + o.sq && cy >= o.y && cy < o.y + o.sq));
   B.speedOf = u => {
-    let s = u.speed.fly || u.speed.land || 25;
+    let s = u.speed.fly || (u.aquatic ? u.speed.swim : 0) || u.speed.land || u.speed.swim || u.speed.climb || u.speed.burrow || 25;
     if (u.fx.some(f => f.key === 'rage') && u.flags.fastMovement) s += 10;
     u.fx.forEach(f => { if (f.speed) s += f.speed; });
     return Math.max(5, s);
   };
-  B.immobile = u => B.cv(u, 'grabbed') || B.cv(u, 'restrained') || B.cv(u, 'immobilized') || B.cv(u, 'paralyzed');
+  B.immobile = u => B.cv(u, 'grabbed') || B.cv(u, 'restrained') || B.cv(u, 'immobilized') || B.cv(u, 'paralyzed') || B.cv(u, 'petrified');
   // segment a path into strides: returns array of paths, each within speed
   B.splitStrides = (u, path, speed) => {
     const segs = []; let cur = [path[0]]; let used = 0; let par = 0;
@@ -722,10 +765,18 @@ PF.Battle = function (cfg) {
     }
     if (done.length > 1) B.emit({ t: 'move', u: u.id, path: done.slice(), kind: o.kind || 'stride' });
     u.fx = u.fx.filter(f => f.key !== 'takeCover');
+    B.checkGrabs(u);
     B.updateHiddenAfterMove(u, o);
     B.checkAuras(u, 'enter');
     B.touch(u);
     return true;
+  };
+  // a grab ends when grabber and grabbed are no longer within the grabber's reach
+  B.checkGrabs = u => {
+    B.units.forEach(v => ['grabbed', 'restrained'].forEach(k => {
+      const c = v.cond[k]; if (!c || !c.src) return; const g = B.get(c.src); if (!g) return;
+      if ((g === u || v === u) && !B.inReach(g, v, Math.max(5, B.reachOf(g)))) { B.clrC(v, k); B.log(B.nm(v) + ' is no longer held by ' + B.nm(g) + '.', 'dim'); }
+    }));
   };
   B.updateHiddenAfterMove = (u, o) => {
     if (!u.hiddenFrom || !u.hiddenFrom.size || o.sneak) return;
@@ -759,6 +810,7 @@ PF.Battle = function (cfg) {
     if (path.length > 1) B.emit({ t: 'move', u: t.id, path, kind: 'push' });
     if (moved || fell) B.log(B.nm(t) + ' is pushed ' + (path.length - 1) * 5 + ' feet.', 'info');
     t.fx = t.fx.filter(f => f.key !== 'takeCover');
+    B.checkGrabs(t);
     if (fell) { const dmg = Math.floor(fell * 5 / 2); B.log(B.nm(t) + ' falls ' + fell * 5 + ' feet!', 'bad'); B.dealDamage(t, [{ type: 'bludgeoning', total: dmg }], { label: 'Fall' }); B.knockProne(t); }
     const lava = B.cellsOf(t).some(([x, y]) => { const tt = B.tile(x, y); return tt && tt.hazard === 'lava'; });
     if (lava && !B.flies(t) && !B.immuneTo(t, 'fire')) B.lavaBurn(t);
@@ -775,31 +827,132 @@ PF.Battle = function (cfg) {
   };
 
   /* ===== auras ===== */
+  // aura spec: legacy {r, dc, fear | every+dmg+type | (stench)} or generic {kind:'fear'|'stench'|'cond'|'dmg', r, dc, save, basic, dmg:[parts], outc:{0..3:[effects]}, traits, living}
+  B.auraKind = a => a.kind || (a.fear ? 'fear' : a.every ? 'dmg' : 'stench');
   B.checkAuras = (u, why) => {
     if (!B.conscious(u)) return;
     B.units.forEach(src => {
-      if (!src.auras || src.team === u.team || !B.alive(src)) return;
+      if (!src.auras || src.team === u.team || !B.alive(src) || src === u) return;
+      if (!B.conscious(src) && !(src.flags && src.flags.auraWhileDown)) return;
       src.auras.forEach(a => {
-        if (B.dist(src, u) > a.r) return;
-        const dc = a.dc + (src.abilDC || 0);
-        if (a.every) { if (why !== 'start') return; if (B.immuneTo(u, a.type)) return; B.log(B.nm(u) + ' is caught in ' + B.nm(src) + "'s " + a.name.split(' (')[0] + '.', 'warn'); const r = B.rollParts([U.dice(a.dmg, a.type)]); const d = B.save(u, 'ref', dc, { basic: true, src }); const f = [2, 1, 0.5, 0][d]; if (f > 0) B.dealDamage(u, B.scaleParts(r.parts, f), { src, label: a.name.split(' (')[0], noReact: true }); return; }
-        if (u.enc.used['aura:' + src.id + a.id]) return;
-        u.enc.used['aura:' + src.id + a.id] = 'pending';
-        if (a.fear) {
+        if (!B.alive(u) || B.dist(src, u) > a.r) return;
+        if (a.off && a.off(B, src)) return;
+        const dc = a.dc + (src.abilDC || 0); const kind = B.auraKind(a); const key = 'aura:' + src.id + ':' + a.id;
+        const label = a.name.split(' (')[0];
+        if (a.living && !B.isLiving(u)) return;
+        if ((a.traits || []).includes('mental') && B.immuneTo(u, 'mental')) return;
+        if ((a.traits || []).includes('poison') && B.immuneTo(u, 'poison')) return;
+        if (kind === 'dmg') {
+          if (why !== 'start') return;
+          const parts = a.dmg ? (Array.isArray(a.dmg) ? a.dmg.map(p => Object.assign({}, p)) : [U.dice(a.dmg, a.type)]) : [];
+          if (!parts.length) return;
+          if (parts.every(p => B.immuneTo(u, p.type))) return;
+          B.log(B.nm(u) + ' is caught in ' + B.nm(src) + "'s " + label + '.', 'warn');
+          const r = B.rollParts(parts.filter(p => !p.persistent));
+          let f = 1, deg = 2;
+          if (a.save || a.every) { deg = B.save(u, a.save || 'ref', dc, { basic: true, src, area: true, traits: a.traits, magical: a.magical }); f = [2, 1, 0.5, 0][deg]; }
+          if (f > 0 && r.parts.length) B.dealDamage(u, B.scaleParts(r.parts, f), { src, label, noReact: true, area: true, traits: a.traits });
+          parts.filter(p => p.persistent).forEach(p => { if (deg <= 1) B.addPersistent(u, p, src); });
+          if (a.outc && a.outc[deg]) B.applyEffects(src, u, a.outc[deg], { name: label });
+          return;
+        }
+        if (u.enc.used[key] === true) return;      // immune for the battle
+        if (u.enc.used[key] === 'pending') return;
+        if (kind === 'fear') {
           if (B.immuneTo(u, 'fear') || B.immuneTo(u, 'mental')) return;
-          B.log(B.nm(u) + ' faces ' + B.nm(src) + "'s " + a.name.split(' (')[0] + '.', 'warn');
-          const d = B.save(u, 'will', dc, { fear: true, mental: true, src, emotion: true });
+          u.enc.used[key] = 'pending';
+          B.log(B.nm(u) + ' faces ' + B.nm(src) + "'s " + label + '.', 'warn');
+          const d = B.save(u, a.save || 'will', dc, { fear: true, mental: true, src, emotion: true, area: true, traits: a.traits });
           if (d === 2) B.setC(u, 'frightened', 1, null, src); if (d === 1) B.setC(u, 'frightened', 2, null, src); if (d === 0) B.setC(u, 'frightened', 4, null, src);
-          u.enc.used['aura:' + src.id + a.id] = true;
+          u.enc.used[key] = true;
+        } else if (kind === 'stench') {
+          if (B.immuneTo(u, 'poison') && !a.kind || !B.isLiving(u) && !a.kind) return;
+          if ((a.traits || []).includes('olfactory') && !B.isLiving(u)) return;
+          u.enc.used[key] = 'pending';
+          B.log(B.nm(u) + ' chokes on ' + B.nm(src) + "'s " + label.toLowerCase() + '.', 'warn');
+          const d = B.save(u, a.save || 'fort', dc, { src, area: true, traits: a.traits });
+          u.enc.used[key] = d >= 2;
+          if (d <= 1) B.setC(u, 'sickened', 1, null, src, { dc });
+          if (d === 0) B.setC(u, 'slowed', 1, null, src, { whileSick: true });
         } else {
-          if (B.immuneTo(u, 'poison') || !B.isLiving(u)) return;
-          B.log(B.nm(u) + ' chokes on ' + B.nm(src) + "'s stench.", 'warn');
-          const d = B.save(u, 'fort', dc, { src });
-          if (d >= 2) u.enc.used['aura:' + src.id + a.id] = true; else u.enc.used['aura:' + src.id + a.id] = false;
-          if (d === 1) B.setC(u, 'sickened', 1, null, src, { dc });
-          if (d === 0) { B.setC(u, 'sickened', 2, null, src, { dc }); B.setC(u, 'slowed', 1, B.rounds(u, 1), src); }
+          // generic condition aura: save each time until a success (or once, if mode 'once')
+          if (!a.outc) return;
+          u.enc.used[key] = 'pending';
+          B.log(B.nm(u) + ' is affected by ' + B.nm(src) + "'s " + label + '.', 'warn');
+          const d = B.save(u, a.save || 'will', dc, { src, area: true, traits: a.traits, magical: a.magical, fear: (a.traits || []).includes('fear'), mental: (a.traits || []).includes('mental') });
+          if (a.outc[d]) B.applyEffects(src, u, a.outc[d], { name: label, dur: a.dur || { k: 'r', n: 1 } });
+          u.enc.used[key] = a.mode === 'once' ? true : d >= 2;
         }
       });
+    });
+  };
+
+  /* ===== generic effects (spell / ability outcomes) =====
+     effects: {c, v, dur} condition | {persist:{n,d,m,type}} | {push: feet} | {lose: n actions} | {dmg: factor} (handled by caller) */
+  const SELF_TIMED = ['frightened', 'sickened', 'stunned', 'drained', 'doomed', 'wounded', 'prone', 'dying'];
+  B.applyEffects = (src, t, effs, o = {}) => {
+    (effs || []).forEach(e => {
+      if (!B.alive(t)) return;
+      if (e.c) {
+        if (e.c === 'prone') { B.knockProne(t); return; }
+        if (e.c === 'quickened' || e.c === 'hidden' || e.c === 'concealed') return;
+        if ((e.c === 'frightened' || e.c === 'fleeing') && B.immuneTo(t, 'fear')) return;
+        let exp = e.dur ? D.effDur(B, src, t, e.dur) : null;
+        if (!e.dur && !SELF_TIMED.includes(e.c)) exp = o.dur ? (D.effDur(B, src, t, o.dur) || B.rounds(src, 1)) : B.rounds(src, 1);
+        if (e.c === 'unconscious') { if (B.immuneTo(t, 'unconscious') || B.immuneTo(t, 'sleep') && (o.traits || []).includes('sleep')) return; B.setC(t, 'unconscious', 1, exp || B.rounds(src, 1), src); if (B.cv(t, 'unconscious')) { t.sleepWake = true; B.knockProne(t); B.log(B.nm(t) + ' falls unconscious.', 'bad'); } return; }
+        if (e.c === 'grabbed' || e.c === 'restrained') { B.setC(t, e.c, 1, exp || B.endOfNext(src), src); return; }
+        B.setC(t, e.c, e.v || 1, exp, src);
+        if (B.cv(t, e.c) && ['stunned', 'slowed', 'paralyzed', 'confused', 'fascinated', 'blinded', 'petrified', 'fleeing', 'immobilized'].includes(e.c)) B.log(B.nm(t) + ' is ' + PF.COND[e.c].n.toLowerCase() + (PF.COND[e.c].v ? ' ' + B.cv(t, e.c) : '') + '.', 'bad');
+      } else if (e.persist) B.addPersistent(t, Object.assign({}, e.persist), src);
+      else if (e.push) { if (src && src !== t) B.push(t, src, Math.max(1, Math.round(e.push / 5)), src); }
+      else if (e.lose) { B.addFx(t, { name: 'Loses ' + e.lose + ' action' + (e.lose > 1 ? 's' : ''), key: 'lose', loseActions: e.lose, exp: B.endOfNext(t), bad: true }); }
+    });
+  };
+
+  /* ===== afflictions (poison, disease, curse) =====
+     aff spec: {id, name, kind, save, dc, traits, maxDur (rounds|null), stages:[{dmg:[parts], conds:[{c,v}], long:bool}]} */
+  B.affImmune = (t, aff) => {
+    const k = aff.kind || 'poison';
+    if (k === 'poison' && (B.immuneTo(t, 'poison') || t.traits.includes('construct'))) return true;
+    if (k === 'disease' && (B.immuneTo(t, 'disease') || !B.isLiving(t))) return true;
+    if (k === 'curse' && B.immuneTo(t, 'curse')) return true;
+    return false;
+  };
+  B.expose = (src, t, aff, o = {}) => {
+    if (!B.alive(t) || !aff || !aff.stages || !aff.stages.length) return -1;
+    if (B.affImmune(t, aff)) { B.log(B.nm(t) + ' is immune to ' + aff.name + '.', 'dim'); return -1; }
+    t.afflictions = t.afflictions || [];
+    const key = aff.id;
+    const dc = (aff.dc || 15) + (src && src.abilDC || 0);
+    const cur = t.afflictions.find(a => a.key === key);
+    const deg = B.save(t, aff.save || 'fort', dc, { src, traits: aff.traits, tags: [aff.kind || 'poison'], magical: (aff.traits || []).includes('magical') });
+    if (cur) { if (deg <= 1) { B.log(B.nm(t) + ' is re-exposed to ' + aff.name + '.', 'bad'); B.affStage(t, cur, cur.stage + (deg === 0 ? 2 : 1), src); } return deg; }
+    if (deg >= 2) return deg;
+    const st = { key, name: aff.name, src: src ? src.id : null, dc, save: aff.save || 'fort', stages: aff.stages, maxDur: aff.maxDur || null, elapsed: 0, stage: 0, traits: aff.traits || [], kind: aff.kind || 'poison' };
+    t.afflictions.push(st);
+    B.affStage(t, st, deg === 0 ? 2 : 1, src);
+    return deg;
+  };
+  B.affStage = (t, a, n, src) => {
+    n = Math.max(0, Math.min(a.stages.length, n));
+    Object.keys(t.cond).forEach(k => { if (t.cond[k] && t.cond[k].aff === a.key) B.clrC(t, k); });
+    a.stage = n;
+    if (n <= 0) { t.afflictions = (t.afflictions || []).filter(x => x !== a); B.log(B.nm(t) + ' recovers from ' + a.name + '.', 'good'); B.touch(t); return; }
+    const S = a.stages[n - 1]; const s0 = src || B.get(a.src);
+    B.log(B.nm(t) + ' suffers ' + a.name + ' (stage ' + n + ').', 'bad'); B.emit({ t: 'float', u: t.id, text: a.name.split(' ')[0] + ' ' + n, c: 'info' });
+    (S.conds || []).forEach(c => { if (c.c === 'prone') B.knockProne(t); else if (c.c === 'unconscious') { B.setC(t, 'unconscious', 1, null, s0, { aff: a.key }); if (B.cv(t, 'unconscious')) B.knockProne(t); } else B.setC(t, c.c, c.v || 1, null, s0, { aff: a.key }); });
+    if (S.dmg && S.dmg.length && !S.long && B.alive(t)) { const r = B.rollParts(S.dmg.filter(p => !p.persistent)); if (r.parts.length) B.dealDamage(t, r.parts, { src: s0, label: a.name, noReact: true }); S.dmg.filter(p => p.persistent).forEach(p => B.addPersistent(t, p, s0)); }
+    B.touch(t);
+  };
+  B.tickAfflictions = u => {
+    (u.afflictions || []).slice().forEach(a => {
+      if (!B.alive(u) || !u.afflictions.includes(a)) return;
+      a.elapsed++;
+      if (a.maxDur && a.elapsed >= a.maxDur) { B.affStage(u, a, 0); return; }
+      const S = a.stages[a.stage - 1]; if (S && S.long) return;   // stages measured in hours/days don't progress during a battle
+      const deg = B.save(u, a.save, a.dc, { traits: a.traits, tags: [a.kind] });
+      const nst = a.stage + [2, 1, -1, -2][deg];
+      B.affStage(u, a, nst, B.get(a.src));
     });
   };
 
@@ -864,6 +1017,7 @@ PF.Battle = function (cfg) {
       if (before <= 0 && u.hp > 0) { B.clrC(u, 'unconscious'); B.emit({ t: 'up', u: u.id }); B.log(B.nm(u) + ' rises again!', 'warn'); }
       B.touch(u);
     } else if (u.regen && u.regen.disabled && u.hp <= 0) { B.kill(u); return false; }
+    if (u.fastHeal && u.hp > 0 && u.hp < B.maxHP(u)) { const before = u.hp; u.hp = Math.min(B.maxHP(u), u.hp + u.fastHeal); B.log(B.nm(u) + ' heals ' + (u.hp - before) + ' HP (fast healing).', 'heal'); B.emit({ t: 'float', u: u.id, text: '+' + (u.hp - before), c: 'heal' }); B.touch(u); }
     if (u.hp <= 0 || B.cv(u, 'unconscious')) {
       if (u.cond.unconscious && u.hp > 0 && u.sleepWake) { /* asleep */ }
       return false;
@@ -879,6 +1033,9 @@ PF.Battle = function (cfg) {
     if (B.cv(u, 'paralyzed')) { acts = 0; u.turn.quick = null; B.log(B.nm(u) + ' is paralyzed.', 'bad'); }
     const cmd = u.fx.find(f => f.key === 'command');
     if (cmd && acts > 0) { const lose = Math.min(acts, cmd.loseActions); acts -= lose; B.knockProne(u, 'command'); B.log(B.nm(u) + ' obeys the command and drops prone.', 'bad'); B.removeFx(u, f => f.key === 'command'); }
+    const lz = u.fx.find(f => f.key === 'lose' && f.loseActions);
+    if (lz && acts > 0) { const lose = Math.min(acts, lz.loseActions); acts -= lose; B.log(B.nm(u) + ' loses ' + lose + ' action' + (lose > 1 ? 's' : '') + '.', 'bad'); B.removeFx(u, f => f === lz); }
+    if (B.cv(u, 'petrified') || B.cv(u, 'controlled')) { acts = 0; u.turn.quick = null; }
     u.turn.acts = Math.max(0, acts);
     if (u.turn.quick && !u.turn.acts && B.cv(u, 'paralyzed')) u.turn.quick = null;
     B.touch(u);
@@ -897,6 +1054,8 @@ PF.Battle = function (cfg) {
         B.touch(u);
       });
     }
+    if (B.alive(u) && u.afflictions && u.afflictions.length) B.tickAfflictions(u);
+    if (B.alive(u) && !skipped) B.units.forEach(v => { const sw = v.fx && v.fx.find(f => f.key === 'swallowed' && f.by === u.id); if (sw && B.alive(v)) { if (!B.cv(v, 'restrained')) { B.removeFx(v, f => f === sw); return; } B.log(B.nm(v) + ' is crushed inside ' + B.nm(u) + '.', 'bad'); B.dealDamage(v, B.rollParts(sw.dmg.map(p => Object.assign({}, p))).parts, { src: u, label: 'Swallowed', noReact: true }); } });
     if (B.alive(u)) {
       const lava = B.cellsOf(u).some(([x, y]) => { const t = B.tile(x, y); return t && t.hazard === 'lava'; });
       if (lava && !B.flies(u) && !B.immuneTo(u, 'fire')) B.lavaBurn(u);
@@ -913,6 +1072,7 @@ PF.Battle = function (cfg) {
       }
       if (u.flags.giantsStatureActive && !u.fx.some(f => f.key === 'rage')) { /* handled in rage end */ }
     }
+    if (B.onEndTurn && B.alive(u) && !skipped) B.onEndTurn(u);
     B.tick(u.id, 'e');
     B.units.forEach(x => B.touch(x));
     B.emit({ t: 'endturn', u: u.id });

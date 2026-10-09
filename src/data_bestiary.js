@@ -389,3 +389,162 @@ D.presets.push(
   { id: 'balor', name: 'Balor', pl: 18, map: 'lava', foes: ['balor'], desc: 'Solo extreme encounter for a high-level party.' }
 );
 })(typeof window !== 'undefined' ? window : globalThis);
+/* ---------- Monster Core support: registration, unit wiring, stat-block ability list ---------- */
+(function (G) {
+'use strict';
+const PF = G.PF, D = PF.D, U = PF.U;
+const COSTG = { '1': '◆', '2': '◆◆', '3': '◆◆◆', reaction: '⟲', free: '◇', passive: '' };
+// register generated Monster Core records (data_mc.js). Colliding hand-built ids are replaced.
+D.registerMC = function (list) {
+  list.forEach(c => {
+    c.mc = true; c.abil = []; c.immune = c.immune || []; c.resist = c.resist || {}; c.weak = c.weak || {}; c.skills = c.skills || {};
+    (c.abilities || []).forEach(a => { const k = 'mc:' + c.id + ':' + a.id; D.abilities[k] = { kind: 'mc', name: a.name + (COSTG[a.cost] ? ' ' + COSTG[a.cost] : '') + (a.auto ? '' : ' (text)'), dc: a.spec && (a.spec.dc || (a.spec.aura && a.spec.aura.dc)) || undefined }; c.abil.push(k); });
+    // compact summary in the legacy shape the stat block reads (x.spells.list / cantrips)
+    if (c.casting && c.casting.length) {
+      const e0 = c.casting[0]; const list2 = []; const cants = [];
+      c.casting.forEach(e => {
+        (e.cantrips || []).forEach(id => { if (D.spells[id] && !cants.includes(id)) cants.push(id); });
+        (e.prepared || []).forEach(p => { if (D.spells[p.id]) list2.push({ id: p.id, rank: p.rank, uses: 1 }); });
+        (e.rep || []).forEach(p => { if (D.spells[p.id]) list2.push({ id: p.id, rank: p.rank, uses: (e.slots && e.slots[p.rank]) || 1 }); });
+        (e.innate || []).forEach(p => { if (D.spells[p.id]) list2.push({ id: p.id, rank: p.rank, uses: p.uses > 50 ? '∞' : p.uses }); });
+        (e.focus || []).forEach(id => { if (D.spells[id]) list2.push({ id, rank: e.focusRank || 1, uses: 'focus' }); });
+      });
+      c.spells = { trad: e0.trad, dc: e0.dc, atk: e0.atk, list: list2, cantrips: cants };
+    }
+    D.creatures[c.id] = c;
+  });
+  if (D.setupMCPresets) D.setupMCPresets();
+};
+// abilities for stat-block UIs: [{name, cost, traits, text, auto}]
+D.creatureAbilities = function (c) {
+  if (!c) return [];
+  if (c.abilities) return c.abilities.map(a => ({ name: a.name, cost: a.cost, traits: (a.traits || []).slice(), text: a.text, auto: !!a.auto, kind: a.spec ? a.spec.kind : null }));
+  return (c.abil || []).map(id => D.abilities[id]).filter(Boolean).map(a => ({ name: a.name, cost: a.kind === 'act' ? '2' : 'passive', traits: [], text: a.name, auto: true, kind: a.kind }));
+};
+const adj0 = D.adjustCreature;
+D.adjustCreature = function (c, adj) {
+  const x = adj0(c, adj);
+  if (adj && x.casting) { const s = adj === 'elite' ? 2 : -2; x.casting.forEach(e => { e.dc += s; e.atk += s; }); }
+  return x;
+};
+const uf0 = D.unitFromCreature;
+D.unitFromCreature = function (c0, adj) {
+  if (!c0.mc) return uf0(c0, adj);
+  const c = D.adjustCreature(c0, adj);
+  // build the base unit without the legacy innate-spell path, then layer Monster Core features on
+  const u = uf0(Object.assign({}, c0, { spells: null, casting: null }), adj);
+  D.applyMC(u, c);
+  return u;
+};
+D.applyMC = function (u, c) {
+  u.mc = true; u.resistX = U.clone(c.resistX || {}); u.saveMods = U.clone(c.saveMods || []); u.aquatic = !!c.aquatic;
+  u.mAbil = []; u.affSpecs = {}; u.riders = {}; u.reacts = []; u.auras = u.auras || []; u.mFollow = [];
+  (c.abilities || []).forEach(a => {
+    if (!a.auto || !a.spec) return;
+    const s = U.clone(a.spec);
+    switch (s.kind) {
+      case 'flag': u.flags[s.flag] = true; if (s.dice) u.flags.mSneakDice = s.dice; if (s.n) { u.flags.packN = s.n; u.flags.packD = s.d; } if (s.rsOnly) u.rsOnly = s.rsOnly; if (s.rsMoveOnly) u.rsMoveOnly = true; break;
+      case 'regen': u.regen = { v: s.v, off: s.off || [], disabled: false }; break;
+      case 'fastHeal': u.fastHeal = s.v; break;
+      case 'aura': u.auras.push(Object.assign({ id: a.id, name: a.name }, s.aura)); break;
+      case 'follow': u.mFollow.push(s.follow); break;
+      case 'affliction': u.affSpecs[a.id] = Object.assign({ id: 'aff:' + a.name.toLowerCase(), name: a.name }, s.aff); break;
+      case 'rider': u.riders[a.id] = Object.assign({ name: a.name }, s.rider); break;
+      case 'react': u.reacts.push({ name: a.name, trig: s.trig, eff: s.eff }); break;
+      case 'area': case 'save': case 'multi': case 'constrict': case 'swallow': case 'trample': case 'rend':
+        u.mAbil.push(Object.assign({ key: a.id, name: a.name, cost: s.cost || (+a.cost || 1), text: a.text }, s)); break;
+      default: break;
+    }
+  });
+  if (u.flags.zombieSlow) { u.flags.noReactions = true; }
+  if (c.casting && c.casting.length) {
+    const es = c.casting.map(e => ({ name: e.name, kind: e.kind, trad: e.trad, dc: e.dc, atk: e.atk, cantripRank: e.cantripRank, cantrips: (e.cantrips || []).slice(),
+      prepared: (e.prepared || []).map(p => ({ id: p.id, rank: p.rank, used: false })),
+      slots: e.slots ? Object.fromEntries(Object.entries(e.slots).map(([r, m]) => [r, { max: m, used: 0 }])) : null,
+      rep: (e.rep || []).slice(), sig: (e.sig || []).slice(),
+      innate: (e.innate || []).map(p => ({ id: p.id, rank: p.rank, uses: p.uses, used: 0 })), focus: (e.focus || []).slice(), focusRank: e.focusRank }));
+    const e0 = es[0];
+    u.spells = { trad: e0.trad, kind: 'mc', dc: e0.dc, atk: e0.atk, cantripRank: e0.cantripRank, cantrips: [], innate: [], prepared: [], comps: [], entries: es };
+    u.st.spellDC = e0.dc; u.st.spellAtk = e0.atk;
+    if (es.some(e => e.focus && e.focus.length)) u.focus = { cur: c.focusPoints || 1, max: c.focusPoints || 1, spells: [] };
+  }
+};
+})(typeof window !== 'undefined' ? window : globalThis);
+/* ---------- map footprint checks, Monster Core presets, auto-encounters ---------- */
+(function (G) {
+'use strict';
+const PF = G.PF, D = PF.D, U = PF.U;
+const fitCache = {};
+// can a creature of footprint sq (squares) deploy in the foe zone of a map?
+D.mapFits = function (mapId, sq, flies) {
+  const k = mapId + ':' + sq + ':' + (flies ? 1 : 0);
+  if (fitCache[k] != null) return fitCache[k];
+  let ok = true;
+  try {
+    const B = PF.Battle({ map: mapId, partyLevel: 1, pcs: [], foes: [] });
+    const u = { sq, speed: flies ? { land: 25, fly: 30 } : { land: 25 }, team: 'foe' };
+    ok = B.zone.foe.some(([x, y]) => B.fits(u, x, y, true) && B.cellsOf(u, x, y).every(([cx, cy]) => B.zone.foe.some(([zx, zy]) => zx === cx && zy === cy)));
+  } catch (e) { ok = true; }
+  fitCache[k] = ok; return ok;
+};
+D.mapHasWater = mapId => { const m = D.maps[mapId]; return !!m && m.t.some(r => /[wW]/.test(r.replace(/\|/g, ''))) && mapId === 'river'; };
+D.creatureFitsMap = (c, mapId) => {
+  if (!mapId || !D.maps[mapId]) return !c.aquatic;
+  if (c.aquatic && !D.mapHasWater(mapId)) return false;
+  return D.mapFits(mapId, PF.SIZE[c.size].sq, !!(c.speed && c.speed.fly));
+};
+/* Prebuilt encounters with Monster Core creatures (ids = camelCase of the Foundry slug). */
+D.setupMCPresets = function () { D.presets = [
+  { id: 'goblinAmbush', name: 'Goblin Ambush', pl: 1, map: 'chapel', foes: ['goblinWarrior', 'goblinWarrior', 'goblinPyro'], desc: 'Goblins loot the ruined chapel; the pyro lobs fire from behind the pews.' },
+  { id: 'restlessDead', name: 'Restless Dead', pl: 1, map: 'crypt', foes: ['skeletonGuard', 'skeletonGuard', 'zombieShambler', 'zombieShambler'], desc: 'Bones and shamblers rise from the tombs. Blunt weapons and vitality help.' },
+  { id: 'wolfPack', name: 'Wolf Pack', pl: 1, map: 'forest', foes: ['wolf', 'wolf'], desc: 'Two wolves that knock prey down and gang up on it.' },
+  { id: 'koboldTunnels', name: 'Kobold Tunnels', pl: 1, map: 'warrens', foes: ['koboldWarrior', 'koboldWarrior', 'koboldScout'], desc: 'Spears at the bridge, a sniper behind them.' },
+  { id: 'sewerTrouble', name: 'Sewer Trouble', pl: 2, map: 'market', foes: ['ratSwarm', 'sewerOoze', 'giantRat'], desc: 'Vermin boil up from the drains under the market. Spread out against the swarm.' },
+  { id: 'boggardBog', name: 'Boggard Ford', pl: 2, map: 'river', foes: ['boggardWarrior', 'boggardScout', 'giantRat'], desc: 'Frog-folk hold the ford and croak terror at intruders.' },
+  { id: 'orcWarband', name: 'Orc Warband', pl: 3, map: 'market', foes: ['orcCommander', 'orcVeteran', 'orcVeteran'], desc: 'A commander and two veterans storm the square.' },
+  { id: 'ghoulCrypt', name: 'Ghoul Crypt', pl: 3, map: 'crypt', foes: ['ghoulSoldier', 'ghoulSoldier', 'ghoulStalker'], desc: 'Paralyzing claws and a sickening stench in the mist.' },
+  { id: 'hellHounds', name: 'Hell Hounds', pl: 3, map: 'lava', foes: ['hellHound', 'hellHound'], desc: 'Fire-breathing hounds on volcanic ground.' },
+  { id: 'ogreBridge', name: "Ogre's Bridge", pl: 3, map: 'warrens', foes: ['ogreWarrior', 'goblinCommando', 'goblinCommando'], desc: 'An ogre and its goblin lackeys guard the chasm crossing.' },
+  { id: 'riverDrake', name: 'Drake at the Ford', pl: 4, map: 'river', foes: ['riverDrake', 'crocodile', 'crocodile'], desc: 'A venomous drake circles above while crocodiles lurk in the shallows.' },
+  { id: 'gargoyleTower', name: 'Gargoyle Watch', pl: 4, map: 'tower', foes: ['gargoyle', 'gargoyle'], desc: 'Stone sentries swoop from the ruined tower.' },
+  { id: 'werebeasts', name: 'Moonlit Hunt', pl: 5, map: 'forest', foes: ['werebear', 'werewolf', 'direWolf'], desc: 'Shapechangers and their wolf hunt in the clearing.' },
+  { id: 'trollBridge', name: 'Forest Troll', pl: 5, map: 'warrens', foes: ['forestTroll', 'witchwarg'], desc: 'A regenerating troll with a witchwarg companion. Bring fire or acid.' },
+  { id: 'wyvernNest', name: 'Wyvern Nest', pl: 6, map: 'tower', foes: ['wyvern', 'giantEagle', 'giantEagle'], desc: 'A venomous wyvern dives from the tower while eagles harry the flanks.' },
+  { id: 'hydraSwamp', name: 'Hydra and Drake', pl: 6, map: 'river', foes: ['hydra', 'jungleDrake'], desc: 'A many-headed hydra blocks the ford; a jungle drake spits venom from above.' },
+  { id: 'medusaLair', name: "Medusa's Garden", pl: 7, map: 'chapel', foes: ['medusa', 'giantAnimatedStatue', 'basilisk'], desc: 'Statues everywhere — some of them still move.' },
+  { id: 'chimeraRift', name: 'Chimera Rift', pl: 8, map: 'lava', foes: ['chimera', 'desertDrake'], desc: 'Three heads, two breath weapons and nowhere cool to stand.' },
+  { id: 'frostGiant', name: 'Frost Giant Raid', pl: 9, map: 'market', foes: ['frostGiant', 'frostDrake', 'frostDrake'], desc: 'A frost giant and its drakes tear through the market.' },
+  { id: 'youngDiabolic', name: 'Young Diabolic Dragon', pl: 10, map: 'lava', foes: ['diabolicDragonYoung', 'greaterHellHound'], desc: 'Hellfire breath, frightful presence and a hound from the pit.' },
+  { id: 'lichCrypt', name: "The Lich's Crypt", pl: 12, map: 'crypt', foes: ['lich', 'graveknight', 'ghostMage'], desc: 'An undead archmage and its bodyguards. Spread out against the spells.' },
+  { id: 'oniRaid', name: 'Shadow and Snow', pl: 13, map: 'market', foes: ['shadowGiant', 'snowOni'], desc: 'A shadow giant and a snow oni descend on the town.' },
+  { id: 'fortuneDragon', name: 'Fortune and Fate', pl: 14, map: 'tower', foes: ['fortuneDragonAdult', 'gylou'], desc: 'An adult fortune dragon with a devil ally atop the watchtower.' },
+  { id: 'ancientDiabolic', name: 'Ancient Diabolic Dragon', pl: 19, map: 'lava', foes: ['diabolicDragonAncient', 'astradaemon'], desc: 'A gargantuan dragon of Hell and a soul-eating daemon. The final exam.' },
+  { id: 'reaper', name: 'The Grim Reaper', pl: 20, map: 'crypt', foes: ['grimReaper', 'nessari'], desc: 'Death itself walks the crypt. Severe.' },
+  { id: 'training', name: 'Training Dummies', pl: 1, map: 'yard', foes: ['zombieShambler', 'skeletonGuard'], desc: 'Two weak undead in an open yard: a clean test of the core math.' }
+].filter(p => p.foes.every(id => D.creatures[id])); };
+D.autoEncounter = function (pl, threat, size, theme, mapId) {
+  if (!mapId && PF.App && PF.App.setup) mapId = PF.App.setup.map;
+  const target = (PF.THREATS.find(t => t.id === threat) || PF.THREATS[2]);
+  const budget = target.xp + target.adj * (size - 4);
+  const pool = Object.values(D.creatures).filter(c => !c.generated && c.lvl >= pl - 4 && c.lvl <= pl + 3 && (!theme || theme === 'any' || (c.theme || []).includes(theme)) && D.creatureFitsMap(c, mapId) && !(c.mc && /spellcaster/i.test(c.id) && U.rand() < 0.5));
+  const out = []; let xp = 0; let guard = 0;
+  while (xp < budget - 5 && guard++ < 40) {
+    const fits = pool.filter(c => xp + PF.creatureXP(c.lvl, pl) <= budget + 5 && PF.creatureXP(c.lvl, pl) > 0);
+    if (!fits.length) break;
+    const leaderOK = out.length === 0 ? fits.filter(c => c.lvl >= pl) : fits.filter(c => out.some(o => (D.creatures[o.id].theme || [])[0] === (c.theme || [])[0]) || U.rand() < 0.3);
+    const c = U.pick(leaderOK.length ? leaderOK : fits);
+    out.push({ id: c.id, adj: null }); xp += PF.creatureXP(c.lvl, pl);
+    if (out.length >= 8) break;
+  }
+  if (!out.length || xp < budget * 0.6) {
+    const flv = theme === 'undead' ? 'undead' : theme === 'beast' ? 'beast' : theme === 'fiend' ? 'fiend' : theme === 'elemental' ? 'elemental' : 'humanoid';
+    while (xp < budget - 5 && out.length < 8) {
+      const rem = budget - xp; const d = rem >= 120 ? 2 : rem >= 60 ? 0 : rem >= 30 ? -1 : -2;
+      const role = U.pick(['brute', 'soldier', 'skirmisher', 'sniper', 'caster']);
+      const c = D.makeCreature({ level: pl + d, role, flavor: flv });
+      out.push({ id: c.id, adj: null }); xp += PF.creatureXP(c.lvl, pl);
+    }
+  }
+  return out;
+};
+})(typeof window !== 'undefined' ? window : globalThis);

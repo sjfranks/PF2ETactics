@@ -90,7 +90,7 @@ PF.installActions = function (B) {
     if (u.flags.mSneak && og) prec.push({ n: u.flags.mSneakDice || 1, d: 6, m: 0, type, precision: true, s: 'sneak attack' });
     if (u.flags.edgePrecision && u.prey === t.id && !u.turn.preyHit) prec.push({ n: u.level >= 19 ? 3 : u.level >= 11 ? 2 : 1, d: 8, m: 0, type, precision: true, s: 'precision edge', edge: true });
     if (s.traits.includes('backstabber') && og) prec.push({ n: 0, d: 0, m: s.atk && s.atk.item >= 3 ? 2 : 1, type, precision: true, s: 'backstabber' });
-    if (u.flags.packAttack && B.alliesOf(u).filter(a => B.threatens(a, t)).length >= 2) prec.push({ n: 1, d: 4, m: 0, type, s: 'pack attack' });
+    if (u.flags.packAttack && B.alliesOf(u).filter(a => B.threatens(a, t)).length >= 2) prec.push({ n: u.flags.packN || 1, d: u.flags.packD || 4, m: 0, type, s: 'pack attack' });
     const deadly = s.traits.find(x => x.startsWith('deadly-d')); const fatal = s.traits.find(x => x.startsWith('fatal-d'));
     return { parts, prec, mods: sm, deadly: deadly ? +deadly.slice(8) : 0, fatal: fatal ? +fatal.slice(7) : 0, type, n: main.n };
   };
@@ -128,7 +128,7 @@ PF.installActions = function (B) {
   // reactions provoked by u doing something within reach. kind: 'manipulate'|'ranged'|'move'
   B.provoke = (u, kind) => {
     let disrupted = false;
-    const rs = B.units.filter(r => r.team !== u.team && B.alive(r) && (r.flags.reactiveStrike || (r.flags.disruptPrey && r.prey === u.id)) && B.canReact(r, 'reactiveStrike') && B.inReach(r, u, B.reachOf(r)));
+    const rs = B.units.filter(r => r.team !== u.team && B.alive(r) && (r.flags.reactiveStrike || (r.flags.disruptPrey && r.prey === u.id)) && !(r.rsMoveOnly && kind !== 'move') && B.canReact(r, 'reactiveStrike') && B.inReach(r, u, B.rsReach(r)));
     for (const r of rs) {
       if (!B.conscious(u)) break;
       const deg = B.reactiveStrike(r, u, kind === 'manipulate' ? 'uses a manipulate action' : kind === 'ranged' ? 'makes a ranged attack' : 'moves');
@@ -139,8 +139,9 @@ PF.installActions = function (B) {
     }
     return { disrupted };
   };
+  B.rsReach = r => r.rsOnly ? Math.max(5, ...r.strikes.filter(x => x.kind === 'melee' && r.rsOnly.some(n => x.name.toLowerCase().includes(n))).map(x => B.reachOf(r, x)), 5) : B.reachOf(r);
   B.reactiveStrike = (r, u, why) => {
-    const s = B.bestStrike(r, u, x => x.kind === 'melee');
+    const s = B.bestStrike(r, u, x => x.kind === 'melee' && (!r.rsOnly || r.rsOnly.some(n => x.name.toLowerCase().includes(n))));
     if (!s) return -1;
     B.useReact(r, 'reactiveStrike');
     B.log(B.nm(r) + ' makes a Reactive Strike as ' + B.nm(u) + ' ' + why + '!', 'react');
@@ -174,8 +175,10 @@ PF.installActions = function (B) {
       B.log(B.nm(t) + ' snaps up a Reactive Shield' + (d2 < deg ? ' — turning the blow!' : '.'), 'react'); deg = d2; R.acTotal = ac2;
     }
     if (o.forceDeg != null) deg = o.forceDeg;
+    let critNote = '';
+    if (deg === 3 && B.immuneTo(t, 'critical-hits')) { deg = 2; critNote = ' (immune to critical hits)'; }
     const detail = 'd20 ' + roll.txt + ' ' + U.sgn(R.atkTotal) + ' = ' + total + ' vs AC ' + R.acTotal + ' | atk: ' + PF.modText(PF.sumMods(R.atk).used.concat([])) + ' | AC: ' + PF.modText(PF.sumMods(R.ac).used) + flatTxt;
-    B.log(B.nm(u) + ' → ' + B.nm(t) + ' · ' + label + ': ' + total + ' vs AC ' + R.acTotal + ' — ' + PF.DEG[deg] + (R.og ? ' (off-guard: ' + R.og + ')' : '') + (R.cover ? ' (' + B.COVERN[R.cover] + ')' : '') + (flatTxt && deg === 1 && R.flat ? flatTxt : ''), 'deg' + deg, detail);
+    B.log(B.nm(u) + ' → ' + B.nm(t) + ' · ' + label + ': ' + total + ' vs AC ' + R.acTotal + ' — ' + PF.DEG[deg] + critNote + (R.og ? ' (off-guard: ' + R.og + ')' : '') + (R.cover ? ' (' + B.COVERN[R.cover] + ')' : '') + (flatTxt && deg === 1 && R.flat ? flatTxt : ''), 'deg' + deg, detail);
     B.emit({ t: 'attack', a: u.id, b: t.id, ranged, deg, c: o.color || (o.spellAtk ? o.spellType : 'weapon') });
     if (s.kind === 'ranged') { if (s.qty != null && s.thrown) s.qty--; if (s.reload) s.loaded = false; }
     // attack bookkeeping
@@ -185,9 +188,13 @@ PF.installActions = function (B) {
     u.fx = u.fx.filter(f => f.key !== 'takeCover');
     if (u.turn.crossbowAce && s.wid && s.wid.includes('crossbow')) u.turn.crossbowAce = false;
     t.fx = t.fx.filter(f => !(f.offGuard && f.once && f.vs === u.id && (!f.melee || s.kind === 'melee')));
+    const magical = !!(o.spellAtk || s.traits.includes('magical') || (s.atk && s.atk.item > 0) || s.monster && u.level >= 5);
+    const splashParts = (s.dmg || []).filter(p => p.splash);
     if (deg >= 2 || (deg === 1 && o.certain)) {
       const spec = B.dmgSpec(u, s, t, o, R);
       const crit = deg === 3;
+      const persist = spec.parts.filter(p => p.persistent);
+      spec.parts = spec.parts.filter(p => !p.persistent && !p.splash);
       let parts = spec.parts.map(p => Object.assign({}, p, crit && spec.fatal && p.main ? { d: spec.fatal } : {}, o.maxDice && p.main ? { max: true } : {}, deg === 1 ? { min: true } : {}));
       let prec = deg === 1 ? [] : spec.prec;
       if (deg === 1) parts = parts.slice(0, 1);
@@ -204,21 +211,44 @@ PF.installActions = function (B) {
       }
       // minimum 1 damage
       const sum = rp.reduce((a, p) => a + p.total, 0); if (sum < 1 && rp.length) rp[0].total = 1;
-      const dealt = B.dealDamage(t, rp, { src: u, crit, strike: s, label: '', spell: !!o.spellAtk });
+      const dealt = B.dealDamage(t, rp, { src: u, crit, strike: s, label: '', spell: !!o.spellAtk, magical, traits: s.traits });
+      if (deg >= 2) persist.forEach(p => B.addPersistent(t, crit ? Object.assign({}, p, { n: (p.n || 0) * 2, m: (p.m || 0) * 2 }) : Object.assign({}, p), u));
+      if (deg >= 2 && splashParts.length) B.splash(u, t, splashParts, s);
       u.turn.lastStrikeHit = t.id;
       if (s.name === 'Claw') { u.turn.clawHits = (u.turn.clawHits || 0) + 1; }
+      { const rn = s.name.toLowerCase(), R0 = u.turn.rend; if (R0 && R0.tid === t.id && R0.sname === rn) R0.n++; else u.turn.rend = { tid: t.id, sname: rn, n: 1 }; }
       B.afterHit(u, s, t, deg, o, dealt);
     } else {
-      u.turn.lastStrikeHit = null;
-      if (deg === 0 && u.flags.critFailNote) { /* */ }
+      u.turn.lastStrikeHit = null; u.turn.rend = null;
+      if (deg === 1 && splashParts.length) B.splash(u, t, splashParts, s);
     }
+    if (deg === 3 && u.flags.momentum && Object.keys(u.enc.rechargeAt).some(k => u.enc.rechargeAt[k] > B.round)) { u.enc.rechargeAt = {}; B.log(B.nm(u) + "'s critical hit recharges its breath (Draconic Momentum).", 'warn'); }
+    if (deg >= 0 && t.reacts && t.reacts.length && B.alive(t) && !o.reaction) B.onStruck(t, u, s, deg);
     if (o.afterAny) o.afterAny(deg);
     B.touch(u); B.touch(t);
     return deg;
   };
+  // splash damage: the target and every other creature within 5 feet (not doubled on a critical hit)
+  B.splash = (u, t, parts, s) => {
+    const r = B.rollParts(parts.map(p => Object.assign({}, p, { splash: false })));
+    B.units.filter(x => B.alive(x) && (x === t || B.inReach(t, x, 5))).forEach(x => B.dealDamage(x, r.parts.map(p => Object.assign({}, p)), { src: u, label: 'Splash', splash: true, traits: s.traits, noReact: true }));
+  };
   B.afterHit = (u, s, t, deg, o, dealt) => {
     if (!B.alive(t)) return;
     const crit = deg === 3;
+    // Monster Core strike riders (Grab / Knockdown / Push follow-ups, afflictions, extra effects)
+    let follow = null;
+    (s.eff || []).forEach(e => {
+      if (!B.alive(t) || deg < 2) return;
+      const [k, a] = e.split(':');
+      if (k === 'igrab') { if (!B.cv(t, 'grabbed') && !B.cv(t, 'restrained')) { B.setC(t, 'grabbed', 1, B.endOfNext(u), u); B.log(B.nm(u) + ' grabs ' + B.nm(t) + ' (Improved Grab).', 'bad'); } }
+      else if (k === 'iknock') { if (!B.flies(t)) { B.knockProne(t); B.log(B.nm(u) + ' knocks ' + B.nm(t) + ' down (Improved Knockdown).', 'bad'); } }
+      else if (k === 'ipush') { B.push(t, u, Math.max(1, Math.round((+a || 5) / 5)), u); }
+      else if (k === 'mgrab' || k === 'mknock' || k === 'mpush') { follow = follow || { tid: t.id, sid: s.id, effs: [] }; follow.effs.push(e); }
+      else if (k === 'aff') { const sp = u.affSpecs && u.affSpecs[a]; if (sp) B.expose(u, t, sp); }
+      else if (k === 'rider') { const sp = u.riders && u.riders[a]; if (sp) B.rider(u, t, sp, deg, dealt); }
+    });
+    if (follow) u.turn.followUp = follow;
     // monster strike riders
     (s.eff || []).forEach(e => {
       if (!B.alive(t)) return;
@@ -257,6 +287,69 @@ PF.installActions = function (B) {
       }
     }
     if (u.flags.debilitating && B.alive(t) && B.offGuardWhy(t, u) && s.kind) { B.addFx(t, { name: 'Debilitated (off-guard)', key: 'debil' + u.id, offGuard: true, vs: null, exp: B.endOfNext(u), bad: true }); }
+  };
+  // extra effects attached to a monster's Strike (sinful bite, energy drain…): {name, save, dc, basic, dmg, outc, heal, temp, crit, needDmg, living, traits}
+  B.rider = (u, t, sp, deg, dealt) => {
+    if (!B.alive(t)) return;
+    if (sp.crit && deg !== 3) return;
+    if (sp.needDmg && !(dealt > 0)) return;
+    if (sp.living && !B.isLiving(t)) return;
+    const tr = sp.traits || [];
+    if ((tr.includes('mental') || tr.includes('emotion')) && B.immuneTo(t, 'mental')) return;
+    if (tr.includes('poison') && B.immuneTo(t, 'poison')) return;
+    if (tr.includes('death') && B.immuneTo(t, 'death')) return;
+    if (sp.once && u.enc.used['rider:' + sp.name + ':' + t.id]) return;
+    let d = 1;
+    if (sp.save) d = B.save(t, sp.save, sp.dc + (u.abilDC || 0), { src: u, basic: sp.basic, traits: tr, fear: tr.includes('fear'), mental: tr.includes('mental'), emotion: tr.includes('emotion'), incap: tr.includes('incapacitation') });
+    if (sp.once) u.enc.used['rider:' + sp.name + ':' + t.id] = true;
+    if (sp.dmg && sp.dmg.length && B.alive(t)) {
+      const f = sp.save ? (sp.basic ? [2, 1, 0.5, 0][d] : (d <= 1 ? 1 : 0)) : 1;
+      if (f > 0) { const r = B.rollParts(sp.dmg.filter(p => !p.persistent)); const got = r.parts.length ? B.dealDamage(t, B.scaleParts(r.parts, f), { src: u, label: sp.name, noReact: true, traits: tr }) : 0; sp.dmg.filter(p => p.persistent).forEach(p => B.addPersistent(t, p, u)); if (sp.drainHeal && got > 0) B.heal(u, got, u, { label: sp.name }); }
+    }
+    if (sp.outc && sp.outc[d]) B.applyEffects(u, t, sp.outc[d], { name: sp.name, dur: sp.dur });
+    if (sp.heal) B.heal(u, sp.heal, u, { label: sp.name });
+    if (sp.temp) { u.temp = Math.max(u.temp, sp.temp); B.touch(u); }
+  };
+  // reactions of a creature that was just attacked: t.reacts = [{name, trig, eff:{kind:'save'|'strike'|'recharge', ...}}]
+  const TRIG = {
+    crit: (t, a, s, deg) => deg === 3, critMelee: (t, a, s, deg) => deg === 3 && s.kind === 'melee',
+    hitMelee: (t, a, s, deg) => deg >= 2 && s.kind === 'melee', damaged: (t, a, s, deg) => deg >= 2,
+    damagedAdj: (t, a, s, deg) => deg >= 2 && B.inReach(t, a, 5), damagedInReach: (t, a, s, deg) => deg >= 2 && s.kind === 'melee',
+    critFailMelee: (t, a, s, deg) => deg === 0 && s.kind === 'melee', attackedMelee: (t, a, s) => s.kind === 'melee'
+  };
+  B.onStruck = (t, a, s, deg) => {
+    for (const r of t.reacts) {
+      if (!TRIG[r.trig] || !B.alive(a) || !B.alive(t) || !B.canReact(t)) continue;
+      if (!TRIG[r.trig](t, a, s, deg, r)) continue;
+      B.doReaction(t, a, r);
+    }
+  };
+  B.doReaction = (t, a, r) => {
+    const e = r.eff || {};
+    if (e.kind === 'strike') {
+      const st = t.strikes.find(x => e.strike && x.name.toLowerCase().includes(e.strike)) || B.bestStrike(t, a, x => x.kind === 'melee');
+      if (!st || !B.prepStrike(t, st, a, { noMAP: true }).ok) return false;
+      B.useReact(t); B.log(B.nm(t) + ' reacts: ' + r.name + '!', 'react'); B.emit({ t: 'float', u: t.id, text: r.name, c: 'react' });
+      B.strike(t, st, a, { reaction: true, noMAP: true, label: r.name, atkMods: e.pen ? [{ t: 'unt', v: e.pen, s: r.name }] : [], extraParts: e.extra ? e.extra.map(p => Object.assign({}, p)) : null });
+      return true;
+    }
+    if (e.kind === 'save') {
+      if (e.range && B.dist(t, a) > e.range) return false;
+      B.useReact(t); B.log(B.nm(t) + ' reacts: ' + r.name + '!', 'react'); B.emit({ t: 'float', u: t.id, text: r.name, c: 'react' });
+      B.rider(t, a, e, 2, 1); return true;
+    }
+    if (e.kind === 'recharge') {
+      if (!Object.keys(t.enc.rechargeAt).some(k => t.enc.rechargeAt[k] > B.round)) return false;
+      B.useReact(t); t.enc.rechargeAt = {}; B.log(B.nm(t) + ' reacts: ' + r.name + ' (abilities recharge).', 'react'); return true;
+    }
+    return false;
+  };
+  B.onEndTurn = u => {
+    // "a creature ends its turn adjacent" reactions (e.g. biting snakes)
+    B.units.forEach(t => {
+      if (t.team === u.team || !t.reacts || !B.alive(u) || !B.alive(t)) return;
+      t.reacts.forEach(r => { if (r.trig === 'endTurnAdj' && B.canReact(t) && B.inReach(t, u, 5)) B.doReaction(t, u, r); });
+    });
   };
   B.critSpec = (u, s, t) => {
     const g = s.group; const nm = B.nm(t);
@@ -319,10 +412,25 @@ PF.installActions = function (B) {
   };
 
   /* ================= SPELLS ================= */
+  const IMM_TRAITS = ['death', 'poison', 'disease', 'curse', 'emotion', 'visual', 'fear'];
   B.castables = u => {
     const out = []; const sp = u.spells;
-    const add = (id, rank, src, ref, extra) => { const s = D.spells[id]; if (!s) return; out.push(Object.assign({ key: src + ':' + id + ':' + rank + ':' + (ref == null ? '' : ref), id, rank, src, ref, spell: s, name: s.name }, extra || {})); };
-    if (sp) {
+    const add = (id, rank, src, ref, extra) => { const s = D.spells[id]; if (!s || s.auto === false) return; out.push(Object.assign({ key: src + ':' + id + ':' + rank + ':' + (ref == null ? '' : ref), id, rank, src, ref, spell: s, name: s.name }, extra || {})); };
+    if (sp && sp.entries) {
+      // Monster Core spellcasting entries (prepared / spontaneous / innate / focus), each with its own DC and attack
+      sp.entries.forEach((e, ei) => {
+        const X = { entry: ei };
+        (e.cantrips || []).forEach(id => add(id, e.cantripRank, 'cantrip', 'e' + ei, X));
+        (e.prepared || []).forEach((p, i) => { if (!p.used) add(p.id, p.rank, 'eprep', ei + '.' + i, X); });
+        if (e.slots) Object.keys(e.slots).forEach(rk => {
+          const r = +rk; const sl = e.slots[rk]; if (sl.used >= sl.max) return;
+          (e.rep || []).forEach(p => { const s0 = D.spells[p.id]; if (!s0) return; if (p.rank === r || ((e.sig || []).includes(p.id) && s0.rank <= r && p.rank < r && !e.rep.some(x => x.id === p.id && x.rank === r))) add(p.id, r, 'eslot', ei + '.' + r, Object.assign({ left: sl.max - sl.used }, X)); });
+        });
+        (e.innate || []).forEach((p, i) => { if (p.used < p.uses) add(p.id, p.rank, 'einnate', ei + '.' + i, Object.assign({ left: p.uses > 50 ? null : p.uses - p.used }, X)); });
+        if (u.focus && u.focus.cur > 0) (e.focus || []).forEach(id => add(id, e.focusRank || Math.max(1, Math.ceil(u.level / 2)), 'efocus', 'e' + ei, X));
+      });
+    }
+    if (sp && !sp.entries) {
       (sp.cantrips || []).forEach(id => add(id, sp.cantripRank, 'cantrip'));
       (sp.prepared || []).forEach((e, i) => { if (!e.used) add(e.id, e.rank, 'prepared', i); });
       if (sp.slots) {
@@ -346,10 +454,10 @@ PF.installActions = function (B) {
     return r;
   };
   B.spellTargetsN = (sp, r) => typeof sp.n === 'function' ? sp.n(r) : (sp.n || 1);
-  B.spellShape = (sp, actions, meta) => {
+  B.spellShape = (sp, actions, meta, r) => {
     if (sp.tgt === 'heal' && actions === 3) return { t: 'emanation', r: 30 };
     if (!sp.area) return null;
-    const a = Object.assign({}, sp.area);
+    const a = Object.assign({}, sp.areaAt && r ? sp.areaAt(r) : sp.area);
     if (meta === 'widen') { if (a.t === 'burst' && a.r >= 10) a.r += 5; else if (a.t === 'cone' || a.t === 'line') a.r += a.r <= (a.t === 'cone' ? 15 : 30) ? 5 : 10; }
     if (meta === 'reach' && a.range) a.range += 30;
     return a;
@@ -426,11 +534,18 @@ PF.installActions = function (B) {
     else if (c.src === 'slot') sp.slots[c.ref].used++;
     else if (c.src === 'font') sp.font.used++;
     else if (c.src === 'innate') sp.innate[c.ref].used++;
-    else if (c.src === 'focus') u.focus.cur--;
+    else if (c.src === 'focus' || c.src === 'efocus') u.focus.cur--;
+    else if (c.src === 'eprep') { const [ei, i] = c.ref.split('.').map(Number); sp.entries[ei].prepared[i].used = true; }
+    else if (c.src === 'eslot') { const [ei, r] = c.ref.split('.').map(Number); sp.entries[ei].slots[r].used++; }
+    else if (c.src === 'einnate') { const [ei, i] = c.ref.split('.').map(Number); sp.entries[ei].innate[i].used++; }
   };
+  // the spellcasting entry a castable belongs to (its DC / attack / tradition apply while casting)
+  B.entryOf = (u, c) => (c && c.entry != null && u.spells && u.spells.entries) ? u.spells.entries[c.entry] : null;
+  B.withEntry = (u, c, fn) => { const prev = u._entry; u._entry = B.entryOf(u, c); try { return fn(); } finally { u._entry = prev; } };
   B.findCastable = (u, key) => B.castables(u).find(c => c.key === key) || null;
   // cast; p: {targets:[ids], gx,gy | px,py, actions}
-  B.cast = (u, c, p = {}) => {
+  B.cast = (u, c, p = {}) => B.withEntry(u, c, () => B.castInner(u, c, p));
+  B.castInner = (u, c, p = {}) => {
     const sp = c.spell; const r = c.rank; const costs = B.spellCosts(sp);
     const actions = p.actions && costs.includes(p.actions) ? p.actions : costs[0];
     if (c.src === 'comp' && u.turn.comp) return { ok: false, err: 'Only one composition per turn' };
@@ -438,7 +553,7 @@ PF.installActions = function (B) {
     if (!B.canSpend(u, actions, 'cast')) return { ok: false, err: 'Not enough actions' };
     // validate
     const meta = p.meta || null;
-    const shape = B.spellShape(sp, actions, meta);
+    const shape = B.spellShape(sp, actions, meta, r);
     let targets = [];
     if (shape) {
       if (shape.t === 'burst') { const rng = shape.range || 0; const corner = B.cornerPt(p.gx, p.gy); if (B.distPt(u, Math.min(p.gx, B.W - 1), Math.min(p.gy, B.H - 1)) > rng + 5 || B.trace(u, corner).blocked) return { ok: false, err: 'Burst centre out of range or blocked' }; }
@@ -493,8 +608,11 @@ PF.installActions = function (B) {
         if (!B.alive(t)) return;
         if ((sp.traits.includes('mental')) && B.immuneTo(t, 'mental')) { B.log(B.nm(t) + ' is immune (mindless).', 'dim'); return; }
         if (sp.traits.includes('sleep') && B.immuneTo(t, 'sleep')) { B.log(B.nm(t) + ' is immune to sleep.', 'dim'); return; }
-        const deg = B.save(t, sp.save, dc, { basic: sp.basic, src: u, origin, area: !!shape, fear: sp.traits.includes('fear'), mental: sp.traits.includes('mental'), emotion: sp.traits.includes('emotion'), incap: sp.incap, rank: r, spell: true });
-        if (roll && sp.basic) { const f = [2, 1, 0.5, 0][deg]; if (f > 0) { const dealt = B.dealDamage(t, B.scaleParts(roll.parts, f), { src: u, spell: true, crit: deg === 0, label: sp.name }); if (sp.afterDamage) sp.afterDamage(B, u, t, dealt); } }
+        const imm = IMM_TRAITS.find(x => sp.traits.includes(x) && B.immuneTo(t, x)); if (imm && !roll) { B.log(B.nm(t) + ' is immune (' + imm + ').', 'dim'); return; }
+        const deg = B.save(t, sp.save, dc, { basic: sp.basic, src: u, origin, area: !!shape, fear: sp.traits.includes('fear'), mental: sp.traits.includes('mental'), emotion: sp.traits.includes('emotion'), incap: sp.incap, rank: r, spell: true, traits: sp.traits, trad: u._entry ? u._entry.trad : (u.spells && u.spells.trad) });
+        const sc = sp.dscale || (sp.basic ? [2, 1, 0.5, 0] : null);
+        if (roll && sc) { const f = sc[deg]; if (f > 0) { const dealt = B.dealDamage(t, B.scaleParts(roll.parts, f), { src: u, spell: true, crit: deg === 0, label: sp.name, area: !!shape, traits: sp.traits }); if (sp.afterDamage) sp.afterDamage(B, u, t, dealt); } }
+        if (imm) return;
         if (sp.onDeg && B.alive(t)) sp.onDeg(B, u, t, deg, r);
       });
     } else if (sp.onDeg) targets.forEach(t => sp.onDeg(B, u, t, 2, r));
@@ -510,6 +628,7 @@ PF.installActions = function (B) {
     let deg; let flatTxt = '';
     if (R.flat) { const f = B.flat(R.flat, R.flatWhy); flatTxt = ' [' + f.txt + ']'; if (!f.ok) deg = 1; }
     const roll = B.d20(0); const total = roll.nat + R.atkTotal; if (deg == null) deg = PF.degree(total, R.acTotal, roll.nat);
+    if (deg === 3 && B.immuneTo(t, 'critical-hits')) deg = 2;
     u.turn.attacks++;
     B.log(B.nm(u) + ' → ' + B.nm(t) + ' · ' + sp.name + ' (spell attack): ' + total + ' vs AC ' + R.acTotal + ' — ' + PF.DEG[deg] + (R.og ? ' (off-guard)' : '') + (R.cover ? ' (' + B.COVERN[R.cover] + ')' : '') + flatTxt, 'deg' + deg, 'd20 ' + roll.txt + ' ' + U.sgn(R.atkTotal) + ' | AC: ' + PF.modText(PF.sumMods(R.ac).used));
     B.emit({ t: 'attack', a: u.id, b: t.id, ranged: !sp.melee, deg, c: o.spellType, spell: true });
@@ -518,7 +637,7 @@ PF.installActions = function (B) {
       const parts = sp.dmg(r, { adjacent: adj }); if (extraFlat) parts[0] = Object.assign({}, parts[0], { m: (parts[0].m || 0) + extraFlat });
       let rp = B.rollParts(parts).parts; if (deg === 3) rp = B.scaleParts(rp, 2);
       if (sp.saveAfterHit) { const d2 = B.save(t, sp.saveAfterHit, B.spellDC(u), { basic: true, src: u, spell: true }); rp = B.scaleParts(rp, [2, 1, 0.5, 0][d2]); }
-      B.dealDamage(t, rp, { src: u, crit: deg === 3, spell: true, label: sp.name });
+      B.dealDamage(t, rp, { src: u, crit: deg === 3, spell: true, label: sp.name, traits: sp.traits });
     }
     return deg;
   };
@@ -817,6 +936,199 @@ PF.installActions = function (B) {
       seq.forEach(s => { if (!s) return; if (!B.alive(t) || !B.conscious(t)) t = B.foesOf(u).find(f => B.conscious(f) && B.prepStrike(u, s, f).ok); if (t && B.prepStrike(u, s, t).ok) B.strike(u, s, t); }); } };
   A.monsterSwipe = Object.assign({}, A.swipe, { name: 'Wide Swing', avail: () => '', group: 'monster', run: (u, p) => { const f = u.turn.flourish; A.swipe.run(u, p); u.turn.flourish = f; } });
 
+  /* ---- Monster Core ability specs (u.mAbil, built by D.unitFromCreature from creature.abilities[].spec) ---- */
+  B.mSpec = (u, key) => (u.mAbil || []).find(a => a.key === key) || null;
+  const SIZE_ORD = s => (PF.SIZE[s] || PF.SIZE.medium).ord;
+  B.grabbedBy = u => B.units.filter(t => B.alive(t) && t !== u && ((t.cond.grabbed && t.cond.grabbed.src === u.id) || (t.cond.restrained && t.cond.restrained.src === u.id)));
+  // availability: recharge, frequency and simple requirements
+  B.mReady = (u, sp) => {
+    if (!sp) return 'Unknown ability';
+    if (sp.recharge && u.enc.rechargeAt[sp.key] && B.round < u.enc.rechargeAt[sp.key]) return 'Recharging (round ' + u.enc.rechargeAt[sp.key] + ')';
+    if (sp.freq === 'battle' && u.enc.used['m:' + sp.key]) return 'Already used this battle';
+    if ((sp.freq === 'round' || sp.freq === 'turn') && u.turn.used && u.turn.used['m:' + sp.key]) return 'Once per turn';
+    if (sp.req === 'grabbed' && !B.grabbedBy(u).length) return 'Needs a grabbed creature';
+    if (sp.kind === 'multi' && sp.move && B.immobile(u)) return 'Immobilized';
+    if (sp.kind === 'trample' && B.immobile(u)) return 'Immobilized';
+    if (sp.kind === 'constrict' && !B.grabbedBy(u).length) return 'Nothing grabbed';
+    if (sp.kind === 'swallow' && (!B.grabbedBy(u).some(t => SIZE_ORD(t.size) <= SIZE_ORD(sp.size || 'medium') && !t.fx.some(f => f.key === 'swallowed')) || B.units.some(t => t.fx && t.fx.some(f => f.key === 'swallowed' && f.by === u.id) && B.alive(t)))) return 'Nothing to swallow';
+    if (sp.kind === 'rend' && !(u.turn.rend && u.turn.rend.n >= 2 && u.turn.rend.sname.includes((sp.strike || '').toLowerCase()))) return 'Needs two hits with ' + (sp.strike || 'the listed Strike');
+    return '';
+  };
+  B.mUse = (u, sp) => {
+    if (sp.recharge) { const r = U.dice(sp.recharge); const n = Math.max(1, B.rollParts([r]).total); u.enc.rechargeAt[sp.key] = B.round + n; u.enc.rechargeMsg = sp.name + ' recharges in ' + n + ' round' + (n > 1 ? 's' : '') + '.'; }
+    if (sp.freq === 'battle') u.enc.used['m:' + sp.key] = true;
+    if (sp.freq === 'round' || sp.freq === 'turn') { u.turn.used = u.turn.used || {}; u.turn.used['m:' + sp.key] = true; }
+  };
+  B.mCost = (u, p) => { const sp = B.mSpec(u, p && p.abil); return sp ? sp.cost : 1; };
+  // resolve a save/damage effect against one target (shared by area abilities, targeted abilities, constrict…)
+  B.mResolve = (u, t, sp, roll, o = {}) => {
+    if (!B.alive(t)) return;
+    const tr = sp.traits || [];
+    if ((tr.includes('mental') || tr.includes('emotion')) && B.immuneTo(t, 'mental')) { B.log(B.nm(t) + ' is immune (mental).', 'dim'); return; }
+    if (sp.living && !B.isLiving(t)) return;
+    let deg = 1;
+    if (sp.save) deg = B.save(t, sp.save, (sp.dc || 15) + (u.abilDC || 0), { basic: sp.basic, src: u, origin: o.origin, area: !!o.area, traits: tr, fear: tr.includes('fear'), mental: tr.includes('mental'), emotion: tr.includes('emotion'), incap: tr.includes('incapacitation'), magical: sp.magical });
+    if (roll && roll.parts.length) {
+      const sc = sp.dscale || (sp.basic || !sp.save ? [2, 1, 0.5, 0] : [2, 1, 0, 0]);
+      const f = sp.save ? sc[deg] : 1;
+      if (f > 0) B.dealDamage(t, B.scaleParts(roll.parts, f), { src: u, crit: deg === 0 && sp.save, label: sp.name, area: !!o.area, traits: tr, magical: sp.magical });
+    }
+    (sp.pdmg || []).forEach(p => { if (B.alive(t) && (!sp.save || deg <= 1)) B.addPersistent(t, deg === 0 ? Object.assign({}, p, { n: (p.n || 0) * 2, m: (p.m || 0) * 2 }) : Object.assign({}, p), u); });
+    if (sp.outc && sp.outc[deg] && B.alive(t)) B.applyEffects(u, t, sp.outc[deg], { name: sp.name, dur: sp.dur || { k: 'r', n: 1 }, traits: tr });
+    if (sp.aff && u.affSpecs && u.affSpecs[sp.aff] && deg <= 1) B.expose(u, t, u.affSpecs[sp.aff]);
+    return deg;
+  };
+  B.mAreaTargets = (u, sp, p) => {
+    const shape = sp.shape; const cells = B.areaCells(u, shape, p); const origin = B.areaOrigin(u, shape, p);
+    let ts = B.unitsInCells(cells, origin).filter(t => t !== u);
+    if (sp.foesOnly) ts = ts.filter(t => t.team !== u.team);
+    return { cells, origin, ts };
+  };
+  A.mArea = { name: 'Area ability', cost: (u, p) => B.mCost(u, p), tgt: 'area', group: 'monster', desc: 'Area attack.',
+    run: (u, p) => {
+      const sp = B.mSpec(u, p.abil); if (!sp) return 'Unknown ability';
+      const shape = sp.shape;
+      if (shape.t === 'burst') { const rng = shape.range || 0; if (p.gx == null || B.distPt(u, Math.min(p.gx, B.W - 1), Math.min(p.gy, B.H - 1)) > rng + 5 || B.trace(u, B.cornerPt(p.gx, p.gy)).blocked) return 'Out of range'; }
+      if ((shape.t === 'cone' || shape.t === 'line') && p.px == null) return 'Choose a direction';
+      B.mUse(u, sp);
+      const { cells, origin, ts } = B.mAreaTargets(u, sp, p);
+      B.log(B.nm(u) + ' uses ' + sp.name + '!', 'cast');
+      const col = (sp.dmg && sp.dmg[0] && sp.dmg[0].type) || (sp.traits || []).find(x => ['fire', 'cold', 'electricity', 'acid', 'sonic', 'void', 'vitality', 'mental', 'spirit', 'force', 'poison'].includes(x)) || 'arcane';
+      B.emit({ t: 'area', cells, c: col, shape: shape.t, origin: { x: origin.pt ? origin.x : u.x + u.sq / 2, y: origin.pt ? origin.y : u.y + u.sq / 2 } });
+      const roll = sp.dmg && sp.dmg.length ? B.rollParts(sp.dmg.map(x => Object.assign({}, x))) : null;
+      if (roll) B.log(sp.name + ' damage: ' + roll.text, 'dim');
+      ts.forEach(t => B.mResolve(u, t, sp, roll, { origin, area: true }));
+      if (u.enc.rechargeMsg) { B.log(B.nm(u) + ': ' + u.enc.rechargeMsg, 'dim'); u.enc.rechargeMsg = null; }
+      if (u.hiddenFrom && u.hiddenFrom.size) B.clearHidden(u, 'attacked');
+    } };
+  // targets of a non-area save ability
+  B.mSaveTargets = (u, sp, p) => {
+    if (sp.targets === 'grabbed') return B.grabbedBy(u);
+    if (sp.targets === 'adjacent') return B.foesOf(u).filter(t => B.inReach(u, t, 5));
+    if (sp.targets === 'all') return B.foesOf(u).filter(t => B.dist(u, t) <= (sp.range || 30) && !B.trace(u, t).blocked);
+    const t = B.get(p.target); return t ? [t] : [];
+  };
+  B.mSaveValid = (u, sp, t) => {
+    if (!t || t.team === u.team) return 'Target a foe';
+    if (sp.targets === 'grabbed') return B.grabbedBy(u).includes(t) ? '' : 'Must be grabbed';
+    const rng = sp.range || 5;
+    if (rng <= 5 ? !B.inReach(u, t, Math.max(5, B.reachOf(u))) : B.dist(u, t) > rng) return 'Out of range';
+    if (B.trace(u, t).blocked) return 'No line of effect';
+    return '';
+  };
+  A.mSave = { name: 'Ability', cost: (u, p) => B.mCost(u, p), tgt: 'unit', group: 'monster', desc: 'A special ability that forces a saving throw.',
+    run: (u, p) => {
+      const sp = B.mSpec(u, p.abil); if (!sp) return 'Unknown ability';
+      const ts = B.mSaveTargets(u, sp, p).slice(0, sp.n || 99);
+      if (!ts.length) return 'No target';
+      if ((sp.targets || 'one') === 'one') { const w = B.mSaveValid(u, sp, ts[0]); if (w) return w; }
+      B.mUse(u, sp);
+      B.log(B.nm(u) + ' uses ' + sp.name + '.', 'cast');
+      const roll = sp.dmg && sp.dmg.length ? B.rollParts(sp.dmg.map(x => Object.assign({}, x))) : null;
+      ts.forEach(t => { B.emit({ t: 'bolt', a: u.id, b: t.id, c: (sp.dmg && sp.dmg[0] && sp.dmg[0].type) || 'mental' }); B.mResolve(u, t, sp, roll, {}); });
+    } };
+  A.mConstrict = { name: 'Constrict', cost: 1, tgt: 'none', group: 'monster', desc: 'Damage every creature you have grabbed (basic Fortitude).',
+    run: (u, p) => {
+      const sp = B.mSpec(u, p.abil); if (!sp) return 'Unknown ability';
+      const ts = B.grabbedBy(u); if (!ts.length) return 'Nothing grabbed';
+      B.log(B.nm(u) + ' constricts!', 'cast');
+      const roll = B.rollParts(sp.dmg.map(x => Object.assign({}, x)));
+      ts.forEach(t => B.mResolve(u, t, Object.assign({ save: 'fort', basic: true }, sp, { outc: sp.greater ? { 0: [{ c: 'unconscious', dur: { k: 'eont' } }], 1: [{ c: 'unconscious', dur: { k: 'eont' } }] } : null }), roll, {}));
+    } };
+  A.mSwallow = { name: 'Swallow Whole', cost: 1, tgt: 'none', traits: ['attack'], group: 'monster', desc: 'Swallow a grabbed creature: it is restrained and takes damage each turn until it Escapes.',
+    run: (u, p) => {
+      const sp = B.mSpec(u, p.abil); if (!sp) return 'Unknown ability';
+      const t = (p.target && B.get(p.target)) || B.grabbedBy(u).find(x => SIZE_ORD(x.size) <= SIZE_ORD(sp.size || 'medium'));
+      if (!t || !B.grabbedBy(u).includes(t) || SIZE_ORD(t.size) > SIZE_ORD(sp.size || 'medium')) return 'Nothing to swallow';
+      B.clrC(t, 'grabbed'); B.setC(t, 'restrained', 1, null, u);
+      B.addFx(t, { name: 'Swallowed by ' + u.name, key: 'swallowed', by: u.id, dmg: sp.dmg.map(x => Object.assign({}, x)), bad: true });
+      B.log(B.nm(u) + ' swallows ' + B.nm(t) + ' whole!', 'bad'); B.emit({ t: 'float', u: t.id, text: 'Swallowed!', c: 'crit' });
+      B.dealDamage(t, B.rollParts(sp.dmg.map(x => Object.assign({}, x))).parts, { src: u, label: 'Swallow Whole', noReact: true });
+    } };
+  A.mRend = { name: 'Rend', cost: 1, tgt: 'none', group: 'monster', desc: 'After two hits with the listed Strike, deal its damage again.',
+    run: (u, p) => {
+      const sp = B.mSpec(u, p.abil); const t = u.turn.rend && B.get(u.turn.rend.tid); const s = u.strikes.find(x => x.name.toLowerCase().includes((sp.strike || '').toLowerCase()));
+      if (!t || !B.alive(t) || !s) return 'No target';
+      u.turn.rend = null; B.log(B.nm(u) + ' rends ' + B.nm(t) + '!', 'bad');
+      const spec = B.dmgSpec(u, s, t, {}, {}); B.dealDamage(t, B.rollParts(spec.parts.filter(x => !x.persistent && !x.splash)).parts, { src: u, label: 'Rend', strike: s, traits: s.traits });
+    } };
+  A.mTrample = { name: 'Trample', cost: 3, tgt: 'move', group: 'monster', desc: 'Move through smaller creatures; each takes Strike damage (basic Reflex).',
+    run: (u, p) => {
+      const sp = B.mSpec(u, p.abil); if (!sp || !p.dest) return 'Choose a destination';
+      const plan = B.tramplePlan(u, sp, p.dest[0], p.dest[1]); if (!plan) return 'Can’t trample there';
+      B.mUse(u, sp); B.log(B.nm(u) + ' tramples!', 'cast');
+      if (!B.moveAlong(u, plan.path, { actId: U.uid('tr') })) return;
+      const s = u.strikes.find(x => x.name.toLowerCase().includes((sp.strike || '').toLowerCase())) || u.strikes.find(x => x.kind === 'melee');
+      plan.hit.forEach(t => { if (!B.alive(t) || !s) return; const spec = B.dmgSpec(u, s, t, {}, {}); const roll = B.rollParts(spec.parts.filter(x => !x.persistent && !x.splash)); B.mResolve(u, t, { name: 'Trample', save: 'ref', basic: true, dc: sp.dc, traits: s.traits }, roll, {}); });
+    } };
+  B.tramplePlan = (u, sp, x, y) => {
+    if (!B.canEnd(u, x, y)) return null;
+    const P = B.paths(u, B.speedOf(u) * 2, { ignoreFoes: true }); const path = B.pathFrom(P, x, y); if (!path) return null;
+    const lim = SIZE_ORD(sp.size || 'medium'); const hit = new Set();
+    for (const [px, py] of path.slice(1)) for (const [cx, cy] of B.cellsOf(u, px, py)) { const o = B.unitAt(cx, cy, u); if (o && o.team !== u.team) { if (SIZE_ORD(o.size) > lim) return null; hit.add(o); } }
+    return { path, hit: [...hit] };
+  };
+  // follow-ups to a successful Strike: Grab / Knockdown / Push (1 action; the Improved versions are free and automatic)
+  const followOK = (u, kind) => { const f = u.turn.followUp; if (!f || !f.effs.some(e => e.split(':')[0] === kind)) return null; const t = B.get(f.tid); if (!t || !B.alive(t)) return null; return t; };
+  A.mGrab = { name: 'Grab', cost: 1, tgt: 'none', traits: ['attack'], group: 'monster', desc: 'The creature you just hit is grabbed until the end of your next turn.',
+    avail: u => { const t = followOK(u, 'mgrab'); return !t ? 'Your last action must be a hit with a Grab Strike' : (B.cv(t, 'grabbed') || B.cv(t, 'restrained')) ? 'Already held' : ''; },
+    run: u => { const t = followOK(u, 'mgrab'); if (!t) return 'No target'; B.setC(t, 'grabbed', 1, B.endOfNext(u), u); B.log(B.nm(u) + ' grabs ' + B.nm(t) + '.', 'bad'); B.emit({ t: 'float', u: t.id, text: 'Grabbed', c: 'info' }); } };
+  A.mKnock = { name: 'Knockdown', cost: 1, tgt: 'none', traits: ['attack'], group: 'monster', desc: 'The creature you just hit falls prone.',
+    avail: u => { const t = followOK(u, 'mknock'); return !t ? 'Your last action must be a hit with a Knockdown Strike' : B.cv(t, 'prone') ? 'Already prone' : B.flies(t) ? 'Can’t knock down a flyer' : ''; },
+    run: u => { const t = followOK(u, 'mknock'); if (!t) return 'No target'; B.knockProne(t); B.log(B.nm(u) + ' knocks ' + B.nm(t) + ' down.', 'bad'); } };
+  A.mPush = { name: 'Push', cost: 1, tgt: 'none', traits: ['attack'], group: 'monster', desc: 'Push the creature you just hit away.',
+    avail: u => followOK(u, 'mpush') ? '' : 'Your last action must be a hit with a Push Strike',
+    run: u => { const t = followOK(u, 'mpush'); if (!t) return 'No target'; const e = u.turn.followUp.effs.find(x => x.startsWith('mpush')); const ft = +(e.split(':')[1] || 5); B.push(t, u, Math.max(1, Math.round(ft / 5)), u); } };
+  // multi-Strike activities (Draconic Frenzy, Pounce, Storm of Jaws, Wide Swing…)
+  // spec: {seq:[names...], move:0|1|2, moveFt, diff, hold, pen, mapCount, atk, dmg, onHit:[effects], swipe:n, reqGrab}
+  B.mStrikeFor = (u, name, t) => {
+    const ms = u.strikes.filter(s => s.kind === 'melee' || name === '*ranged');
+    const nm = (name || '').toLowerCase();
+    let c = nm && nm !== '*' ? u.strikes.filter(s => s.name.toLowerCase() === nm || s.name.toLowerCase().includes(nm) || nm.includes(s.name.toLowerCase())) : ms;
+    if (!c.length) c = ms;
+    if (t) { const ok = c.filter(s => B.prepStrike(u, s, t, { noMAP: true }).ok); if (ok.length) return B.bestStrike(u, t, s => ok.includes(s)) || ok[0]; return null; }
+    return c[0] || null;
+  };
+  A.mStrikes = { name: 'Multi-Strike', cost: (u, p) => B.mCost(u, p), tgt: 'unit', group: 'monster', desc: 'Several Strikes in one activity.',
+    run: (u, p) => {
+      const sp = B.mSpec(u, p.abil); if (!sp) return 'Unknown ability';
+      let t = B.get(p.target);
+      if (sp.move && p.dest && (p.dest[0] !== u.x || p.dest[1] !== u.y)) {
+        const P = B.paths(u, sp.moveFt || B.speedOf(u) * sp.move); const path = B.pathFrom(P, p.dest[0], p.dest[1]);
+        if (!path || !B.canEnd(u, p.dest[0], p.dest[1])) return 'Can’t reach';
+        B.mUse(u, sp);
+        if (!B.moveAlong(u, path, { actId: U.uid('ms') })) return;
+        if (!B.canAct(u)) return;
+      } else B.mUse(u, sp);
+      const n0 = u.turn.attacks; const atkMods = []; if (sp.pen) atkMods.push({ t: 'unt', v: sp.pen, s: sp.name }); if (sp.atk) atkMods.push({ t: 'circ', v: sp.atk, s: sp.name });
+      const dmgMods = sp.dmg ? [{ t: 'circ', v: sp.dmg, s: sp.name }] : [];
+      const used = new Set(); let made = 0;
+      if (sp.swipe) {
+        const s = B.mStrikeFor(u, sp.seq[0], t); if (!s || !t) return 'Out of reach';
+        const others = B.foesOf(u).filter(f => f !== t && B.conscious(f) && B.prepStrike(u, s, f).ok && B.inReach(t, f, 5)).slice(0, sp.swipe - 1);
+        const nat = U.d(20);
+        [t].concat(others).forEach(x => { u.turn.attacks = n0; const R = B.prepStrike(u, s, x, { atkMods }); const deg = PF.degree(nat + R.atkTotal, R.acTotal, nat); B.strike(u, s, x, { forceDeg: deg, noMAPinc: true, label: sp.name, atkMods, dmgMods }); });
+        u.turn.attacks = n0 + (sp.mapCount || 2); return;
+      }
+      for (const name of sp.seq) {
+        if (!B.canAct(u)) break;
+        let tgt = t && B.alive(t) && B.conscious(t) && !(sp.diff && used.has(t.id)) ? t : null;
+        if (!tgt || !B.mStrikeFor(u, name, tgt)) {
+          tgt = B.foesOf(u).filter(f => B.conscious(f) && !(sp.diff && used.has(f.id)) && B.mStrikeFor(u, name, f)).sort((a, b) => a.hp - b.hp)[0] || null;
+          if (!tgt && !sp.diff && t && B.alive(t) && B.mStrikeFor(u, name, t)) tgt = t;
+        }
+        if (!tgt) continue;
+        const s = B.mStrikeFor(u, name, tgt); if (!s) continue;
+        if (sp.hold) u.turn.attacks = n0;
+        const d = B.strike(u, s, tgt, { label: sp.name, atkMods, dmgMods, noMAPinc: !!sp.hold });
+        used.add(tgt.id); made++;
+        if (d >= 2 && sp.onHit && B.alive(tgt)) B.applyEffects(u, tgt, sp.onHit, { name: sp.name });
+        if (sp.diff) t = null;
+      }
+      if (sp.hold) u.turn.attacks = n0 + (sp.mapCount || made);
+      else if (sp.mapCount) u.turn.attacks = n0 + sp.mapCount;
+    } };
+
   /* ================= CATALOGUE FOR UI / AI ================= */
   B.hp100 = u => u.hp / B.maxHP(u);
   B.costOf = (u, a, p) => typeof a.cost === 'function' ? a.cost(u, p) : (a.cost2 ? a.cost2(u) : a.cost);
@@ -825,7 +1137,7 @@ PF.installActions = function (B) {
     const push = (id, a, extra) => {
       const A0 = Object.assign({}, a, extra || {}); A0.id = id;
       let why = A0.avail ? A0.avail(u) : '';
-      const c = B.costOf(u, A0, {});
+      const c = B.costOf(u, A0, { abil: A0.abil });
       if (!why && typeof c === 'number' && !B.canSpend(u, c, A0.kind)) why = 'Not enough actions';
       if (!why && raging(u) && (A0.traits || []).includes('concentrate') && !(A0.traits || []).includes('rage') && id !== 'seek' && !(id === 'demoralize' && u.flags.ragingIntimidation)) why = 'Can’t concentrate while raging';
       if (!why && B.cv(u, 'restrained') && id !== 'escape') why = 'Restrained';
@@ -861,6 +1173,14 @@ PF.installActions = function (B) {
       if (id === 'stance') return;
       if (A[id]) push(id, A[id]);
     });
+    // Monster Core ability specs
+    (u.mAbil || []).forEach(sp => {
+      const id = { area: 'mArea', save: 'mSave', multi: 'mStrikes', constrict: 'mConstrict', swallow: 'mSwallow', trample: 'mTrample', rend: 'mRend' }[sp.kind]; if (!id) return;
+      const base = A[id];
+      const tgt = id === 'mArea' ? (sp.shape.t === 'emanation' ? 'none' : 'area') : id === 'mSave' ? ((sp.targets || 'one') === 'one' ? 'unit' : 'none') : id === 'mStrikes' ? (sp.move ? 'move+unit' : 'unit') : base.tgt;
+      push(id, base, { name: sp.name, abil: sp.key, shape: sp.shape, tgt, moveMult: sp.move || 1, desc: sp.text || base.desc, avail: u2 => B.mReady(u2, sp) || (base.avail ? base.avail(u2) : '') });
+    });
+    if (u.mFollow) ['mGrab', 'mKnock', 'mPush'].forEach(id => { if (u.mFollow.includes(id)) push(id, A[id]); });
     (u.feats || []).forEach(fid => { const f = D.feats[fid]; if (!f) return; if (f.act === 'stance') push('stance', A.stance, { name: f.name, stance: f.stance, desc: f.desc, avail: u2 => u2.fx.some(x => x.key === 'stance' && x.stance === f.stance) ? 'Already in this stance' : '' }); });
     if (u.flags.lingering) push('lingering', A.lingering);
     if (u.flags.fortissimo) push('fortissimo', A.fortissimo);
@@ -879,6 +1199,7 @@ PF.installActions = function (B) {
   B.doAction = (u, id, p = {}) => {
     if (B.over) return { ok: false, err: 'Battle over' };
     if (B.cur !== u) return { ok: false, err: 'Not your turn' };
+    if (id === 'cast' || id === 'move') u.turn.followUp = null;
     if (id === 'cast') { const c = B.findCastable(u, p.castKey); if (!c) return { ok: false, err: 'Spell not available' }; const meta = u.turn.meta; const r = B.cast(u, c, Object.assign({}, p, { meta })); if (r.ok) u.turn.meta = null; return r; }
     if (id !== 'reachSpell' && id !== 'widenSpell') u.turn.meta = null;
     if (id === 'move') return B.doMove(u, p.dest);
@@ -886,6 +1207,7 @@ PF.installActions = function (B) {
     let A0 = a;
     if (p.abil) { const ab = D.abilities[p.abil]; if (ab && ab.act === 'swipe') A0 = A.monsterSwipe; }
     const why = A0.avail ? A0.avail(u) : ''; if (why) return { ok: false, err: why };
+    if (p.abil && id.charAt(0) === 'm' && B.mSpec(u, p.abil)) { const w = B.mReady(u, B.mSpec(u, p.abil)); if (w) return { ok: false, err: w }; }
     if (A0.valid && p.target) { const t = B.get(p.target); const w = t ? A0.valid(u, t) : 'No target'; if (w) return { ok: false, err: w }; }
     const cost = B.costOf(u, A0, p);
     if (!B.canSpend(u, cost, A0.kind)) return { ok: false, err: 'Not enough actions' };
@@ -894,9 +1216,11 @@ PF.installActions = function (B) {
     u.turn.actsUsed.push(id);
     if (id !== 'strike' && id !== 'knockback') { /* keep lastStrikeHit only right after a strike */ }
     const prevHit = u.turn.lastStrikeHit;
+    const prevFollow = u.turn.followUp; u.turn.followUp = null;
     if (id !== 'knockback') u.turn.lastStrikeHit = null;
     if (id === 'knockback') u.turn.lastStrikeHit = prevHit;
-    const err = A0.run(u, p);
+    const err = (id === 'mGrab' || id === 'mKnock' || id === 'mPush') ? (u.turn.followUp = prevFollow, A0.run(u, p)) : A0.run(u, p);
+    if (id === 'mGrab' || id === 'mKnock' || id === 'mPush') { if (u.turn.followUp === prevFollow) u.turn.followUp = null; }
     if (err) { B.log(err, 'dim'); }
     B.touch(u);
     B.checkOver();

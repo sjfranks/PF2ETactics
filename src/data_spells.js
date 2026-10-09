@@ -280,6 +280,73 @@ def('qiRush', { name: 'Qi Rush', rank: 1, focus: true, trad: 'divine', cost: 1, 
   cast: (B, u, r, p) => { B.moveTo(u, p.path, { noReact: false }); B.addFx(u, { name: 'Qi Rush', key: 'qiRush', concealed: true, exp: B.untilStart(u) }); },
   ai: { kind: 'none' }, desc: '1 action: move up to twice your Speed and become concealed until your next turn.' });
 
+/* ===== GENERIC (IMPORTED) SPELLS =====
+   D.autoSpell(spec) turns a JSON spec from data_spells_auto.js (tools/import_spells.py) into a spell record
+   with dmg(r) (interval + fixed heightening, rank-scaled dice), pdmg(r) (persistent parts), n(r), areaAt(r),
+   onDeg (outcome effects per degree via B.applyEffects), and cast() for heal / buff spells. */
+const DUR = (B, u, t, d) => {
+  if (!d) return null;
+  if (typeof d === 'string') { const s = d.toLowerCase(); if (/^1 round|^until the start of your next turn/.test(s)) return B.untilStart(u); if (/end of your next turn|end of the target's next turn/.test(s)) return B.endOfNext(u); if (/(\d+) rounds?/.test(s)) return B.rounds(u, +s.match(/(\d+) rounds?/)[1]); return B.minute(u); }
+  if (d.k === 'r') return B.rounds(u, d.n || 1);
+  if (d.k === 'min') return B.minute(u);
+  if (d.k === 'eont') return B.endOfNext(u);
+  if (d.k === 'sont') return B.untilStart(u);
+  if (d.k === 'eot') return B.endOfTurn(u);
+  return null;
+};
+D.effDur = DUR;
+const avgP = ps => ps.reduce((a, p) => a + (p.n || 0) * ((p.d || 0) + 1) / 2 + (p.m || 0), 0);
+D.autoSpell = function (o) {
+  const s = Object.assign({}, o);
+  s.trad = (o.trad || []).slice(); s.traits = (o.traits || []).slice(); s.isAuto = true;
+  if (s.rank === 0 && !s.traits.includes('cantrip')) s.traits.push('cantrip');
+  if (s.focus && s.rank !== 0) s.rank = Math.max(1, o.flvl || 1);
+  const base = Math.max(1, o.focus ? (o.flvl || 1) : (o.rank || 1));
+  const every = (o.hi && o.hi.e) || 1;
+  const steps = r => o.hi ? Math.max(0, Math.floor((r - base) / every)) : 0;
+  const hfKeys = Object.keys(o.hf || {}).map(Number).sort((a, b) => a - b);
+  const fixed = (r, f) => { let v = null; hfKeys.forEach(l => { if (l <= r && o.hf[l][f] != null) v = o.hf[l][f]; }); return v; };
+  const partsAt = r => {
+    let ps = fixed(r, 'dmg') || o.dmg || [];
+    ps = ps.map(p => ({ n: p.nr ? Math.max(1, Math.floor(r * p.nr[0] / p.nr[1])) : (p.n || 0), d: p.d || 0, m: p.m || 0, type: p.type || 'untyped', cat: p.cat || null }));
+    if (o.hi && o.hi.add) { const k = steps(r); Object.keys(o.hi.add).forEach(i => { const a = o.hi.add[i], p = ps[+i]; if (p && k) { p.n += (a.n || 0) * k; p.m += (a.m || 0) * k; if (!p.d) p.d = a.d; } }); }
+    return ps;
+  };
+  if (o.dmg || fixed(10, 'dmg')) {
+    s.dmg = (r) => partsAt(r).filter(p => p.cat !== 'persistent' && p.type !== 'healing').map(p => ({ n: p.n, d: p.d, m: p.m, type: p.type }));
+    s.pdmg = (r) => partsAt(r).filter(p => p.cat === 'persistent').map(p => ({ n: p.n, d: p.d, m: p.m, type: p.type }));
+    if (!s.dmg(Math.max(1, s.rank)).length) delete s.dmg;
+  }
+  if (o.n != null || hfKeys.some(l => o.hf[l].n != null)) s.n = r => fixed(r, 'n') || o.n || 1;
+  if (o.area && ((o.hi && o.hi.ar) || hfKeys.some(l => o.hf[l].ar))) s.areaAt = r => Object.assign({}, o.area, { r: o.area.r + (o.hi && o.hi.ar ? o.hi.ar * steps(r) : 0) + (fixed(r, 'ar') || 0) });
+  // per-degree effect value for the AI
+  const W = { frightened: 3, sickened: 3, clumsy: 2.5, enfeebled: 2.5, stupefied: 2, drained: 2.5, stunned: 8, slowed: 10, doomed: 2, dazzled: 3, blinded: 10, deafened: 1, immobilized: 5, paralyzed: 22, fleeing: 9, offguard: 3, fascinated: 4, confused: 9, grabbed: 5, restrained: 10, fatigued: 2, unconscious: 22, petrified: 25, prone: 4, controlled: 25 };
+  s.outcVal = [0, 1, 2, 3].map(k => ((o.outc && o.outc[k]) || []).reduce((a, e) => a + (e.c ? (W[e.c] || 2) * (['frightened', 'sickened', 'clumsy', 'enfeebled', 'stupefied', 'drained', 'stunned', 'slowed'].includes(e.c) ? (e.v || 1) : 1) * (e.dur && (e.dur.k === 'r' && (e.dur.n || 1) <= 1 || e.dur.k === 'sont') ? 0.6 : 1) : e.persist ? avgP([e.persist]) * 2 : e.lose ? 7 * e.lose : e.push ? 1 : 0), 0));
+  if (o.save || o.atk) {
+    s.onDeg = (B, u, t, deg, r) => {
+      const effs = ((o.outc && o.outc[deg]) || []).filter(e => !e.dmg);
+      if (effs.length) B.applyEffects(u, t, effs, { name: s.name, spell: s, r, traits: s.traits, dur: o.dur });
+      if (!o.persistInOutc && s.pdmg) { const pp = s.pdmg(r); const on = o.atk ? deg >= 2 : deg <= 1; if (pp.length && on && B.alive(t)) pp.forEach(p => B.addPersistent(t, (deg === 0 && !o.atk) || (deg === 3 && o.atk) ? Object.assign({}, p, { n: p.n * 2, m: p.m * 2 }) : p, u)); }
+    };
+  }
+  if (o.heal && o.hdmg) {
+    const hp = r => { const ps = (fixed(r, 'dmg') || o.hdmg).map(p => ({ n: p.nr ? Math.max(1, Math.floor(r * p.nr[0] / p.nr[1])) : p.n, d: p.d, m: p.m || 0, type: 'heal' })); if (o.hi && o.hi.add) { const k = steps(r); Object.keys(o.hi.add).forEach(i => { const p = ps[+i]; if (p) { p.n += (o.hi.add[i].n || 0) * k; p.m += (o.hi.add[i].m || 0) * k; } }); } return ps; };
+    s.tgt = 'ally'; s.cast = (B, u, r, p) => { const roll = B.rollParts(hp(r)); (p.targets || []).map(id => B.get(id)).filter(Boolean).forEach(t => { if (s.livingOnly && !B.isLiving(t)) return; B.emit({ t: 'bolt', a: u.id, b: t.id, c: 'heal' }); B.heal(t, roll.total, u, { spell: true, rank: r, label: s.name }); }); };
+    s.ai = { kind: 'healOne', avg: r => avgP(hp(r)) };
+  }
+  if (o.buff) {
+    const b = o.buff;
+    s.cast = (B, u, r, p) => {
+      const ts = s.tgt === 'self' ? [u] : (p.targets || []).map(id => B.get(id)).filter(Boolean);
+      ts.forEach(t => { B.addFx(t, { name: s.name, key: 'sp:' + s.id, mods: (b.mods || []).map(m => Object.assign({}, m)), resist: b.resist || null, exp: DUR(B, u, t, o.dur || '1 minute') }); if (b.temp) t.temp = Math.max(t.temp, b.temp); B.log(B.nm(t) + ' gains ' + s.name + '.', 'good'); });
+    };
+    s.ai = Object.assign({}, o.ai, { kind: s.tgt === 'self' ? 'buffSelf' : 'buffOne' });
+  }
+  if (s.focus) s.trad = s.trad.length ? s.trad : ['occult'];
+  SP[o.id] = s;
+  return s;
+};
+
 // tradition lists
-D.spellList = trad => Object.values(SP).filter(s => !s.focus && !s.comp && s.trad.includes(trad));
+D.spellList = trad => Object.values(SP).filter(s => !s.focus && !s.comp && s.auto !== false && s.trad.includes(trad));
 })(typeof window !== 'undefined' ? window : globalThis);

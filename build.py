@@ -1,6 +1,6 @@
 import sys, os
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
-order = ['core','data_rules','data_classes','data_spells','data_bestiary','data_maps','builder','engine','actions','ai','render3d','ui_core','ui_builder','ui_battle']
+order = ['core','data_rules','data_classes','data_spells','data_spells_auto','data_bestiary','data_mc','data_maps','builder','engine','actions','ai','render3d','ui_core','ui_builder','ui_battle']
 js = '\n'.join(open('src/%s.js' % f).read() for f in order) + '\nPF.App.boot();\n'
 css = open('src/style.css').read()
 shell = open('src/shell.html').read()
