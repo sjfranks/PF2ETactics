@@ -1,95 +1,121 @@
 <title>Three-Action Tactics</title>
+<meta name="color-scheme" content="dark">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marcellus+SC&family=Barlow+Semi+Condensed:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Barlow+Semi+Condensed:wght@400;500;600;700&family=Barlow+Condensed:wght@500;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap">
 <style>
 /*CSS*/
 </style>
 <div id="app">
   <div id="stage"></div>
   <div id="plates"></div>
+  <div class="vignette" aria-hidden="true"></div>
 
   <!-- HOME -->
   <section id="home" class="screen">
-    <div class="home-panel">
-      <div class="eyebrow">Pathfinder Second Edition rules sandbox</div>
-      <h1 class="title">Three&#8209;Action<br>Tactics</h1>
-      <p class="lede">Build heroes from level 1 to 20, assemble encounters on the GM Core XP budget, and fight them turn by turn on a 3D grid. Every Strike, save, flank and Reactive Strike is rolled and shown.</p>
-      <div class="home-actions">
-        <button class="btn primary big" id="btnQuick">Quick battle</button>
-        <button class="btn big" id="btnSetup">Build a skirmish</button>
-        <button class="btn big" id="btnRoster">Characters</button>
+    <div class="home-wrap">
+      <div class="home-panel">
+        <div class="eyebrow"><span class="acts" aria-hidden="true">◆◆◆</span> Pathfinder Second Edition · tactical rules sandbox</div>
+        <h1 class="title">Three&#8209;Action<br><span>Tactics</span></h1>
+        <p class="lede">Build heroes from level 1 to 20, budget encounters with the GM Core XP tables, and fight them turn by turn on a 3D grid. Every Strike, save, flank and Reactive Strike is rolled and explained.</p>
+        <nav class="home-menu" aria-label="Main menu">
+          <button class="menu-card primary" id="btnQuick"><span class="mc-ico" data-ico="swords2"></span><span class="mc-txt"><b>Quick battle</b><small>A random prebuilt encounter with the pregenerated heroes</small></span><span class="mc-go" data-ico="next"></span></button>
+          <button class="menu-card" id="btnSetup"><span class="mc-ico" data-ico="map"></span><span class="mc-txt"><b>Build a skirmish</b><small>Pick heroes, monsters, threat and battlefield</small></span><span class="mc-go" data-ico="next"></span></button>
+          <button class="menu-card" id="btnRoster"><span class="mc-ico" data-ico="users"></span><span class="mc-txt"><b>Characters</b><small>Create and level your own heroes</small></span><span class="mc-go" data-ico="next"></span></button>
+        </nav>
+        <div class="home-row">
+          <button class="btn ghost small" id="btnHomeSettings"><span data-ico="gear"></span> Settings</button>
+          <button class="btn ghost small" id="btnHomeHelp"><span data-ico="help"></span> How to play</button>
+        </div>
+        <div class="home-foot">Remaster rules (Player Core, GM Core, Monster Core). Unofficial fan tool; not affiliated with Paizo.</div>
       </div>
-      <div class="home-foot">Remaster rules (Player Core, GM Core, Monster Core). Unofficial fan tool; not affiliated with Paizo.</div>
+      <aside class="home-side" aria-label="How a turn works">
+        <div class="hs-title">Every turn</div>
+        <div class="hs-row"><span class="dia">◆</span><div><b>Three actions</b><small>Stride, Strike, cast, Raise a Shield — spend them in any order.</small></div></div>
+        <div class="hs-row"><span class="dia r">⟲</span><div><b>One reaction</b><small>Reactive Strike, Shield Block, champion reactions.</small></div></div>
+        <div class="hs-row"><span class="dia m">−5</span><div><b>Multiple attack penalty</b><small>Each attack after the first is harder. Agile weapons soften it.</small></div></div>
+        <div class="hs-row"><span class="dia c">20</span><div><b>Degrees of success</b><small>Beat the DC by 10 for a critical; natural 20s and 1s shift the result.</small></div></div>
+      </aside>
     </div>
   </section>
 
   <!-- SETUP -->
   <section id="setup" class="screen page" hidden>
     <header class="bar">
-      <button class="btn ghost" data-go="home">‹ Home</button>
-      <h2>Skirmish builder</h2>
+      <button class="btn ghost" data-go="home"><span data-ico="back"></span> Home</button>
+      <div class="bar-title"><small>Skirmish</small><h2>Encounter builder</h2></div>
       <div class="grow"></div>
-      <button class="btn primary" id="btnDeploy">Deploy ›</button>
+      <div class="bar-sum" id="setupSum"></div>
+      <button class="btn primary" id="btnDeploy">Deploy <span data-ico="next"></span></button>
     </header>
-    <div class="page-body">
-      <div class="presets">
-        <div class="label">Prebuilt encounters</div>
+    <div class="page-body setup-body">
+      <section class="presets" aria-label="Prebuilt encounters">
+        <div class="sec-label">Prebuilt encounters</div>
         <div id="presetList" class="preset-list"></div>
-      </div>
+      </section>
       <div class="cols">
-        <div class="col">
-          <div class="col-head"><h3>Party</h3>
+        <section class="col col-party">
+          <div class="col-head"><h3><span data-ico="users"></span> Party</h3>
             <div class="stepper" title="Party level"><span>Level</span><button class="btn tiny" id="plDown" aria-label="Lower party level">−</button><b id="plVal">1</b><button class="btn tiny" id="plUp" aria-label="Raise party level">+</button></div>
           </div>
           <div id="partyList" class="list"></div>
-          <div class="row gap">
-            <button class="btn" id="btnAddHero">+ Add hero</button>
-            <button class="btn ghost" id="btnIconicParty">Iconic four</button>
+          <div class="row gap wrap">
+            <button class="btn" id="btnAddHero"><span data-ico="plus"></span> Add hero</button>
+            <button class="btn ghost" id="btnIconicParty">Default four</button>
           </div>
-          <p class="note">Heroes are rebuilt at the party level from their build choices, with standard runes, armor and a healing potion for that level. Tick <b>AI</b> to let the computer play a hero.</p>
-        </div>
-        <div class="col">
-          <div class="col-head"><h3>Opposition</h3><span id="xpLabel" class="pill"></span></div>
+          <p class="note">Heroes are rebuilt at the party level from their build choices, with standard runes, armor and a healing potion for that level. Toggle <b>AI</b> to let the computer play a hero.</p>
+        </section>
+        <section class="col col-opp">
+          <div class="col-head"><h3><span data-ico="skull"></span> Opposition</h3><span id="xpLabel" class="pill"></span></div>
           <div id="xpBar" class="xpbar"></div>
           <div id="foeList" class="list"></div>
           <div class="genrow">
-            <select id="genThreat" aria-label="Threat"><option value="low">Low</option><option value="moderate" selected>Moderate</option><option value="severe">Severe</option><option value="extreme">Extreme</option><option value="trivial">Trivial</option></select>
+            <select id="genThreat" aria-label="Threat"><option value="trivial">Trivial</option><option value="low">Low</option><option value="moderate" selected>Moderate</option><option value="severe">Severe</option><option value="extreme">Extreme</option></select>
             <select id="genTheme" aria-label="Theme"></select>
-            <button class="btn" id="btnGen">Generate</button>
+            <button class="btn" id="btnGen"><span data-ico="d20"></span> Generate</button>
             <button class="btn ghost" id="btnClearFoes">Clear</button>
           </div>
-          <details class="bestiary" open>
-            <summary>Bestiary</summary>
-            <div class="row gap"><input id="bSearch" type="search" placeholder="Search creatures" aria-label="Search creatures"><select id="bTheme" aria-label="Filter"></select></div>
-            <div id="bList" class="blist"></div>
-          </details>
+          <div class="bestiary" id="bestiary">
+            <div class="best-head"><h4>Bestiary</h4><span class="dim" id="bCount"></span></div>
+            <div class="best-filters">
+              <label class="search"><span data-ico="search"></span><input id="bSearch" type="search" placeholder="Search name or trait" aria-label="Search creatures"></label>
+              <select id="bTheme" aria-label="Trait or theme"></select>
+              <select id="bSize" aria-label="Size"></select>
+              <span class="lvrange"><label>Lv <input id="bLvMin" type="number" min="-1" max="25" aria-label="Minimum level"></label><span>–</span><input id="bLvMax" type="number" min="-1" max="25" aria-label="Maximum level"></span>
+              <select id="bSort" aria-label="Sort"><option value="lvl">Sort: level</option><option value="name">Sort: name</option><option value="xp">Sort: XP</option></select>
+              <label class="tog" title="Group rows by level"><input type="checkbox" id="bGroup" checked> Group</label>
+              <button class="btn tiny ghost" id="bReset" title="Reset filters">Reset</button>
+            </div>
+            <div class="btable-head" aria-hidden="true"><span>Lv</span><span>Creature</span><span>Size</span><span>XP</span><span></span></div>
+            <div id="bList" class="blist" role="list"></div>
+          </div>
           <details class="custom">
-            <summary>Custom creature (GM Core building tables)</summary>
+            <summary>Custom creature <span class="dim">GM Core building tables</span></summary>
             <div class="row gap wrap">
               <label>Level <input id="cLvl" type="number" min="-1" max="24" value="1"></label>
               <label>Role <select id="cRole"></select></label>
               <label>Flavor <select id="cFlavor"></select></label>
-              <button class="btn" id="btnCustom">Add</button>
+              <button class="btn" id="btnCustom"><span data-ico="plus"></span> Add</button>
             </div>
           </details>
-        </div>
-        <div class="col">
-          <div class="col-head"><h3>Battlefield</h3></div>
+        </section>
+        <section class="col col-map">
+          <div class="col-head"><h3><span data-ico="map"></span> Battlefield</h3></div>
           <div id="mapList" class="maps"></div>
-        </div>
+        </section>
       </div>
     </div>
+    <aside class="flyout" id="bFly" hidden></aside>
   </section>
 
   <!-- ROSTER / BUILDER -->
   <section id="roster" class="screen page" hidden>
     <header class="bar">
-      <button class="btn ghost" data-go="back">‹ Back</button>
-      <h2>Characters</h2>
+      <button class="btn ghost" data-go="back"><span data-ico="back"></span> Back</button>
+      <div class="bar-title"><small>Characters</small><h2>Hero builder</h2></div>
       <div class="grow"></div>
-      <button class="btn" id="btnNewChar">New character</button>
-      <button class="btn ghost" id="btnRandChar">Random</button>
+      <button class="btn" id="btnNewChar"><span data-ico="plus"></span> New character</button>
+      <button class="btn ghost" id="btnRandChar"><span data-ico="d20"></span> Random</button>
     </header>
     <div class="page-body builder">
       <aside class="roster-list" id="rosterList"></aside>
@@ -101,47 +127,64 @@
   <!-- BATTLE HUD -->
   <section id="battle" class="screen hud" hidden>
     <div class="hud-top">
-      <button class="btn ghost small" id="btnLeave" title="Leave battle">‹ Leave</button>
-      <div class="round" id="roundLbl">Deployment</div>
-      <div class="init" id="initBar"></div>
+      <div class="hud-tl">
+        <button class="ibtn" id="btnLeave" title="Leave battle" aria-label="Leave battle"><span data-ico="back"></span></button>
+        <div class="roundbox"><small id="roundSub">Encounter</small><b id="roundLbl">Deployment</b></div>
+      </div>
+      <div class="init" id="initBar" role="list" aria-label="Initiative order"></div>
       <div class="hud-tools">
-        <label class="tog" title="Let the AI play your heroes"><input type="checkbox" id="autoParty"> Autoplay</label>
-        <select id="animSpeed" aria-label="Animation speed"><option value="0.75">Slow</option><option value="1" selected>Normal</option><option value="2">Fast</option><option value="5">Instant</option></select>
-        <button class="btn ghost small" id="btnLog">Log</button>
-        <button class="btn ghost small" id="btnHelp" title="Controls">?</button>
+        <label class="ibtn tgl" title="Autoplay: let the AI play your heroes"><input type="checkbox" id="autoParty"><span data-ico="auto"></span><span class="tl">Auto</span></label>
+        <label class="spd" title="Animation speed"><span data-ico="speed"></span><select id="animSpeed" aria-label="Animation speed"><option value="0.75">Slow</option><option value="1" selected>Normal</option><option value="2">Fast</option><option value="5">Instant</option></select></label>
+        <button class="ibtn" id="btnLog" title="Combat log (L)" aria-label="Combat log"><span data-ico="log"></span></button>
+        <button class="ibtn" id="btnSettings" title="Settings" aria-label="Settings"><span data-ico="gear"></span></button>
+        <button class="ibtn" id="btnHelp" title="Controls and rules (?)" aria-label="Help"><span data-ico="help"></span></button>
       </div>
     </div>
-    <div class="banner" id="banner" hidden></div>
+    <div class="banner" id="banner" hidden aria-live="polite"></div>
     <div class="deploybar" id="deployBar" hidden>
-      <div><b>Deployment.</b> Select a hero, then a blue square to reposition. Enemies are placed in the red zone.</div>
-      <button class="btn primary" id="btnBegin">Roll initiative</button>
+      <span data-ico="flag" class="db-ico"></span>
+      <div><b>Deployment</b><span>Select a hero, then a highlighted square in the blue zone to reposition. Enemies hold the red zone.</span></div>
+      <button class="btn primary" id="btnBegin">Roll initiative <span data-ico="d20"></span></button>
     </div>
-    <aside class="log" id="logPanel"><div class="log-head"><b>Combat log</b><span class="dim">click a line for the full roll</span></div><div id="logBody" class="log-body"></div></aside>
+    <aside class="log" id="logPanel" aria-label="Combat log">
+      <div class="log-head"><b><span data-ico="log"></span> Combat log</b><span class="dim">tap a line for the roll</span><button class="x" id="logClose" aria-label="Close log">×</button></div>
+      <div id="logBody" class="log-body"></div>
+    </aside>
     <aside class="inspect" id="inspect" hidden></aside>
     <div class="tip" id="tip" hidden></div>
+    <aside class="shot" id="shotPanel" hidden aria-live="polite"></aside>
     <div class="hud-bottom" id="hudBottom">
       <div class="unitcard" id="unitCard"></div>
-      <div class="actions" id="actionBar"></div>
+      <div class="tray-wrap" id="trayWrap">
+        <div class="targets" id="targetBar" role="list" aria-label="Targets"></div>
+        <div class="ainfo" id="abilityInfo"></div>
+        <div class="tray" id="tray">
+          <div class="tray-tabs" id="trayTabs" role="tablist"></div>
+          <div class="actions" id="actionBar"></div>
+        </div>
+      </div>
+      <div class="endwrap" id="endWrap"></div>
     </div>
     <div class="spellbook" id="spellbook" hidden></div>
     <div class="result" id="result" hidden></div>
     <div class="help" id="helpPanel" hidden>
-      <h3>Controls</h3>
-      <ul>
-        <li><b>Left-drag</b> or <b>WASD</b>: pan · <b>Right-drag</b> or <b>Q / E</b>: rotate · <b>Wheel</b>: zoom</li>
-        <li>Click a square to Stride there (one action per Stride). Blue = 1 action, gold = 2, orange = 3.</li>
-        <li>Pick an action, then a target. Hover a target to see hit chance, modifiers and damage.</li>
-        <li><b>Esc</b> cancels targeting · <b>Space</b> ends the turn · number keys trigger actions.</li>
-        <li>Click any creature with no action selected to inspect its stat block.</li>
+      <div class="row" style="justify-content:space-between"><h3>Controls</h3><button class="x" id="btnHelpClose" aria-label="Close">×</button></div>
+      <ul class="keys">
+        <li><kbd>W A S D</kbd> / arrows or <b>left-drag</b> — pan</li>
+        <li><kbd>Q</kbd> <kbd>E</kbd> or <b>right-drag</b> — rotate · <b>wheel</b> / pinch — zoom</li>
+        <li><kbd>1</kbd>–<kbd>0</kbd> — abilities in the open tab · <kbd>Tab</kbd> / <kbd>Shift+Tab</kbd> — cycle targets</li>
+        <li><kbd>Enter</kbd> — confirm target / cast early · <kbd>Esc</kbd> — cancel · <kbd>Space</kbd> — end turn</li>
+        <li><kbd>L</kbd> — combat log · <kbd>B</kbd> — spellbook</li>
+        <li>Click a square to Stride: <span class="kc c1">blue</span> 1 action, <span class="kc c2">gold</span> 2, <span class="kc c3">orange</span> 3. Shields on the hover card show cover against each foe.</li>
+        <li>With no ability selected, click any creature to read its stat block.</li>
       </ul>
       <h3>Rules in play</h3>
       <p>Three actions and a reaction per turn; multiple attack penalty; degrees of success with natural 20/1; flanking and off-guard; lesser, standard and greater cover from terrain and creatures; concealment and hidden flat checks; difficult terrain and elevation; Reactive Strike, Shield Block and champion reactions; dying, wounded, recovery checks and Hero Points; persistent damage; resistances, weaknesses, immunities and regeneration; incapacitation; frightened, sickened, slowed, stunned, prone, grabbed and more.</p>
-      <button class="btn" id="btnHelpClose">Close</button>
     </div>
   </section>
 
-  <div class="toast" id="toast" hidden></div>
-  <div class="modal" id="modal" hidden><div class="modal-card" id="modalCard"></div></div>
+  <div class="toast" id="toast" hidden role="status"></div>
+  <div class="modal" id="modal" hidden><div class="modal-card" id="modalCard" role="dialog" aria-modal="true"></div></div>
 </div>
 <!--LIBS-->
 <script>
