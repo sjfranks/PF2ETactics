@@ -28,7 +28,7 @@ App.saveSetup = () => store.set('tat.setup.v1', { pl: App.setup.pl, party: App.s
 
 /* ---------- settings ----------
    App.settings.gfx: 'high'|'medium'|'low'|'off' (also mirrored raw in localStorage 'tat.gfx' for the renderer)
-   App.settings.reactions: 'auto'|'ask'|'never'   App.settings.heroPoints: 'death'|'reroll'
+   App.settings.reactions: 'auto'|'defensive'|'never'   App.settings.heroPoints: 'death'|'reroll'
    A 'tat:settings' window event fires after every change with detail = App.settings. */
 const SET_DEF = { gfx: 'high', speed: 1, follow: true, grid: true, confirmEnd: true, reactions: 'auto', heroPoints: 'death', banners: true, logOpen: null };
 App.settings = Object.assign({}, SET_DEF, store.get('tat.settings.v1', {}));
@@ -110,8 +110,8 @@ App.openSettings = () => {
     row('Show grid', 'Draw square outlines on the battlefield.', sw('grid')) +
     row('Turn banners', '“Your turn” and “Enemy activity” announcements.', sw('banners')) +
     row('Confirm end turn', 'Ask before ending a turn with actions left.', sw('confirmEnd')) +
-    row('Reactions', 'Reactive Strike, Shield Block and other reactions for your heroes.', seg('reactions', [['auto', 'Auto'], ['ask', 'Ask'], ['never', 'Never']])) +
-    row('Hero Points', 'Spend Hero Points to avoid death, or to reroll failed checks.', seg('heroPoints', [['death', 'Avoid death'], ['reroll', 'Reroll']])) +
+    row('Reactions', 'Which reactions your heroes use automatically: all (Reactive Strike, Shield Block, Nimble Dodge…), only Shield Block, or none.', seg('reactions', [['auto', 'All'], ['defensive', 'Shield only'], ['never', 'None']])) +
+    row('Hero Points', 'Spend Hero Points to avoid death, or to reroll a failed saving throw (the point is then gone).', seg('heroPoints', [['death', 'Avoid death'], ['reroll', 'Reroll']])) +
     '</div><div class="row gap" style="justify-content:flex-end"><button class="btn" onclick="PF.App.closeModal()">Done</button></div>', el => {
     $$('[data-set]', el).forEach(b => b.onclick = () => { const k = b.dataset.set; let v = b.dataset.val; if (k === 'speed') v = +v; S[k] = v; $$('[data-set="' + k + '"]', el).forEach(x => x.classList.toggle('on', x === b)); App.saveSettings(); });
     $$('[data-sw]', el).forEach(c => c.onchange = () => { S[c.dataset.sw] = c.checked; App.saveSettings(); });
@@ -125,12 +125,13 @@ App.openHelp = () => {
 const TRAIT_CLS = t => ['tiny', 'small', 'medium', 'large', 'huge', 'gargantuan'].includes(t) ? ' size' : ['uncommon', 'rare', 'unique'].includes(t) ? ' rare' : '';
 const traitHTML = list => '<div class="traits">' + list.filter(Boolean).map(t => '<span class="trait' + TRAIT_CLS(t) + '">' + esc(t) + '</span>').join('') + '</div>';
 App.traitHTML = traitHTML;
-const effText = e => ({ persistFire1: '1 persistent fire', splash1: '1 fire splash', knockdown: 'Knockdown', grab: 'Grab', improvedGrab: 'Improved Grab' }[e] || e.replace(/([a-z])(\d+)$/, '$1 DC $2').replace(/([a-z])([A-Z])/g, '$1 $2').toLowerCase());
+const effText = (e, c) => { const m = /^(aff|rider|eff):(a\d+)$/.exec(e); if (m && c && c.abilities) { const a = c.abilities.find(x => x.id === m[2]); if (a) return a.name; } if (/^(aff|rider|eff):/.test(e)) return ''; return effText0(e); };
+const effText0 = e => ({ persistFire1: '1 persistent fire', splash1: '1 fire splash', knockdown: 'Knockdown', grab: 'Grab', improvedGrab: 'Improved Grab' }[e] || e.replace(/([a-z])(\d+)$/, '$1 DC $2').replace(/([a-z])([A-Z])/g, '$1 $2').toLowerCase());
 const strikeLine = s => {
   const b = (s.atk ? s.atk.base + s.atk.item : s.bonus);
   const dmg = (s.dmg || []).map(d => U.dstr(d) + ' ' + d.type).join(' plus ');
   const tr = (s.traits || []).slice(); if (s.reach > 5 && s.kind === 'melee') tr.push('reach ' + s.reach + ' ft'); if (s.range) tr.push('range increment ' + s.range + ' ft');
-  return '<div class="line"><b>' + (s.kind === 'melee' ? 'Melee' : 'Ranged') + '</b><span class="act">◆</span>' + esc(s.name) + ' <span class="num">' + App.sgn(b) + '</span>' + (tr.length ? ' <span class="dim">(' + esc(tr.join(', ')) + ')</span>' : '') + ', <b>Damage</b> ' + esc(dmg) + ((s.eff && s.eff.length) ? ' plus ' + esc(s.eff.map(effText).join(', ')) : '') + '</div>';
+  return '<div class="line"><b>' + (s.kind === 'melee' ? 'Melee' : 'Ranged') + '</b><span class="act">◆</span>' + esc(s.name) + ' <span class="num">' + App.sgn(b) + '</span>' + (tr.length ? ' <span class="dim">(' + esc(tr.join(', ')) + ')</span>' : '') + ', <b>Damage</b> ' + esc(dmg) + ((s.eff && s.eff.length) ? ' plus ' + esc(s.eff.map(e => effText(e, App._sbC)).filter(Boolean).join(', ')) : '') + '</div>';
 };
 App.strikeLine = strikeLine;
 const ABIL_COST = { breath: 2, screech: 1, frenzy: 2, monsterCharge: 2, swipe: 2 };
@@ -171,7 +172,7 @@ App.creatureBlock = (c, adj) => {
   if (Object.keys(x.resist || {}).length) h += '<div class="line"><b>Resistances</b> ' + Object.entries(x.resist).map(([k, v]) => esc(k) + ' ' + v).join(', ') + '</div>';
   if (Object.keys(x.weak || {}).length) h += '<div class="line"><b>Weaknesses</b> ' + Object.entries(x.weak).map(([k, v]) => esc(k) + ' ' + v).join(', ') + '</div>';
   h += '<hr>';
-  x.strikes.forEach(s => { h += strikeLine(s); });
+  App._sbC = c; x.strikes.forEach(s => { h += strikeLine(s); }); App._sbC = null;
   if (x.spells) h += '<div class="line"><b>' + U.cap(x.spells.trad) + ' Innate Spells</b> DC ' + x.spells.dc + ', attack ' + App.sgn(x.spells.atk) + '; ' + x.spells.list.map(s => esc(D.spells[s.id].name) + ' <span class="dim">(' + s.uses + '/battle)</span>').join(', ') + '; <b>Cantrips</b> ' + x.spells.cantrips.map(id => esc(D.spells[id].name)).join(', ') + '</div>';
   const ab = App.creatureAbilities(c);
   if (ab.length) h += '<hr>' + abilHTML(ab.map(a => a.text && x.abilDC && /DC \d+/.test(a.text) ? Object.assign({}, a, { text: a.text.replace(/DC (\d+)/g, (m, d) => 'DC ' + (+d + x.abilDC)) }) : a));

@@ -756,6 +756,11 @@ PF.installActions = function (B) {
   A.seek = { name: 'Seek', cost: 1, tgt: 'none', traits: ['concentrate', 'secret'], group: 'skill', desc: 'Perception vs the Stealth DC of hidden foes within 30 feet to reveal them.',
     avail: u => B.foesOf(u).some(f => B.isHiddenTo(f, u)) ? '' : 'No hidden foes',
     run: u => { B.foesOf(u).filter(f => B.isHiddenTo(f, u) && B.dist(u, f) <= 30).forEach(f => { const c = B.check(u, 'per', B.dcOf(f, 'skill:stealth')); B.log(B.nm(u) + ' Seeks ' + B.nm(f) + ': ' + B.fmtCheck(c), 'deg' + c.deg); if (c.deg >= 2) { f.hiddenFrom.delete(u.id); B.touch(f); } }); } };
+  A.delay = { name: 'Delay', cost: 0, tgt: 'none', group: 'basic', desc: 'Step out of the initiative order before acting; you act again right after the next creature. Effects that would end at the start of your turn have already ended.',
+    avail: u => u.turn.actsUsed.filter(x => x !== 'delay').length ? 'Only before you act' : '', run: u => { B.delay(u); } };
+  A.ready = { name: 'Ready Strike', cost: 2, tgt: 'none', traits: ['concentrate'], group: 'basic', desc: 'Prepare a Strike with your best weapon. As a reaction, it triggers when a foe moves into a square where you can hit it (in reach, or in your first range increment). Uses your current multiple attack penalty.',
+    avail: u => u.readied ? 'Already readied' : !u.strikes.length ? 'No Strike' : '',
+    run: u => { const s = u.strikes.find(x => x.kind === 'melee' && x.wid !== 'fist') || u.strikes.find(x => x.kind === 'ranged') || u.strikes[0]; u.readied = { strike: s.id }; B.log(B.nm(u) + ' readies a Strike with ' + s.name + '.'); B.emit({ t: 'float', u: u.id, text: 'Ready', c: 'info' }); } };
   A.reload = { name: 'Reload', cost: 1, tgt: 'none', traits: ['manipulate'], group: 'basic', desc: 'Interact to reload a weapon with reload 1.',
     avail: u => u.strikes.some(s => s.reload && !s.loaded) ? '' : 'Nothing to reload',
     run: u => { B.provoke(u, 'manipulate'); if (!B.canAct(u)) return; u.strikes.forEach(s => { if (s.reload) s.loaded = true; }); if (u.flags.crossbowAce) u.turn.crossbowAce = true; B.log(B.nm(u) + ' reloads.'); } };
@@ -1148,6 +1153,7 @@ PF.installActions = function (B) {
     push('step', A.step);
     if (u.shield) push('raiseShield', A.raiseShield);
     push('takeCover', A.takeCover);
+    if (u.kind === 'pc') { push('ready', A.ready); push('delay', A.delay); }
     if (B.cv(u, 'prone')) push('stand', A.stand);
     if (B.cv(u, 'grabbed') || B.cv(u, 'restrained')) push('escape', A.escape);
     if (u.strikes.some(s => s.reload)) push('reload', A.reload);

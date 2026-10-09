@@ -451,6 +451,7 @@ PF.Battle = function (cfg) {
     let c = B.check(t, kind, dc, { mods, ctx });
     // reactions / rerolls
     if (c.deg <= 1 && o.spell && t.flags.divineGrace && t.react > 0 && B.conscious(t) && c.total + 2 >= dc) { t.react--; c = Object.assign({}, c, { total: c.total + 2 }); c.deg = PF.degree(c.total, dc, c.nat); B.log(B.nm(t) + ' uses Divine Grace (+2).', 'good'); }
+    if (c.deg <= 1 && t.kind === 'pc' && t.hero > 0 && B.settings().heroPoints === 'reroll' && (o.spell || o.area || o.src)) { t.hero--; const c2 = B.check(t, kind, dc, { mods, ctx }); B.log(B.nm(t) + ' spends a Hero Point to reroll the save: ' + c2.total + '.', 'good'); B.emit({ t: 'float', u: t.id, text: 'Hero Point', c: 'good' }); c = c2; }
     if (c.deg <= 1 && t.flags.halflingLuck && !t.enc.used.luck) { t.enc.used.luck = true; const c2 = B.check(t, kind, dc, { mods, ctx }); B.log(B.nm(t) + ' uses Halfling Luck to reroll: ' + c2.total + '.', 'good'); c = c2; }
     let deg = c.deg; const notes = [];
     if (deg === 2 && t.ranks && t.ranks[kind] >= 3) { deg = 3; notes.push('master save'); }
@@ -566,8 +567,10 @@ PF.Battle = function (cfg) {
     return dealt;
   };
   B.fxBlocksReact = u => u.fx.some(f => f.noReactions) || u.flags.noReactions || !!B.cv(u, 'confused') || !!B.cv(u, 'petrified');
+  B.settings = () => (G.PF && G.PF.App && G.PF.App.settings) || {};
   B.canReact = (u, kind) => {
     if (!B.conscious(u) || B.cv(u, 'paralyzed') || B.fxBlocksReact(u)) return false;
+    if (u.kind === 'pc' && !u.ai) { const pol = B.settings().reactions; if (pol === 'never') return false; if (pol === 'defensive' && kind !== 'shieldBlock') return false; }
     if (u.react > 0) return true;
     if (kind && u.reactX[kind] > 0) return true;
     return false;
@@ -747,6 +750,16 @@ PF.Battle = function (cfg) {
       }
       const [nx, ny] = path[i];
       u.x = nx; u.y = ny; done.push([nx, ny]);
+      if (!o.noReady) {
+        const rd = B.units.find(r => r.readied && r.team !== u.team && B.canReact(r) && (() => { const s = r.strikes.find(x => x.id === r.readied.strike); return s && B.prepStrike(r, s, u, { noMAP: true }).ok; })());
+        if (rd) {
+          B.emit({ t: 'move', u: u.id, path: done.slice(), kind: o.kind || 'stride' }); done.length = 0; done.push([u.x, u.y]);
+          const s = rd.strikes.find(x => x.id === rd.readied.strike); rd.readied = null; B.useReact(rd);
+          B.log(B.nm(rd) + "'s readied Strike triggers!", 'react'); B.emit({ t: 'float', u: rd.id, text: 'Readied Strike', c: 'react' });
+          B.strike(rd, s, u, { reaction: true, noMAP: false, label: 'Readied ' + s.name });
+          if (!B.conscious(u) || B.cv(u, 'prone') || B.immobile(u)) { B.log(B.nm(u) + "'s movement is stopped.", 'bad'); return false; }
+        }
+      }
       // hazards on entering
       const hz = B.cellsOf(u).map(([x, y]) => B.tile(x, y)).find(t => t && t.hazard === 'lava');
       if (hz && !B.flies(u) && !B.immuneTo(u, 'fire')) {
@@ -985,6 +998,7 @@ PF.Battle = function (cfg) {
       if (B.turnIdx >= B.order.length) { B.turnIdx = 0; B.round++; B.emit({ t: 'round', n: B.round }); B.log('— Round ' + B.round + ' —', 'round'); B.units.forEach(u => { u.reactedTo = {}; }); }
       const u = B.get(B.order[B.turnIdx]);
       if (!u) continue;
+      if (u.delayed) { const saved = u.delayed; u.delayed = null; B.cur = u; u.turn = saved; B.emit({ t: 'turn', u: u.id }); B.log(B.nm(u) + ' returns to the initiative order.', 'dim'); B.touch(u); return u; }
       const can = B.beginTurn(u);
       if (B.checkOver()) return null;
       if (can) return u;
@@ -998,6 +1012,7 @@ PF.Battle = function (cfg) {
     u.turn = { acts: 0, attacks: 0, quick: null, comp: false, flourish: false, preyHit: false, actsUsed: [], lastStrikeHit: null, clawHits: 0, strideFree: 0 };
     B.tick(u.id, 's');
     if (!B.alive(u)) return false;
+    if (u.readied) { u.readied = null; }
     u.react = 1; u.reactX = {}; if (u.flags.combatReflexes) u.reactX.reactiveStrike = 1; if (u.flags.quickShieldBlock) u.reactX.shieldBlock = 1;
     if (u.shield && u.shield.raised) { u.shield.raised = false; B.emit({ t: 'shield', u: u.id, v: false }); }
     if (u.regen && u.regen.disabled && B.round >= u.regen.until) u.regen.disabled = false;
@@ -1078,6 +1093,20 @@ PF.Battle = function (cfg) {
     B.emit({ t: 'endturn', u: u.id });
     if (B.cur === u) B.cur = null;
     B.checkOver();
+  };
+  // Delay: step out of the initiative order and act again after the creature you choose (default: next creature)
+  B.delay = (u, afterId) => {
+    if (B.cur !== u || u.turn.actsUsed.filter(x => x !== 'delay').length) return false;
+    const i = B.order.indexOf(u.id); if (i < 0) return false;
+    B.order.splice(i, 1);
+    let j = afterId ? B.order.indexOf(afterId) : i; if (j < 0) j = i;
+    // turnIdx points at u's old slot; after splice the next creature sits at index i
+    const ins = Math.min(B.order.length, (afterId ? j : i) + 1);
+    B.order.splice(ins, 0, u.id);
+    u.delayed = u.turn; B.turnIdx = i - 1;
+    B.log(B.nm(u) + ' delays' + (afterId && B.get(afterId) ? ' until after ' + B.nm(B.get(afterId)) : '') + '.', 'dim');
+    B.emit({ t: 'endturn', u: u.id }); B.cur = null; B.emit({ t: 'order' });
+    return true;
   };
   B.checkOver = () => {
     if (B.over) return true;

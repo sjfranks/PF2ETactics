@@ -30,6 +30,7 @@ async def desktop(b):
     pg = await b.new_page(viewport={'width': 1440, 'height': 900})
     pg.on('pageerror', lambda e: errs.append('PAGEERROR: ' + str(e)))
     pg.on('console', lambda m: errs.append('console: ' + m.text) if m.type == 'error' and 'fonts' not in m.text and 'ERR_' not in m.text else None)
+    await pg.add_init_script("try{localStorage.setItem('tat.gfx', os_gfx)}catch(e){}".replace('os_gfx', repr(os.environ.get('GFX','low'))))
     await pg.goto(URL); await pg.wait_for_timeout(1500)
     await pg.screenshot(path=OUT + 'd01_home.png'); await overflow(pg, 'home')
     await pg.click('#btnSetup'); await pg.wait_for_timeout(700)
@@ -72,7 +73,7 @@ async def desktop(b):
     await pg.screenshot(path=OUT + 'd12_skill_target.png')
     await pg.keyboard.press('Escape'); await pg.click('[data-tab="combat"]')
     # Ezren spells
-    ok = await wait_player(pg, 'Ezren', 240)
+    ok = await wait_player(pg, 'Corwin', 240)
     print('ezren turn', ok)
     await pg.evaluate(NEAR); await pg.wait_for_timeout(500)
     if await pg.query_selector('[data-akey="spells"]'): await pg.click('[data-akey="spells"]')
@@ -111,6 +112,7 @@ async def desktop(b):
 async def mobile(b):
     pg = await b.new_page(viewport={'width': 390, 'height': 844}, device_scale_factor=2, is_mobile=True, has_touch=True)
     pg.on('pageerror', lambda e: errs.append('PAGEERROR m: ' + str(e)))
+    await pg.add_init_script("try{localStorage.setItem('tat.gfx', os_gfx)}catch(e){}".replace('os_gfx', repr(os.environ.get('GFX','low'))))
     await pg.goto(URL); await pg.wait_for_timeout(1500)
     await pg.screenshot(path=OUT + 'm01_home.png'); await overflow(pg, 'm home')
     await pg.tap('#btnSetup'); await pg.wait_for_timeout(700)

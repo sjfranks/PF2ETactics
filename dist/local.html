@@ -968,7 +968,7 @@ details[open] summary { margin-bottom: 8px; }
           <button class="btn ghost small" id="btnHomeSettings"><span data-ico="gear"></span> Settings</button>
           <button class="btn ghost small" id="btnHomeHelp"><span data-ico="help"></span> How to play</button>
         </div>
-        <div class="home-foot">Remaster rules (Player Core, GM Core, Monster Core). Unofficial fan tool; not affiliated with Paizo.</div>
+        <div class="home-foot">Remaster rules (Player Core, GM Core, Monster Core). Unofficial fan tool; not affiliated with or endorsed by Paizo. Contains material from Pathfinder Monster Core and Player Core (Paizo Inc.), used under the ORC License.</div>
       </div>
       <aside class="home-side" aria-label="How a turn works">
         <div class="hs-title">Every turn</div>
@@ -5169,6 +5169,7 @@ PF.Battle = function (cfg) {
     let c = B.check(t, kind, dc, { mods, ctx });
     // reactions / rerolls
     if (c.deg <= 1 && o.spell && t.flags.divineGrace && t.react > 0 && B.conscious(t) && c.total + 2 >= dc) { t.react--; c = Object.assign({}, c, { total: c.total + 2 }); c.deg = PF.degree(c.total, dc, c.nat); B.log(B.nm(t) + ' uses Divine Grace (+2).', 'good'); }
+    if (c.deg <= 1 && t.kind === 'pc' && t.hero > 0 && B.settings().heroPoints === 'reroll' && (o.spell || o.area || o.src)) { t.hero--; const c2 = B.check(t, kind, dc, { mods, ctx }); B.log(B.nm(t) + ' spends a Hero Point to reroll the save: ' + c2.total + '.', 'good'); B.emit({ t: 'float', u: t.id, text: 'Hero Point', c: 'good' }); c = c2; }
     if (c.deg <= 1 && t.flags.halflingLuck && !t.enc.used.luck) { t.enc.used.luck = true; const c2 = B.check(t, kind, dc, { mods, ctx }); B.log(B.nm(t) + ' uses Halfling Luck to reroll: ' + c2.total + '.', 'good'); c = c2; }
     let deg = c.deg; const notes = [];
     if (deg === 2 && t.ranks && t.ranks[kind] >= 3) { deg = 3; notes.push('master save'); }
@@ -5284,8 +5285,10 @@ PF.Battle = function (cfg) {
     return dealt;
   };
   B.fxBlocksReact = u => u.fx.some(f => f.noReactions) || u.flags.noReactions || !!B.cv(u, 'confused') || !!B.cv(u, 'petrified');
+  B.settings = () => (G.PF && G.PF.App && G.PF.App.settings) || {};
   B.canReact = (u, kind) => {
     if (!B.conscious(u) || B.cv(u, 'paralyzed') || B.fxBlocksReact(u)) return false;
+    if (u.kind === 'pc' && !u.ai) { const pol = B.settings().reactions; if (pol === 'never') return false; if (pol === 'defensive' && kind !== 'shieldBlock') return false; }
     if (u.react > 0) return true;
     if (kind && u.reactX[kind] > 0) return true;
     return false;
@@ -5465,6 +5468,16 @@ PF.Battle = function (cfg) {
       }
       const [nx, ny] = path[i];
       u.x = nx; u.y = ny; done.push([nx, ny]);
+      if (!o.noReady) {
+        const rd = B.units.find(r => r.readied && r.team !== u.team && B.canReact(r) && (() => { const s = r.strikes.find(x => x.id === r.readied.strike); return s && B.prepStrike(r, s, u, { noMAP: true }).ok; })());
+        if (rd) {
+          B.emit({ t: 'move', u: u.id, path: done.slice(), kind: o.kind || 'stride' }); done.length = 0; done.push([u.x, u.y]);
+          const s = rd.strikes.find(x => x.id === rd.readied.strike); rd.readied = null; B.useReact(rd);
+          B.log(B.nm(rd) + "'s readied Strike triggers!", 'react'); B.emit({ t: 'float', u: rd.id, text: 'Readied Strike', c: 'react' });
+          B.strike(rd, s, u, { reaction: true, noMAP: false, label: 'Readied ' + s.name });
+          if (!B.conscious(u) || B.cv(u, 'prone') || B.immobile(u)) { B.log(B.nm(u) + "'s movement is stopped.", 'bad'); return false; }
+        }
+      }
       // hazards on entering
       const hz = B.cellsOf(u).map(([x, y]) => B.tile(x, y)).find(t => t && t.hazard === 'lava');
       if (hz && !B.flies(u) && !B.immuneTo(u, 'fire')) {
@@ -5703,6 +5716,7 @@ PF.Battle = function (cfg) {
       if (B.turnIdx >= B.order.length) { B.turnIdx = 0; B.round++; B.emit({ t: 'round', n: B.round }); B.log('— Round ' + B.round + ' —', 'round'); B.units.forEach(u => { u.reactedTo = {}; }); }
       const u = B.get(B.order[B.turnIdx]);
       if (!u) continue;
+      if (u.delayed) { const saved = u.delayed; u.delayed = null; B.cur = u; u.turn = saved; B.emit({ t: 'turn', u: u.id }); B.log(B.nm(u) + ' returns to the initiative order.', 'dim'); B.touch(u); return u; }
       const can = B.beginTurn(u);
       if (B.checkOver()) return null;
       if (can) return u;
@@ -5716,6 +5730,7 @@ PF.Battle = function (cfg) {
     u.turn = { acts: 0, attacks: 0, quick: null, comp: false, flourish: false, preyHit: false, actsUsed: [], lastStrikeHit: null, clawHits: 0, strideFree: 0 };
     B.tick(u.id, 's');
     if (!B.alive(u)) return false;
+    if (u.readied) { u.readied = null; }
     u.react = 1; u.reactX = {}; if (u.flags.combatReflexes) u.reactX.reactiveStrike = 1; if (u.flags.quickShieldBlock) u.reactX.shieldBlock = 1;
     if (u.shield && u.shield.raised) { u.shield.raised = false; B.emit({ t: 'shield', u: u.id, v: false }); }
     if (u.regen && u.regen.disabled && B.round >= u.regen.until) u.regen.disabled = false;
@@ -5796,6 +5811,20 @@ PF.Battle = function (cfg) {
     B.emit({ t: 'endturn', u: u.id });
     if (B.cur === u) B.cur = null;
     B.checkOver();
+  };
+  // Delay: step out of the initiative order and act again after the creature you choose (default: next creature)
+  B.delay = (u, afterId) => {
+    if (B.cur !== u || u.turn.actsUsed.filter(x => x !== 'delay').length) return false;
+    const i = B.order.indexOf(u.id); if (i < 0) return false;
+    B.order.splice(i, 1);
+    let j = afterId ? B.order.indexOf(afterId) : i; if (j < 0) j = i;
+    // turnIdx points at u's old slot; after splice the next creature sits at index i
+    const ins = Math.min(B.order.length, (afterId ? j : i) + 1);
+    B.order.splice(ins, 0, u.id);
+    u.delayed = u.turn; B.turnIdx = i - 1;
+    B.log(B.nm(u) + ' delays' + (afterId && B.get(afterId) ? ' until after ' + B.nm(B.get(afterId)) : '') + '.', 'dim');
+    B.emit({ t: 'endturn', u: u.id }); B.cur = null; B.emit({ t: 'order' });
+    return true;
   };
   B.checkOver = () => {
     if (B.over) return true;
@@ -6588,6 +6617,11 @@ PF.installActions = function (B) {
   A.seek = { name: 'Seek', cost: 1, tgt: 'none', traits: ['concentrate', 'secret'], group: 'skill', desc: 'Perception vs the Stealth DC of hidden foes within 30 feet to reveal them.',
     avail: u => B.foesOf(u).some(f => B.isHiddenTo(f, u)) ? '' : 'No hidden foes',
     run: u => { B.foesOf(u).filter(f => B.isHiddenTo(f, u) && B.dist(u, f) <= 30).forEach(f => { const c = B.check(u, 'per', B.dcOf(f, 'skill:stealth')); B.log(B.nm(u) + ' Seeks ' + B.nm(f) + ': ' + B.fmtCheck(c), 'deg' + c.deg); if (c.deg >= 2) { f.hiddenFrom.delete(u.id); B.touch(f); } }); } };
+  A.delay = { name: 'Delay', cost: 0, tgt: 'none', group: 'basic', desc: 'Step out of the initiative order before acting; you act again right after the next creature. Effects that would end at the start of your turn have already ended.',
+    avail: u => u.turn.actsUsed.filter(x => x !== 'delay').length ? 'Only before you act' : '', run: u => { B.delay(u); } };
+  A.ready = { name: 'Ready Strike', cost: 2, tgt: 'none', traits: ['concentrate'], group: 'basic', desc: 'Prepare a Strike with your best weapon. As a reaction, it triggers when a foe moves into a square where you can hit it (in reach, or in your first range increment). Uses your current multiple attack penalty.',
+    avail: u => u.readied ? 'Already readied' : !u.strikes.length ? 'No Strike' : '',
+    run: u => { const s = u.strikes.find(x => x.kind === 'melee' && x.wid !== 'fist') || u.strikes.find(x => x.kind === 'ranged') || u.strikes[0]; u.readied = { strike: s.id }; B.log(B.nm(u) + ' readies a Strike with ' + s.name + '.'); B.emit({ t: 'float', u: u.id, text: 'Ready', c: 'info' }); } };
   A.reload = { name: 'Reload', cost: 1, tgt: 'none', traits: ['manipulate'], group: 'basic', desc: 'Interact to reload a weapon with reload 1.',
     avail: u => u.strikes.some(s => s.reload && !s.loaded) ? '' : 'Nothing to reload',
     run: u => { B.provoke(u, 'manipulate'); if (!B.canAct(u)) return; u.strikes.forEach(s => { if (s.reload) s.loaded = true; }); if (u.flags.crossbowAce) u.turn.crossbowAce = true; B.log(B.nm(u) + ' reloads.'); } };
@@ -6980,6 +7014,7 @@ PF.installActions = function (B) {
     push('step', A.step);
     if (u.shield) push('raiseShield', A.raiseShield);
     push('takeCover', A.takeCover);
+    if (u.kind === 'pc') { push('ready', A.ready); push('delay', A.delay); }
     if (B.cv(u, 'prone')) push('stand', A.stand);
     if (B.cv(u, 'grabbed') || B.cv(u, 'restrained')) push('escape', A.escape);
     if (u.strikes.some(s => s.reload)) push('reload', A.reload);
@@ -14097,7 +14132,7 @@ App.saveSetup = () => store.set('tat.setup.v1', { pl: App.setup.pl, party: App.s
 
 /* ---------- settings ----------
    App.settings.gfx: 'high'|'medium'|'low'|'off' (also mirrored raw in localStorage 'tat.gfx' for the renderer)
-   App.settings.reactions: 'auto'|'ask'|'never'   App.settings.heroPoints: 'death'|'reroll'
+   App.settings.reactions: 'auto'|'defensive'|'never'   App.settings.heroPoints: 'death'|'reroll'
    A 'tat:settings' window event fires after every change with detail = App.settings. */
 const SET_DEF = { gfx: 'high', speed: 1, follow: true, grid: true, confirmEnd: true, reactions: 'auto', heroPoints: 'death', banners: true, logOpen: null };
 App.settings = Object.assign({}, SET_DEF, store.get('tat.settings.v1', {}));
@@ -14179,8 +14214,8 @@ App.openSettings = () => {
     row('Show grid', 'Draw square outlines on the battlefield.', sw('grid')) +
     row('Turn banners', '“Your turn” and “Enemy activity” announcements.', sw('banners')) +
     row('Confirm end turn', 'Ask before ending a turn with actions left.', sw('confirmEnd')) +
-    row('Reactions', 'Reactive Strike, Shield Block and other reactions for your heroes.', seg('reactions', [['auto', 'Auto'], ['ask', 'Ask'], ['never', 'Never']])) +
-    row('Hero Points', 'Spend Hero Points to avoid death, or to reroll failed checks.', seg('heroPoints', [['death', 'Avoid death'], ['reroll', 'Reroll']])) +
+    row('Reactions', 'Which reactions your heroes use automatically: all (Reactive Strike, Shield Block, Nimble Dodge…), only Shield Block, or none.', seg('reactions', [['auto', 'All'], ['defensive', 'Shield only'], ['never', 'None']])) +
+    row('Hero Points', 'Spend Hero Points to avoid death, or to reroll a failed saving throw (the point is then gone).', seg('heroPoints', [['death', 'Avoid death'], ['reroll', 'Reroll']])) +
     '</div><div class="row gap" style="justify-content:flex-end"><button class="btn" onclick="PF.App.closeModal()">Done</button></div>', el => {
     $$('[data-set]', el).forEach(b => b.onclick = () => { const k = b.dataset.set; let v = b.dataset.val; if (k === 'speed') v = +v; S[k] = v; $$('[data-set="' + k + '"]', el).forEach(x => x.classList.toggle('on', x === b)); App.saveSettings(); });
     $$('[data-sw]', el).forEach(c => c.onchange = () => { S[c.dataset.sw] = c.checked; App.saveSettings(); });
@@ -14194,12 +14229,13 @@ App.openHelp = () => {
 const TRAIT_CLS = t => ['tiny', 'small', 'medium', 'large', 'huge', 'gargantuan'].includes(t) ? ' size' : ['uncommon', 'rare', 'unique'].includes(t) ? ' rare' : '';
 const traitHTML = list => '<div class="traits">' + list.filter(Boolean).map(t => '<span class="trait' + TRAIT_CLS(t) + '">' + esc(t) + '</span>').join('') + '</div>';
 App.traitHTML = traitHTML;
-const effText = e => ({ persistFire1: '1 persistent fire', splash1: '1 fire splash', knockdown: 'Knockdown', grab: 'Grab', improvedGrab: 'Improved Grab' }[e] || e.replace(/([a-z])(\d+)$/, '$1 DC $2').replace(/([a-z])([A-Z])/g, '$1 $2').toLowerCase());
+const effText = (e, c) => { const m = /^(aff|rider|eff):(a\d+)$/.exec(e); if (m && c && c.abilities) { const a = c.abilities.find(x => x.id === m[2]); if (a) return a.name; } if (/^(aff|rider|eff):/.test(e)) return ''; return effText0(e); };
+const effText0 = e => ({ persistFire1: '1 persistent fire', splash1: '1 fire splash', knockdown: 'Knockdown', grab: 'Grab', improvedGrab: 'Improved Grab' }[e] || e.replace(/([a-z])(\d+)$/, '$1 DC $2').replace(/([a-z])([A-Z])/g, '$1 $2').toLowerCase());
 const strikeLine = s => {
   const b = (s.atk ? s.atk.base + s.atk.item : s.bonus);
   const dmg = (s.dmg || []).map(d => U.dstr(d) + ' ' + d.type).join(' plus ');
   const tr = (s.traits || []).slice(); if (s.reach > 5 && s.kind === 'melee') tr.push('reach ' + s.reach + ' ft'); if (s.range) tr.push('range increment ' + s.range + ' ft');
-  return '<div class="line"><b>' + (s.kind === 'melee' ? 'Melee' : 'Ranged') + '</b><span class="act">◆</span>' + esc(s.name) + ' <span class="num">' + App.sgn(b) + '</span>' + (tr.length ? ' <span class="dim">(' + esc(tr.join(', ')) + ')</span>' : '') + ', <b>Damage</b> ' + esc(dmg) + ((s.eff && s.eff.length) ? ' plus ' + esc(s.eff.map(effText).join(', ')) : '') + '</div>';
+  return '<div class="line"><b>' + (s.kind === 'melee' ? 'Melee' : 'Ranged') + '</b><span class="act">◆</span>' + esc(s.name) + ' <span class="num">' + App.sgn(b) + '</span>' + (tr.length ? ' <span class="dim">(' + esc(tr.join(', ')) + ')</span>' : '') + ', <b>Damage</b> ' + esc(dmg) + ((s.eff && s.eff.length) ? ' plus ' + esc(s.eff.map(e => effText(e, App._sbC)).filter(Boolean).join(', ')) : '') + '</div>';
 };
 App.strikeLine = strikeLine;
 const ABIL_COST = { breath: 2, screech: 1, frenzy: 2, monsterCharge: 2, swipe: 2 };
@@ -14240,7 +14276,7 @@ App.creatureBlock = (c, adj) => {
   if (Object.keys(x.resist || {}).length) h += '<div class="line"><b>Resistances</b> ' + Object.entries(x.resist).map(([k, v]) => esc(k) + ' ' + v).join(', ') + '</div>';
   if (Object.keys(x.weak || {}).length) h += '<div class="line"><b>Weaknesses</b> ' + Object.entries(x.weak).map(([k, v]) => esc(k) + ' ' + v).join(', ') + '</div>';
   h += '<hr>';
-  x.strikes.forEach(s => { h += strikeLine(s); });
+  App._sbC = c; x.strikes.forEach(s => { h += strikeLine(s); }); App._sbC = null;
   if (x.spells) h += '<div class="line"><b>' + U.cap(x.spells.trad) + ' Innate Spells</b> DC ' + x.spells.dc + ', attack ' + App.sgn(x.spells.atk) + '; ' + x.spells.list.map(s => esc(D.spells[s.id].name) + ' <span class="dim">(' + s.uses + '/battle)</span>').join(', ') + '; <b>Cantrips</b> ' + x.spells.cantrips.map(id => esc(D.spells[id].name)).join(', ') + '</div>';
   const ab = App.creatureAbilities(c);
   if (ab.length) h += '<hr>' + abilHTML(ab.map(a => a.text && x.abilDC && /DC \d+/.test(a.text) ? Object.assign({}, a, { text: a.text.replace(/DC (\d+)/g, (m, d) => 'DC ' + (+d + x.abilDC)) }) : a));
@@ -14727,7 +14763,7 @@ App.startBattle = cfg => {
   BC.showZones();
   const cen = team => { const us = B.units.filter(u => u.team === team); return { x: us.reduce((a, u) => a + u.x + u.sq / 2, 0) / Math.max(1, us.length), y: us.reduce((a, u) => a + u.y + u.sq / 2, 0) / Math.max(1, us.length) }; };
   const a = cen('pc'), b = cen('foe');
-  R.cam.gyaw = R.cam.yaw = Math.atan2(a.x - b.x, a.y - b.y); R.cam.gdist = 22; R.cam.gpitch = 0.95;
+  R.cam.gyaw = R.cam.yaw = Math.atan2(a.x - b.x, a.y - b.y); R.cam.gdist = innerWidth < 760 ? 20 : 17; R.cam.gpitch = 0.88;
   R.focus(a.x * 0.65 + b.x * 0.35, a.y * 0.65 + b.y * 0.35, true);
   BC.addLog({ text: (cfg.title ? cfg.title + ' — ' : '') + D.maps[cfg.map].name + '. Party level ' + cfg.partyLevel + '. ' + BC.threatText(), cls: 'head' });
   const first = B.units.find(u => u.team === 'pc'); BC.sel = first || null; if (first) R.setActive(first.id);

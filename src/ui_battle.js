@@ -31,7 +31,7 @@ App.startBattle = cfg => {
   BC.showZones();
   const cen = team => { const us = B.units.filter(u => u.team === team); return { x: us.reduce((a, u) => a + u.x + u.sq / 2, 0) / Math.max(1, us.length), y: us.reduce((a, u) => a + u.y + u.sq / 2, 0) / Math.max(1, us.length) }; };
   const a = cen('pc'), b = cen('foe');
-  R.cam.gyaw = R.cam.yaw = Math.atan2(a.x - b.x, a.y - b.y); R.cam.gdist = 22; R.cam.gpitch = 0.95;
+  R.cam.gyaw = R.cam.yaw = Math.atan2(a.x - b.x, a.y - b.y); R.cam.gdist = innerWidth < 760 ? 20 : 17; R.cam.gpitch = 0.88;
   R.focus(a.x * 0.65 + b.x * 0.35, a.y * 0.65 + b.y * 0.35, true);
   BC.addLog({ text: (cfg.title ? cfg.title + ' — ' : '') + D.maps[cfg.map].name + '. Party level ' + cfg.partyLevel + '. ' + BC.threatText(), cls: 'head' });
   const first = B.units.find(u => u.team === 'pc'); BC.sel = first || null; if (first) R.setActive(first.id);
