@@ -1,0 +1,149 @@
+<title>Three-Action Tactics</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marcellus+SC&family=Barlow+Semi+Condensed:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/*CSS*/
+</style>
+<div id="app">
+  <div id="stage"></div>
+  <div id="plates"></div>
+
+  <!-- HOME -->
+  <section id="home" class="screen">
+    <div class="home-panel">
+      <div class="eyebrow">Pathfinder Second Edition rules sandbox</div>
+      <h1 class="title">Three&#8209;Action<br>Tactics</h1>
+      <p class="lede">Build heroes from level 1 to 20, assemble encounters on the GM Core XP budget, and fight them turn by turn on a 3D grid. Every Strike, save, flank and Reactive Strike is rolled and shown.</p>
+      <div class="home-actions">
+        <button class="btn primary big" id="btnQuick">Quick battle</button>
+        <button class="btn big" id="btnSetup">Build a skirmish</button>
+        <button class="btn big" id="btnRoster">Characters</button>
+      </div>
+      <div class="home-foot">Remaster rules (Player Core, GM Core, Monster Core). Unofficial fan tool; not affiliated with Paizo.</div>
+    </div>
+  </section>
+
+  <!-- SETUP -->
+  <section id="setup" class="screen page" hidden>
+    <header class="bar">
+      <button class="btn ghost" data-go="home">‹ Home</button>
+      <h2>Skirmish builder</h2>
+      <div class="grow"></div>
+      <button class="btn primary" id="btnDeploy">Deploy ›</button>
+    </header>
+    <div class="page-body">
+      <div class="presets">
+        <div class="label">Prebuilt encounters</div>
+        <div id="presetList" class="preset-list"></div>
+      </div>
+      <div class="cols">
+        <div class="col">
+          <div class="col-head"><h3>Party</h3>
+            <div class="stepper" title="Party level"><span>Level</span><button class="btn tiny" id="plDown" aria-label="Lower party level">−</button><b id="plVal">1</b><button class="btn tiny" id="plUp" aria-label="Raise party level">+</button></div>
+          </div>
+          <div id="partyList" class="list"></div>
+          <div class="row gap">
+            <button class="btn" id="btnAddHero">+ Add hero</button>
+            <button class="btn ghost" id="btnIconicParty">Iconic four</button>
+          </div>
+          <p class="note">Heroes are rebuilt at the party level from their build choices, with standard runes, armor and a healing potion for that level. Tick <b>AI</b> to let the computer play a hero.</p>
+        </div>
+        <div class="col">
+          <div class="col-head"><h3>Opposition</h3><span id="xpLabel" class="pill"></span></div>
+          <div id="xpBar" class="xpbar"></div>
+          <div id="foeList" class="list"></div>
+          <div class="genrow">
+            <select id="genThreat" aria-label="Threat"><option value="low">Low</option><option value="moderate" selected>Moderate</option><option value="severe">Severe</option><option value="extreme">Extreme</option><option value="trivial">Trivial</option></select>
+            <select id="genTheme" aria-label="Theme"></select>
+            <button class="btn" id="btnGen">Generate</button>
+            <button class="btn ghost" id="btnClearFoes">Clear</button>
+          </div>
+          <details class="bestiary" open>
+            <summary>Bestiary</summary>
+            <div class="row gap"><input id="bSearch" type="search" placeholder="Search creatures" aria-label="Search creatures"><select id="bTheme" aria-label="Filter"></select></div>
+            <div id="bList" class="blist"></div>
+          </details>
+          <details class="custom">
+            <summary>Custom creature (GM Core building tables)</summary>
+            <div class="row gap wrap">
+              <label>Level <input id="cLvl" type="number" min="-1" max="24" value="1"></label>
+              <label>Role <select id="cRole"></select></label>
+              <label>Flavor <select id="cFlavor"></select></label>
+              <button class="btn" id="btnCustom">Add</button>
+            </div>
+          </details>
+        </div>
+        <div class="col">
+          <div class="col-head"><h3>Battlefield</h3></div>
+          <div id="mapList" class="maps"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ROSTER / BUILDER -->
+  <section id="roster" class="screen page" hidden>
+    <header class="bar">
+      <button class="btn ghost" data-go="back">‹ Back</button>
+      <h2>Characters</h2>
+      <div class="grow"></div>
+      <button class="btn" id="btnNewChar">New character</button>
+      <button class="btn ghost" id="btnRandChar">Random</button>
+    </header>
+    <div class="page-body builder">
+      <aside class="roster-list" id="rosterList"></aside>
+      <div class="build-form" id="buildForm"></div>
+      <div class="sheet" id="sheetView"></div>
+    </div>
+  </section>
+
+  <!-- BATTLE HUD -->
+  <section id="battle" class="screen hud" hidden>
+    <div class="hud-top">
+      <button class="btn ghost small" id="btnLeave" title="Leave battle">‹ Leave</button>
+      <div class="round" id="roundLbl">Deployment</div>
+      <div class="init" id="initBar"></div>
+      <div class="hud-tools">
+        <label class="tog" title="Let the AI play your heroes"><input type="checkbox" id="autoParty"> Autoplay</label>
+        <select id="animSpeed" aria-label="Animation speed"><option value="0.75">Slow</option><option value="1" selected>Normal</option><option value="2">Fast</option><option value="5">Instant</option></select>
+        <button class="btn ghost small" id="btnLog">Log</button>
+        <button class="btn ghost small" id="btnHelp" title="Controls">?</button>
+      </div>
+    </div>
+    <div class="banner" id="banner" hidden></div>
+    <div class="deploybar" id="deployBar" hidden>
+      <div><b>Deployment.</b> Select a hero, then a blue square to reposition. Enemies are placed in the red zone.</div>
+      <button class="btn primary" id="btnBegin">Roll initiative</button>
+    </div>
+    <aside class="log" id="logPanel"><div class="log-head"><b>Combat log</b><span class="dim">click a line for the full roll</span></div><div id="logBody" class="log-body"></div></aside>
+    <aside class="inspect" id="inspect" hidden></aside>
+    <div class="tip" id="tip" hidden></div>
+    <div class="hud-bottom" id="hudBottom">
+      <div class="unitcard" id="unitCard"></div>
+      <div class="actions" id="actionBar"></div>
+    </div>
+    <div class="spellbook" id="spellbook" hidden></div>
+    <div class="result" id="result" hidden></div>
+    <div class="help" id="helpPanel" hidden>
+      <h3>Controls</h3>
+      <ul>
+        <li><b>Left-drag</b> or <b>WASD</b>: pan · <b>Right-drag</b> or <b>Q / E</b>: rotate · <b>Wheel</b>: zoom</li>
+        <li>Click a square to Stride there (one action per Stride). Blue = 1 action, gold = 2, orange = 3.</li>
+        <li>Pick an action, then a target. Hover a target to see hit chance, modifiers and damage.</li>
+        <li><b>Esc</b> cancels targeting · <b>Space</b> ends the turn · number keys trigger actions.</li>
+        <li>Click any creature with no action selected to inspect its stat block.</li>
+      </ul>
+      <h3>Rules in play</h3>
+      <p>Three actions and a reaction per turn; multiple attack penalty; degrees of success with natural 20/1; flanking and off-guard; lesser, standard and greater cover from terrain and creatures; concealment and hidden flat checks; difficult terrain and elevation; Reactive Strike, Shield Block and champion reactions; dying, wounded, recovery checks and Hero Points; persistent damage; resistances, weaknesses, immunities and regeneration; incapacitation; frightened, sickened, slowed, stunned, prone, grabbed and more.</p>
+      <button class="btn" id="btnHelpClose">Close</button>
+    </div>
+  </section>
+
+  <div class="toast" id="toast" hidden></div>
+  <div class="modal" id="modal" hidden><div class="modal-card" id="modalCard"></div></div>
+</div>
+<!--LIBS-->
+<script>
+/*JS*/
+</script>
