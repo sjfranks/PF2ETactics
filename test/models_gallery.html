@@ -99,8 +99,8 @@ async function setup() {
     cx = rowW / 2; cz = z / 2 + 1; span = Math.max(rowW, z) * 0.62;
   } else if (mode === 'plans') {
     const P = Q.get('only') ? Q.get('only').split(',') : M.plans; let i = 0; const cols = 8;
-    P.forEach(p => { const d = PLAN_EX[p] ? PLAN_EX[p]() : { plan: p, size: 'medium' }; place(d, (i % cols) * 2.6, Math.floor(i / cols) * 3, p); i++; });
-    cx = 9; cz = 4; span = 12;
+    P.forEach(p => { const d = PLAN_EX[p] ? PLAN_EX[p]() : { plan: p, size: 'medium' }; if (!Q.get('native')) d.size = ({ huge: 'large', gargantuan: 'large' })[d.size] || d.size; const f = place(d, (i % cols) * 3.0, Math.floor(i / cols) * 3.4, p + ': ' + (d.name || '')); i++; });
+    cx = (cols - 1) * 1.5; cz = Math.floor((P.length - 1) / cols) * 1.7; span = 11;
   } else if (mode === 'closeup') {
     const which = (Q.get('which') || 'fighter/human,wizard/human,ranger/elf,barbarian/orc,cleric/dwarf').split(',');
     which.forEach((w, i) => {
@@ -161,6 +161,11 @@ function drawLabels() {
 }
 const PLAN_EX = {};
 window.PLAN_EX = PLAN_EX;
+// one representative creature per body plan (Monster Core names, or hand-built descs)
+const PLAN_MC = { humanoid: 'Hobgoblin Soldier', quadruped: 'Grizzly Bear', dragon: 'Diabolic Dragon (Young)', drake: 'Flame Drake', linnorm: 'Ice Linnorm', biped: 'Velociraptor', bird: 'Giant Eagle', bat: 'Giant Bat', hydra: 'Hydra', centaur: 'Centaur Herbalist',
+  spider: 'Hunting Spider', scorpion: 'Giant Scorpion', crab: 'Reefclaw', insect: 'Giant Ant', centipede: 'Giant Centipede', serpent: 'Python', worm: 'Cave Worm', fish: 'Great White Shark', octopus: 'Giant Octopus',
+  ooze: 'Sewer Ooze', aberration: 'Irnakurse', plant: 'Giant Flytrap', wisp: "Will-o'-Wisp", hand: 'Giant Crawling Hand', object: 'Animated Broom', swarm: 'Rat Swarm', ghost: 'Ghost Commoner', elemental: 'Living Wildfire', tree: 'Awakened Tree' };
+Object.keys(PLAN_MC).forEach(k => { PLAN_EX[k] = (va) => { const c = (window.MC_LIST || []).find(c => c.name === PLAN_MC[k]); const d = c ? PF.Models.descForCreature(c.name, c.traits, c.size, c.strikes, Object.assign({ land: c.speed }, c.other || {})) : { plan: k }; if (va) d.variant = va; if (d.plan !== k) d.plan = k; return d; }; });
 setup().catch(e => { errors.push(String(e.stack || e)); document.getElementById('info').textContent = 'ERR ' + e.stack; window.READY = true; });
 })();
 </script></body></html>

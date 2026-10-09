@@ -24,13 +24,16 @@
  *   fig.setShield(raised)   raise/lower shield (if any)
  *   fig.setFlying(on)       hover + flap for flyers (default = desc.fly)
  *   fig.dispose()
- *   extras: fig.desc, fig.J (joint map), fig.pose, fig.flying, fig.anchor(name) -> world Vector3 for
+ *   NOTE: flyers hover by themselves (root lifted while flying); the integrator should NOT add its own lift.
+ *   extras: fig.desc, fig.J (joint map), fig.pose, fig.flying, fig.meshCount, fig.anchor(name) -> world Vector3 for
  *           'head' | 'chest' | 'weapon' (tip) | 'handR' | 'handL' | 'mouth' (projectile / effect origins),
  *           fig.setTint(hex|null) optional emissive flash on all figure materials (cheap: one uniform per figure)
  *
  * DESC SCHEMA (all fields optional except plan)
  *   {
- *     plan:   one of PF.Models.plans
+ *     plan:   one of PF.Models.plans:
+ *             humanoid centaur ghost elemental tree | quadruped dragon drake linnorm biped bird bat hydra |
+ *             spider scorpion crab insect centipede | serpent worm fish octopus | ooze aberration plant wisp hand object swarm
  *     name:   string (label only)
  *     size:   'tiny'|'small'|'medium'|'large'|'huge'|'gargantuan'
  *     scale:  extra multiplier on top of the size scale (default 1)
@@ -45,12 +48,21 @@
  *     acc:    headgear 'helm'|'hood'|'hat'|'none'|'crown'|'wizard'|'feather'|'horned'|'antlers'|'redcap'|'headdress'
  *     weapon: weapon id (see WEAPONS table), offhand: weapon id or null, shield: null|'round'|'heater'|'tower'|'buckler'
  *     lower:  humanoid lower body 'legs'|'goat'|'snake'|'fish'|'horse'|'float'|'column'|'tentacles'|'roots'
- *     fly, swim, burrow: booleans (fly => hover/flap available)
+ *     fly, swim, burrow: booleans (fly => hover/flap available); flyDefault:false => starts landed; floatFly => always floats, no flight toggle
  *     melee, ranged: default clip styles
- *     f: feature flags { tail, wings:'bat'|'feather'|'insect'|'bone', horns:'ram'|'curved'|'straight'|'antler'|'bull'|'single'|'many',
- *          tusks, beard, ears, halo, eyes:n, glowEyes, snakeHair, cape, crown, quiver, lute, book, symbol, wisps,
- *          mane, trunk, saber, spikes, shell, heads:n, claws, mandibles, stinger, pincers, quills, frill, plates,
- *          translucent, emissive, flame, rock, metal, bones, ragged, glow, legs:n, segments:n, tentacles:n, critter }
+ *     element: elemental plan 'fire'|'water'|'air'|'earth'|'metal'|'wood'
+ *     stance: humanoid idle stance override 'zombie'|'claws'|'regal'|'hover'|'knuckle'
+ *     beast: per-creature overrides of the BEASTV proportions table {len,hh,sh,g,leg,foot,neck,head,tail,...}
+ *     arth: overrides of the ARTHV table (arthropods); beastVariant/beastPal: horse body for centaurs
+ *     capType (leshy 'leaf'|'mushroom'|'gourd'), staffKind ('arcane'|'druid'|'bo'|'plain')
+ *     f: feature flags { tail:'devil'|'reptile'|'kobold'|'cat'|'rat'|'fur'|'flame'|'stinger', wings:'bat'|'feather'|'insect'|'bone'|'flame',
+ *          horns:'ram'|'curved'|'straight'|'bull'|'many'|'antler'|'single', dhorns (dragon horns 'swept'|'ram'|'many'|'forward'|'crown'),
+ *          tusks, beard:'short'|'long', hairStyle, hair:false, ears, halo, glowEyes, snakeHair, cape:true|'tatter', collar, crown, quiver,
+ *          lute, book, symbol, tabard, runes, wisps, pouches, leafCloak, flameHair, chestEye, chestMaw, ragged, claws, talons,
+ *          mane, ruff, saber, spikes, ridge, shell, plates, armor, heads:n, headTypes:[...], neck:{n,len,ang,r}, stinger, quills,
+ *          frill, frillD, noseHorn, barbels, unicorn, woolly, cover:'fur'|'scales'|'skin'|'hide'|'feather'|'stone'|'bone'|'metal'|'ghost'|'emis'|'glass'|'tar',
+ *          flame (fire aura), tailFlame, hoverH, segments, thick, fins, crest, hood, teeth, flukes, snout, bigFin, stripes,
+ *          tentacles:n, longArms, eyes:n, maw, float, debris, strings, stag, horn, hairy, metal, legsSmall, count (swarm) }
  *   }
  */
 (function (G) {
@@ -632,7 +644,7 @@ function buildHumanoid(fig) {
   fig.P = { h, w, hs, legs, arms, lower };
   const thigh = 0.34 * h * legs, shin = 0.33 * h * legs, ank = 0.06 * h;
   let hipY = ank + shin + thigh;
-  const LOWER_HIP = { snake: 0.62, fish: 0.6, float: 0.62, column: 0.62, tentacles: 0.42, horse: 1.0, roots: 0.5 };
+  const LOWER_HIP = { snake: 0.58, fish: 0.52, float: 0.62, column: 0.62, tentacles: 0.42, horse: 1.0, roots: 0.5 };
   if (LOWER_HIP[lower] != null) hipY = LOWER_HIP[lower] * h;
   if (lower === 'goat') hipY = (thigh + shin) * 0.86 + ank * 1.4;
   const J = (n, p, x, y, z) => fig.bone(n, p ? fig.J[p] : fig.root, x, y, z);
@@ -774,17 +786,17 @@ function buildLower(fig, lower) {
     for (let i = 0; i < n; i++) {
       const b = fig.bone('tail' + i, parent, 0, i === 0 ? -0.02 : 0, i === 0 ? 0 : -segL);
       const rr = r0 * (1 - i / (n + (lower === 'snake' ? 1.5 : 2)));
-      if (i > 1) b.rotation.y = lower === 'snake' ? (i % 2 ? 0.55 : -0.6) : 0;
-      add(b, U.limb(rr, rr * 0.86, segL, 0.05), mt, [0, 0, 0], [-HP, 0, 0]);
-      if (lower === 'snake') add(b, U.limb(rr * 0.9, rr * 0.78, segL, 0), bel, [0, -rr * 0.22, 0.0], [-HP, 0, 0], [0.92, 1, 0.9]);
+      if (i > 2) b.rotation.y = lower === 'snake' ? 0.62 : 0;
+      add(b, U.limb(rr, rr * 0.86, segL * 1.08, 0.05), mt, [0, 0, 0], [HP, 0, 0]);
+      if (lower === 'snake') add(b, U.limb(rr * 0.9, rr * 0.78, segL, 0), bel, [0, -rr * 0.22, 0.0], [HP, 0, 0], [0.92, 1, 0.9]);
       parent = b;
     }
     if (lower === 'fish') {
       const fin = U.shape('tailfin', [[0, 0], [0.16, -0.18], [0.06, -0.08], [0, -0.1], [-0.06, -0.08], [-0.16, -0.18]], 0.012, 0.004);
-      add(parent, fin, MT.membrane(pal.fin || shade(pal.tail || '#3a8a8a', 1.3)), [0, 0, -segL * 0.8], [-HP, 0, 0], [1.4 * w, 1.6, 1]);
-      fig.J.tail0.rotation.x = 1.25; fig.J.tail1.rotation.x = 0.25; fig.J.tail2.rotation.x = -0.35; fig.J.tail3.rotation.x = -0.45; fig.J.tail4.rotation.x = -0.3;
+      add(parent, fin, MT.membrane(pal.fin || shade(pal.tail || '#3a8a8a', 1.3)), [0, 0, -segL * 0.8], [HP, 0, 0], [1.4 * w, 1.6, 1]);
+      fig.J.tail0.rotation.x = -1.5; fig.J.tail1.rotation.x = 0.25; fig.J.tail2.rotation.x = 1.05; fig.J.tail3.rotation.x = 0.45; fig.J.tail4.rotation.x = 0.4;
     } else {
-      fig.J.tail0.rotation.x = 1.45; fig.J.tail1.rotation.x = 0.1; fig.J.tail2.rotation.x = 0.0;
+      fig.J.tail0.rotation.x = -1.45; fig.J.tail1.rotation.x = 0.15; fig.J.tail2.rotation.x = 1.2;
     }
     fig.tailN = n; fig.lowerTail = lower;
   } else if (lower === 'float' || lower === 'column') {
@@ -1138,14 +1150,14 @@ function addTail(fig, parent, o) {
   const bones = [];
   for (let i = 0; i < n; i++) {
     const b = fig.bone((o.name || 'tl') + i, p, 0, i === 0 ? (o.y || 0) : 0, i === 0 ? (o.z || -0.08) : -segL);
-    b.rotation.x = i === 0 ? (o.rx0 != null ? o.rx0 : 0.6) : (o.rx != null ? o.rx : -0.12);
+    b.rotation.x = -(i === 0 ? (o.rx0 != null ? o.rx0 : 0.6) : (o.rx != null ? o.rx : -0.12));
     const rr = r0 * (1 - i / (n + 0.6)), rr2 = r0 * (1 - (i + 1) / (n + 0.6));
-    add(b, U.limb(rr, Math.max(0.004, rr2), segL, 0.05), m, null, [-HP, 0, 0]);
+    add(b, U.limb(rr, Math.max(0.004, rr2), segL * 1.06, 0.05), m, null, [HP, 0, 0]);
     bones.push(b); p = b;
   }
-  if (o.tip === 'spade') add(p, U.shape('spade', [[0, 0], [0.04, -0.04], [0, -0.1], [-0.04, -0.04]], 0.012, 0.004), o.tipM || m, [0, 0, -segL], [-HP, 0, 0], 0.8 + r0 * 4);
+  if (o.tip === 'spade') add(p, U.shape('spade', [[0, 0], [0.04, -0.04], [0, -0.1], [-0.04, -0.04]], 0.012, 0.004), o.tipM || m, [0, 0, -segL], [HP, 0, 0], 0.8 + r0 * 4);
   if (o.tip === 'stinger') spike(p, o.tipM || MT.horn('#2a2622'), [0, 0, -segL], [0, 0.04, -segL - 0.08], r0 * 0.6);
-  if (o.tip === 'flame') add(p, U.cone(8), MT.emis('#ff7a20', 2), [0, 0, -segL - 0.03], [-HP, 0, 0], [0.03, 0.09, 0.03]);
+  if (o.tip === 'flame') add(p, U.cone(8), MT.emis('#ff7a20', 2), [0, 0, -segL - 0.03], [HP, 0, 0], [0.03, 0.09, 0.03]);
   return bones;
 }
 function wingShape(type, span, chord) {
@@ -1194,7 +1206,7 @@ function addFeatures(fig) {
   if (f.tail) {
     const tt = f.tail; const tm = tt === 'devil' ? MT.skin(pal.skin) : tt === 'rat' ? MT.skin(pal.tailC || '#c89a8a') : tt === 'cat' || tt === 'fur' ? MT.fur(pal.tailC || pal.skin) : M.skin;
     const o = { devil: { n: 6, len: 0.62, r: 0.022, tip: 'spade', rx0: 1.0, rx: -0.18 }, rat: { n: 6, len: 0.6, r: 0.02, rx0: 1.2, rx: -0.15 }, cat: { n: 6, len: 0.62, r: 0.03, rx0: 1.0, rx: -0.2 }, fur: { n: 4, len: 0.35, r: 0.05, rx0: 0.9 },
-      reptile: { n: 6, len: 0.75, r: 0.075, rx0: 1.0, rx: 0.06 }, kobold: { n: 5, len: 0.55, r: 0.05, rx0: 1.05, rx: 0.05 }, flame: { n: 5, len: 0.6, r: 0.03, tip: 'flame', rx0: 1.0 }, stinger: { n: 7, len: 0.8, r: 0.04, tip: 'stinger', rx0: 0.6, rx: -0.35 } }[tt] || { n: 5, len: 0.6, r: 0.04 };
+      reptile: { n: 6, len: 0.75, r: 0.075, rx0: 0.75, rx: -0.13 }, kobold: { n: 5, len: 0.55, r: 0.05, rx0: 0.8, rx: -0.14 }, flame: { n: 5, len: 0.6, r: 0.03, tip: 'flame', rx0: 1.0 }, stinger: { n: 7, len: 0.8, r: 0.04, tip: 'stinger', rx0: 0.6, rx: -0.35 } }[tt] || { n: 5, len: 0.6, r: 0.04 };
     o.m = tm; o.y = -0.02; o.z = -0.08 * w;
     fig.tail = addTail(fig, J.hips, o);
   }
@@ -1802,8 +1814,8 @@ function humLie(fig, p) {
     if (p === 'down') return full({ hips: [1.3, 0, 0.4, 0, y + 0.08, 0.1], neck: [0.3, 0, 0.4], head: [0.2, 0.3, 0], armL: [-1.4, 0, 0.6], foreL: [-0.4, 0, 0], armR: [-0.6, 0, -0.6], foreR: [-0.3, 0, 0], root: [0, 0, 0, 0, fig.floaty ? -0.12 : 0, 0] });
     return full({ hips: [1.45, 0, 0.6, 0, y + 0.05, 0.1], spine: [0.2, 0, 0.2], neck: [0.5, 0, 0.5], head: [0.3, 0.4, 0], armL: [-1.8, 0, 0.9], foreL: [-0.2, 0, 0], armR: [-0.8, 0, -0.9], foreR: [-0.2, 0, 0], jaw: [0.35, 0, 0], root: [0, 0, 0, 0, fig.floaty ? -0.14 : 0, 0] });
   }
-  if (p === 'prone') return full({ root: [HP, 0, 0, 0, 0.13, -H * 0.46], neck: [-0.75, 0, 0], head: [-0.35, 0, 0], armL: [-2.5, -0.3, 0.45], foreL: [-1.2, 0, 0], armR: [-2.5, 0.3, -0.45], foreR: [-1.2, 0, 0], thighL: [0.05, 0, 0.05], shinL: [0.15, 0, 0], footL: [0.9, 0, 0], thighR: [0.05, 0, -0.05], shinR: [0.15, 0, 0], footR: [0.9, 0, 0] });
-  if (p === 'down') return full({ root: [-HP, 0, 0, 0, 0.12, H * 0.46], neck: [0.05, 0.5, 0], head: [0, 0.3, 0.1], armL: [-0.1, 0, 0.75], foreL: [-0.5, 0, 0], armR: [0.0, 0, -0.95], foreR: [-0.3, 0, 0], thighL: [-0.35, 0, 0.05], shinL: [0.7, 0, 0], footL: [-0.3, 0, 0], thighR: [0, 0, -0.12], shinR: [0.1, 0, 0], footR: [-0.5, 0, 0] });
+  if (p === 'prone') return full({ root: [HP, 0, 0, 0, 0.13, -H * 0.46], neck: [-0.75, 0, 0], head: [-0.35, 0, 0], armL: [-2.5, -0.3, 0.45], foreL: [-1.2, 0, 0], armR: [-2.5, 0.3, -0.45], foreR: [-1.2, 0, 0], handR: [-1.3, 0, 0], thighL: [-0.06, 0, 0.06], shinL: [0.02, 0, 0], footL: [1.0, 0, 0], thighR: [-0.06, 0, -0.06], shinR: [0.02, 0, 0], footR: [1.0, 0, 0] });
+  if (p === 'down') return full({ root: [-HP, 0, 0, 0, 0.12, H * 0.46], neck: [0.05, 0.5, 0], head: [0, 0.3, 0.1], armL: [-0.1, 0, 0.75], foreL: [-0.5, 0, 0], armR: [0.0, 0, -0.95], foreR: [-0.3, 0, 0], handR: [-1.6, 0, 0], thighL: [-0.35, 0, 0.05], shinL: [0.7, 0, 0], footL: [-0.3, 0, 0], thighR: [0, 0, -0.12], shinR: [0.1, 0, 0], footR: [-0.5, 0, 0] });
   // dead: crumpled on the right side
   return full({ root: [0.12, 0, HP, H * 0.45, 0.16, 0], spine: [0.35, 0, 0], chest: [0.2, 0, 0], neck: [0.45, 0, 0.35], head: [0.25, 0, 0.25], jaw: [0.3, 0, 0], armR: [-1.45, 0, 0.25], foreR: [-0.35, 0, 0], handR: [0.4, 0, 0], armL: [-0.7, 0, 0.55], foreL: [-0.9, 0, 0], thighL: [-1.0, 0, 0], shinL: [1.45, 0, 0], footL: [0.3, 0, 0], thighR: [-0.55, 0, 0], shinR: [0.85, 0, 0], footR: [0.3, 0, 0] });
 }
@@ -2898,11 +2910,11 @@ function buildBlob(fig) {
       if (f.eyes !== false) [1, -1].forEach(s => ell(jig, MT.glowEye(pal.eye || '#e0ff60'), [s * 0.08, 0.5, 0.22], 0.025));
     }
   } else if (plan === 'wisp') {
-    const gm = fig.perMat(mat(pal.glow || '#a0e0ff', { e: pal.glow || '#a0e0ff', ei: 2.5, op: 0.85 }));
+    const gm = fig.perMat(mat(pal.glow || '#a0e0ff', { e: pal.glow || '#a0e0ff', ei: 1.1, op: 0.9 }));
     const hm = fig.perMat(mat(pal.glow || '#a0e0ff', { basic: true, add: true, op: 0.35 }));
     const core = keep(ell(jig, gm, [0, 0.55, 0], 0.11)); core.castShadow = false;
     const halo = keep(ell(jig, hm, [0, 0.55, 0], 0.22)); halo.castShadow = false;
-    fig.updaters.push(fg => { const s = 1 + 0.15 * Math.sin(fg.t * 7) + 0.08 * Math.sin(fg.t * 13); halo.scale.setScalar(0.22 * s); gm.emissiveIntensity = 2 + Math.sin(fg.t * 5); });
+    fig.updaters.push(fg => { const s = 1 + 0.15 * Math.sin(fg.t * 7) + 0.08 * Math.sin(fg.t * 13); halo.scale.setScalar(0.22 * s); gm.emissiveIntensity = 1.0 + 0.4 * Math.sin(fg.t * 5); });
     fig.floaty = true;
   } else if (plan === 'hand') {
     const hm = MT.skin(pal.body || '#8a9a78');
@@ -3114,7 +3126,7 @@ function descForCreature(name, traits, size, strikes, speeds) {
   if (has('dragon') || (nm('dragon', 'drake', 'wyvern', 'linnorm') && !has('humanoid'))) {
     const key = Object.keys(DRAGON_COLORS).find(k => n.includes(k));
     if (nm('turtle')) { d.plan = 'quadruped'; d.variant = 'turtle'; Object.assign(pal, { body: '#3a6a5a', belly: '#a8b888', shell: '#3a4a30', horn: '#d8ccb0' }); f.spikes = 1; d.melee = 'bite'; return done(); }
-    if (nm('linnorm')) { d.plan = 'linnorm'; const c = nm('crag') ? ['#6a3a2a', '#c8904a', '#ff6a1a'] : nm('ice') ? ['#a8c8dc', '#e8f0f8', '#c0f0ff'] : nm('tarn') ? ['#3a5a42', '#8a9a60', '#9be34a'] : ['#7a5a3a', '#c8a878', '#ff8a3a']; Object.assign(pal, { body: c[0], belly: c[1], breath: c[2], horn: '#e8dcc0' }); f.dhorns = 'swept'; f.spikes = 1; d.fly = false; d.noWings = true; return done(); }
+    if (nm('linnorm')) { d.plan = 'linnorm'; const c = nm('crag') ? ['#6a3a2a', '#c8904a', '#ff6a1a'] : nm('ice') ? ['#a8c8dc', '#e8f0f8', '#c0f0ff'] : nm('tarn') ? ['#3a5a42', '#8a9a60', '#9be34a'] : ['#7a5a3a', '#c8a878', '#ff8a3a']; Object.assign(pal, { body: c[0], belly: c[1], breath: c[2], horn: '#e8dcc0' }); f.dhorns = 'swept'; f.spikes = 1; d.noWings = true; d.flyDefault = false; return done(); }
     if (nm('wyvern') || nm('drake')) {
       d.plan = 'drake';
       const c = nm('desert') ? ['#c8a060', '#e8d0a0', '#ffd080'] : nm('flame') ? ['#b8401a', '#e8a050', '#ff6a1a'] : nm('frost') ? ['#a0c8e0', '#e8f4ff', '#c0f0ff'] : nm('jungle') ? ['#3a7a3a', '#a8c070', '#9be34a'] : nm('river') ? ['#3a7a8a', '#a8d0c8', '#9fdcff'] : ['#6a6040', '#b8a878', '#9be34a'];
