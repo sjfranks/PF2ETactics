@@ -936,3 +936,6 @@ details[open] summary { margin-bottom: 8px; }
 .agroup { gap: 3px; }
 .agroup + .agroup { margin-left: 4px; padding-left: 6px; }
 @media (max-width: 1280px) { .abtn { width: 62px; height: 66px; } .abtn .ai svg { width: 25px; height: 25px; } }
+.abtn .cnt { white-space: nowrap; }
+@media (max-width: 760px) { .shot { width: auto; } }
+.deploybar { z-index: 14; max-width: min(860px, calc(100% - 24px)); }

@@ -163,7 +163,7 @@ BC.playOne = async e => {
     case 'dead': { const t = B.get(e.u); if (t && BC.stats) { BC.stats.kills[t.team === 'pc' ? 'foe' : 'pc']++; const k = B.get(BC.lastAtk[e.u] || BC.playCur); if (k && k.team !== t.team) credit(k.id, 'kills', 1); } await R.animDeath(e.u); break; }
     case 'shield': R.setPose(e.u, { shield: e.v }); break;
     case 'turn': {
-      const u = B.get(e.u); R.setActive(e.u); BC.playCur = e.u; BC.lastAtk = {}; BC.lastCaster = null; BC.renderInit(e.u);
+      const u = B.get(e.u); R.setActive(e.u); BC.playCur = e.u; if (u) { BC.cur = u; BC.renderActions(); } BC.lastAtk = {}; BC.lastCaster = null; BC.renderInit(e.u);
       if (u) {
         if (App.settings.follow) R.focus(u.x + u.sq / 2, u.y + u.sq / 2);
         BC.renderUnitCard(u);
@@ -267,7 +267,7 @@ BC.endTurn = async force => {
   }
   BC.endArm = 0;
   BC.busy = true; App.R.clearLayers(); App.R.showPath(null); $('#spellbook').hidden = true; $('#tip').hidden = true; BC.hideShot(); BC.ring('sel', null, '#f5b942');
-  $('#targetBar').innerHTML = '';
+  $('#targetBar').innerHTML = ''; BC.renderActions(true);
   BC.B.endTurn(BC.cur); await BC.play(); BC.busy = false; BC.advance();
 };
 BC.flash = msg => { const b = $('#banner'); clearTimeout(BC._ft); b.className = 'banner flash'; b.innerHTML = '<div class="bt">' + esc(msg) + '</div>'; b.hidden = false; BC._ft = setTimeout(() => { b.hidden = true; }, 1600); };
