@@ -179,7 +179,7 @@ PF.installActions = function (B) {
     if (deg === 3 && B.immuneTo(t, 'critical-hits')) { deg = 2; critNote = ' (immune to critical hits)'; }
     const detail = 'd20 ' + roll.txt + ' ' + U.sgn(R.atkTotal) + ' = ' + total + ' vs AC ' + R.acTotal + ' | atk: ' + PF.modText(PF.sumMods(R.atk).used.concat([])) + ' | AC: ' + PF.modText(PF.sumMods(R.ac).used) + flatTxt;
     B.log(B.nm(u) + ' → ' + B.nm(t) + ' · ' + label + ': ' + total + ' vs AC ' + R.acTotal + ' — ' + PF.DEG[deg] + critNote + (R.og ? ' (off-guard: ' + R.og + ')' : '') + (R.cover ? ' (' + B.COVERN[R.cover] + ')' : '') + (flatTxt && deg === 1 && R.flat ? flatTxt : ''), 'deg' + deg, detail);
-    B.emit({ t: 'attack', a: u.id, b: t.id, ranged, deg, c: o.color || (o.spellAtk ? o.spellType : 'weapon') });
+    B.emit({ t: 'attack', a: u.id, b: t.id, ranged, deg, c: o.color || (o.spellAtk ? o.spellType : 'weapon'), w: (s.wid || s.group || s.name || '').toLowerCase() });
     if (s.kind === 'ranged') { if (s.qty != null && s.thrown) s.qty--; if (s.reload) s.loaded = false; }
     // attack bookkeeping
     if (!o.noMAPinc && !(o.exacting && deg <= 1)) u.turn.attacks += (o.mapCount || 1);
@@ -583,7 +583,7 @@ PF.installActions = function (B) {
     if (shape) {
       cells = B.areaCells(u, shape, p); origin = B.areaOrigin(u, shape, p);
       targets = B.unitsInCells(cells, origin).filter(t => !(t === u && shape.t !== 'burst'));
-      B.emit({ t: 'area', cells, c: sp.traits.find(x => ['fire', 'cold', 'electricity', 'acid', 'sonic', 'void', 'vitality', 'mental', 'spirit', 'force'].includes(x)) || 'arcane', shape: shape.t, origin: { x: origin.pt ? origin.x : origin.x + origin.sq / 2, y: origin.pt ? origin.y : origin.y + origin.sq / 2 } });
+      B.emit({ t: 'area', u: u.id, cells, c: sp.traits.find(x => ['fire', 'cold', 'electricity', 'acid', 'sonic', 'void', 'vitality', 'mental', 'spirit', 'force'].includes(x)) || 'arcane', shape: shape.t, origin: { x: origin.pt ? origin.x : origin.x + origin.sq / 2, y: origin.pt ? origin.y : origin.y + origin.sq / 2 } });
     }
     if (sp.livingOnly) targets = targets.filter(t => B.isLiving(t));
     if (sp.undeadOnly) targets = targets.filter(t => B.isUndead(t));
@@ -920,7 +920,7 @@ PF.installActions = function (B) {
     const cells = B.areaCells(u, shape, p); const origin = B.areaOrigin(u, shape, p);
     const targets = B.unitsInCells(cells, origin).filter(t => t !== u);
     B.log(B.nm(u) + ' uses ' + o.name + '!', 'cast');
-    B.emit({ t: 'area', cells, c: o.c || 'fire', shape: shape.t, origin: { x: u.x + u.sq / 2, y: u.y + u.sq / 2 } });
+    B.emit({ t: 'area', u: u.id, cells, c: o.c || 'fire', shape: shape.t, origin: { x: u.x + u.sq / 2, y: u.y + u.sq / 2 } });
     const roll = B.rollParts(o.dmg); B.log(o.name + ' damage: ' + roll.text, 'dim');
     targets.forEach(t => { const d = B.save(t, o.save, o.dc, { basic: true, src: u, origin, area: true }); const f = [2, 1, 0.5, 0][d]; if (f > 0) B.dealDamage(t, B.scaleParts(roll.parts, f), { src: u, crit: d === 0, label: o.name }); });
     if (u.hiddenFrom && u.hiddenFrom.size) B.clearHidden(u, 'attacked');
@@ -994,7 +994,7 @@ PF.installActions = function (B) {
       const { cells, origin, ts } = B.mAreaTargets(u, sp, p);
       B.log(B.nm(u) + ' uses ' + sp.name + '!', 'cast');
       const col = (sp.dmg && sp.dmg[0] && sp.dmg[0].type) || (sp.traits || []).find(x => ['fire', 'cold', 'electricity', 'acid', 'sonic', 'void', 'vitality', 'mental', 'spirit', 'force', 'poison'].includes(x)) || 'arcane';
-      B.emit({ t: 'area', cells, c: col, shape: shape.t, origin: { x: origin.pt ? origin.x : u.x + u.sq / 2, y: origin.pt ? origin.y : u.y + u.sq / 2 } });
+      B.emit({ t: 'area', u: u.id, cells, c: col, shape: shape.t, origin: { x: origin.pt ? origin.x : u.x + u.sq / 2, y: origin.pt ? origin.y : u.y + u.sq / 2 } });
       const roll = sp.dmg && sp.dmg.length ? B.rollParts(sp.dmg.map(x => Object.assign({}, x))) : null;
       if (roll) B.log(sp.name + ' damage: ' + roll.text, 'dim');
       ts.forEach(t => B.mResolve(u, t, sp, roll, { origin, area: true }));

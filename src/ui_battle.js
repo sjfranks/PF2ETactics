@@ -136,13 +136,13 @@ BC.playOne = async e => {
     case 'attack': {
       const a = B.get(e.a); BC.lastAtk[e.b] = e.a;
       if (a && BC.stats && e.deg === 3) { BC.stats.crits[a.team]++; credit(e.a, 'crits', 1); }
-      await R.animAttack(e.a, e.b, e.ranged, e.deg, e.c);
+      await R.animAttack(e.a, e.b, e.ranged, e.deg, e.c, e.w);
       if (e.deg <= 1) BC.float(e.b, e.deg === 0 ? 'Critical miss' : 'Miss', 'miss');
       else if (e.deg === 3) BC.float(e.b, 'Critical hit', 'critlbl');
       break;
     }
-    case 'bolt': { BC.lastAtk[e.b] = e.a; const a = R.units[e.a], b = R.units[e.b]; if (a && b) { const pa = a.g.position.clone(); pa.y += 0.9; const pb = b.g.position.clone(); pb.y += 0.6; for (let i = 0; i < Math.min(3, e.n || 1); i++) await R.animBolt(pa, pb, R.fxColor(e.c), true); } break; }
-    case 'area': await R.animArea(e.cells, e.c); break;
+    case 'bolt': { BC.lastAtk[e.b] = e.a; await R.animBolt(e.a, e.b, e.c, e.n || 1); break; }
+    case 'area': await R.animArea(e.cells, e.c, e.shape, e.origin, e.u); break;
     case 'pulse': await R.animPulse(e.u, e.r, e.c); break;
     case 'cast': BC.lastCaster = e.u; await R.animCast(e.u, e.c); break;
     case 'float': {
@@ -153,7 +153,7 @@ BC.playOne = async e => {
         credit(e.u, 'taken', n);
         const src = B.get(BC.lastAtk[e.u] || BC.lastCaster || BC.playCur); const by = src && src.team !== t.team ? src : B.get(BC.playCur);
         if (by && by.team !== t.team) credit(by.id, 'dmg', n);
-      } else if (t && /^\+\d+/.test(e.text)) { const h = B.get(BC.playCur); if (h && h.team === t.team) credit(h.id, 'heal', +e.text.slice(1)); }
+      } else if (t && /^\+\d+/.test(e.text)) { R.animHeal && R.animHeal(e.u); const h = B.get(BC.playCur); if (h && h.team === t.team) credit(h.id, 'heal', +e.text.slice(1)); }
       await R.wait(0.06); break;
     }
     case 'state': { BC.disp[e.u] = e.s; BC.updatePlate(e.u); const r = R.units[e.u]; if (r && !r.state.dead) R.setPose(e.u, { prone: e.s.prone, down: e.s.down && !e.s.dead, shield: e.s.shield }); if (BC.shown && BC.shown.id === e.u) BC.renderUnitCard(BC.shown, true); BC.dirtyInit(); break; }

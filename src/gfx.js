@@ -202,11 +202,11 @@ recipe('sand', 512, 1.8, (B, n) => {
   }
 });
 recipe('ash', 512, 2.4, (B, n) => {
-  const N = B.N; const W = Worley(7, 41, 0.9); const c0 = hexRGB('#26211f'), c1 = hexRGB('#3e3733'), ashc = hexRGB('#8a837c'), hot = hexRGB('#5a2618');
+  const N = B.N; const W = Worley(7, 41, 0.9); const c0 = hexRGB('#26211f'), c1 = hexRGB('#3e3733'), ashc = hexRGB('#5e5650'), hot = hexRGB('#5a2618');
   for (let y = 0; y < N; y++) for (let x = 0; x < N; x++) {
     const u = x / N, v = y / N, i = y * N + x; const a = n.fbm(u, v, 4, 5) * 0.5 + 0.5; const d = n.fbm(u + 0.4, v, 6, 4) * 0.5 + 0.5; const g = n.p(u * 200, v * 200, 200, 200);
     let c = [lerp(c0[0], c1[0], a), lerp(c0[1], c1[1], a), lerp(c0[2], c1[2], a)];
-    const drift = smooth(0.55, 0.75, d); c = [lerp(c[0], ashc[0], drift * 0.7), lerp(c[1], ashc[1], drift * 0.7), lerp(c[2], ashc[2], drift * 0.7)];
+    const drift = smooth(0.4, 0.9, d); c = [lerp(c[0], ashc[0], drift * 0.45), lerp(c[1], ashc[1], drift * 0.45), lerp(c[2], ashc[2], drift * 0.45)];
     const w = W(u, v); const crack = smooth(0.06, 0.0, w.f2 - w.f1) * (1 - drift);
     c = [lerp(c[0], hot[0], crack * 0.8), lerp(c[1], hot[1], crack * 0.8), lerp(c[2], hot[2], crack * 0.8)];
     const cinder = g > 0.55 ? 0.6 : 1;
