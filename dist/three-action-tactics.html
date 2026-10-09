@@ -673,7 +673,7 @@ details[open] summary { margin-bottom: 8px; }
 .abtn.skill { --ac: #9fe0b0; }
 .abtn.class { --ac: var(--amber); }
 .abtn.monster { --ac: var(--red); }
-.abtn.item { --ac: #ff9dc0; }
+.abtn.itm { --ac: #ff9dc0; }
 .abtn.spell { --ac: var(--spell); }
 .abtn.end { --ac: var(--amber); }
 .endwrap { display: flex; justify-content: flex-end; align-items: end; gap: 6px; }
@@ -931,6 +931,17 @@ details[open] summary { margin-bottom: 8px; }
 }
 @media (max-width: 760px) { .bf-head h3 { flex-basis: 100%; } }
 .agroup { flex: 0 0 auto; }
+.tray { width: 100%; }
+.actions { justify-content: safe center; }
+.shot { width: 340px; }
+.shot .mods2 { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+.shot .mods2 > div { min-width: 0; }
+.shot .sect h5 { flex-wrap: wrap; gap: 4px; }
+.abtn { width: 66px; height: 70px; }
+.abtn .ai svg { width: 28px; height: 28px; }
+.agroup { gap: 3px; }
+.agroup + .agroup { margin-left: 4px; padding-left: 6px; }
+@media (max-width: 1280px) { .abtn { width: 62px; height: 66px; } .abtn .ai svg { width: 25px; height: 25px; } }
 
 </style>
 <div id="app">
@@ -6988,7 +6999,7 @@ BC.catalog = u => {
   return { acts, g };
 };
 const SHORT = { potion: 'Potion', raiseShield: 'Raise Shield', takeCover: 'Take Cover', medicine: 'Battle Medicine', mobility: 'Mobility' };
-const btnCls = a => a.id === 'cast' ? 'spell' : a.group === 'strike' ? 'strike' : a.group === 'skill' ? 'skill' : a.group === 'item' || a.id === 'potion' ? 'item' : a.group === 'monster' ? 'monster' : a.group === 'class' ? 'class' : '';
+const btnCls = a => a.id === 'cast' ? 'spell' : a.group === 'strike' ? 'strike' : a.group === 'skill' ? 'skill' : a.group === 'item' || a.id === 'potion' ? 'itm' : a.group === 'monster' ? 'monster' : a.group === 'class' ? 'class' : '';
 BC.renderActions = waiting => {
   const B = BC.B; const bar = $('#actionBar'); const tabs = $('#trayTabs');
   const u = BC.cur;

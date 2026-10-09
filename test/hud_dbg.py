@@ -17,6 +17,8 @@ async def main():
             if r[0] and r[1] == 'Ezren': break
         print(await pg.evaluate("() => { const B=PF.App.B, BC=PF.App.Battle; return [B.cur && B.cur.name, BC.cur && BC.cur.name, BC.busy, B.events.length, B.over, document.querySelector('#banner').hidden, BC.gen] }"))
         print(await pg.evaluate("() => { const BC=PF.App.Battle; const k=Object.keys(BC.keyMap).find(k=>k.startsWith('strike:')); BC.choose(k); return [k, PF.App.B.foesOf(BC.cur).map(t=>t.name+':'+BC.targetWhy(t)+'|'+JSON.stringify(BC.evalTarget(t).why))] }"))
+        print(await pg.evaluate("() => ['#hudBottom','#trayWrap','#tray','#actionBar','#endWrap','#unitCard'].map(s => { const e=document.querySelector(s); return s+':'+e.getBoundingClientRect().width+'/'+e.scrollWidth; })"))
+        print(await pg.evaluate("() => getComputedStyle(document.querySelector('#hudBottom')).gridTemplateColumns"))
         print(await pg.evaluate("() => { const l=document.querySelectorAll('.ll')[2]; const cs=getComputedStyle(l); return [l.className, cs.textAlign, cs.direction, cs.display, l.getBoundingClientRect().width] }"))
         print(await pg.evaluate("() => document.querySelector('#trayTabs').innerHTML.slice(0,400)"))
         await b.close()

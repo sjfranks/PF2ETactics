@@ -369,7 +369,7 @@ BC.catalog = u => {
   return { acts, g };
 };
 const SHORT = { potion: 'Potion', raiseShield: 'Raise Shield', takeCover: 'Take Cover', medicine: 'Battle Medicine', mobility: 'Mobility' };
-const btnCls = a => a.id === 'cast' ? 'spell' : a.group === 'strike' ? 'strike' : a.group === 'skill' ? 'skill' : a.group === 'item' || a.id === 'potion' ? 'item' : a.group === 'monster' ? 'monster' : a.group === 'class' ? 'class' : '';
+const btnCls = a => a.id === 'cast' ? 'spell' : a.group === 'strike' ? 'strike' : a.group === 'skill' ? 'skill' : a.group === 'item' || a.id === 'potion' ? 'itm' : a.group === 'monster' ? 'monster' : a.group === 'class' ? 'class' : '';
 BC.renderActions = waiting => {
   const B = BC.B; const bar = $('#actionBar'); const tabs = $('#trayTabs');
   const u = BC.cur;
