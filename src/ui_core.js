@@ -30,7 +30,7 @@ App.saveSetup = () => store.set('tat.setup.v1', { pl: App.setup.pl, party: App.s
    App.settings.gfx: 'high'|'medium'|'low'|'off' (also mirrored raw in localStorage 'tat.gfx' for the renderer)
    App.settings.reactions: 'auto'|'defensive'|'never'   App.settings.heroPoints: 'death'|'reroll'
    A 'tat:settings' window event fires after every change with detail = App.settings. */
-const SET_DEF = { gfx: 'high', speed: 1, follow: true, grid: true, confirmEnd: true, reactions: 'auto', heroPoints: 'death', banners: true, logOpen: null };
+const SET_DEF = { gfx: Math.min(G.innerWidth, G.innerHeight) < 700 ? 'medium' : 'high', speed: 1, follow: true, grid: true, confirmEnd: true, reactions: 'auto', heroPoints: 'death', banners: true, logOpen: null, sound: false, haptics: false };
 App.settings = Object.assign({}, SET_DEF, store.get('tat.settings.v1', {}));
 try { const g = localStorage.getItem('tat.gfx'); if (['high', 'medium', 'low', 'off'].includes(g)) App.settings.gfx = g; } catch (e) { /* no storage */ }
 App.saveSettings = () => {
@@ -82,6 +82,7 @@ App.show = name => {
   $$('.screen').forEach(s => { s.hidden = s.id !== name; });
   if (name !== App.screen) App.prev = App.screen;
   App.screen = name;
+  if (name !== 'battle' && App.R) App.R.setViewportInsets(0, 0);
   if (name !== 'setup') App.closeFly && App.closeFly();
   if (name === 'home' || name === 'setup' || name === 'roster') App.showDiorama();
   if (name === 'setup') App.renderSetup();
@@ -89,8 +90,23 @@ App.show = name => {
 };
 
 /* ---------- modal / toast ---------- */
-App.modal = (html, onBind) => { const m = $('#modal'); $('#modalCard').innerHTML = html; App.hydrateIcons($('#modalCard')); m.hidden = false; if (onBind) onBind($('#modalCard')); const f = $('#modalCard').querySelector('button, select, input'); if (f) f.focus({ preventScroll: true }); };
-App.closeModal = () => { $('#modal').hidden = true; };
+App.modal = (html, onBind) => {
+  const m = $('#modal'), card = $('#modalCard');
+  if (m.hidden) App.modalReturn = document.activeElement;
+  if (App.Battle) App.Battle.keys = {};
+  card.innerHTML = html; App.hydrateIcons(card); m.hidden = false;
+  const heading = card.querySelector('h3'); if (heading) { heading.id = 'modalTitle'; card.setAttribute('aria-labelledby', heading.id); }
+  if (onBind) onBind(card);
+  const f = card.querySelector('button, select, input'); if (f) f.focus({ preventScroll: true });
+};
+App.closeModal = () => { $('#modal').hidden = true; if (App.modalReturn && App.modalReturn.isConnected) App.modalReturn.focus({ preventScroll: true }); };
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Tab' || $('#modal').hidden) return;
+  const els = $$('button, input, select, textarea, a[href], [tabindex="0"]', $('#modalCard')).filter(el => !el.disabled && el.getClientRects().length);
+  const first = els[0], last = els[els.length - 1]; if (!first) return;
+  if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+  else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+});
 document.addEventListener('click', e => { if (e.target.id === 'modal') App.closeModal(); });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') { if (!$('#modal').hidden) { App.closeModal(); e.stopPropagation(); } else if (App.flyOpen) App.closeFly(); } }, true);
 App.toast = msg => { const t = $('#toast'); t.textContent = msg; t.hidden = false; clearTimeout(App._tt); App._tt = setTimeout(() => { t.hidden = true; }, 2000); };
@@ -109,10 +125,12 @@ App.openSettings = () => {
     row('Camera follow', 'Pan to whoever is acting.', sw('follow')) +
     row('Show grid', 'Draw square outlines on the battlefield.', sw('grid')) +
     row('Turn banners', '“Your turn” and “Enemy activity” announcements.', sw('banners')) +
+    row('Sound effects', 'Soft cues for actions, hits, spells and the start of your turn.', sw('sound')) +
+    row('Touch feedback', 'Short vibrations for actions and critical hits, on supported devices.', sw('haptics')) +
     row('Confirm end turn', 'Ask before ending a turn with actions left.', sw('confirmEnd')) +
     row('Reactions', 'Which reactions your heroes use automatically: all (Reactive Strike, Shield Block, Nimble Dodge…), only Shield Block, or none.', seg('reactions', [['auto', 'All'], ['defensive', 'Shield only'], ['never', 'None']])) +
     row('Hero Points', 'Spend Hero Points to avoid death, or to reroll a failed saving throw (the point is then gone).', seg('heroPoints', [['death', 'Avoid death'], ['reroll', 'Reroll']])) +
-    '</div><div class="row gap" style="justify-content:flex-end"><button class="btn" onclick="PF.App.closeModal()">Done</button></div>', el => {
+    '</div><div class="row gap" style="justify-content:flex-end"><button class="btn ghost" onclick="PF.App.openHelp()">How to play</button><button class="btn" onclick="PF.App.closeModal()">Done</button></div>', el => {
     $$('[data-set]', el).forEach(b => b.onclick = () => { const k = b.dataset.set; let v = b.dataset.val; if (k === 'speed') v = +v; S[k] = v; $$('[data-set="' + k + '"]', el).forEach(x => x.classList.toggle('on', x === b)); App.saveSettings(); });
     $$('[data-sw]', el).forEach(c => c.onchange = () => { S[c.dataset.sw] = c.checked; App.saveSettings(); });
   });
@@ -284,7 +302,8 @@ App.renderSetup = () => {
 App.themes = () => { const s = new Set(); Object.values(D.creatures).forEach(c => (c.theme || []).forEach(t => s.add(t))); return ['any'].concat([...s].sort()); };
 
 /* ---------- bestiary (filterable, virtualized) ---------- */
-const ROW_H = 44;
+// Keep this in sync with .brow: virtual rows must not overlap on touch screens.
+const ROW_H = 56;
 App.bf = { q: '', tag: 'any', size: 'any', lmin: '', lmax: '', sort: 'lvl', group: true, sel: null };
 App.bestiaryTags = () => {
   const cnt = {}; Object.values(D.creatures).forEach(c => (c.traits || []).forEach(t => { cnt[t] = (cnt[t] || 0) + 1; }));
@@ -434,16 +453,18 @@ App.boot = () => {
   App.hydrateIcons();
   if (!G.THREE) { document.getElementById('app').innerHTML = '<div style="padding:24px">The 3D engine (three.js) could not be loaded. Check your connection and reload.</div>'; return; }
   App.R = PF.Render($('#stage'));
-  App.R.onFrame = dt => { if (App.screen !== 'battle') App.R.cam.gyaw += dt * 0.05; if (App.Battle && App.screen === 'battle') App.Battle.frame(dt); };
+  App.R.onFrame = dt => { if (App.screen !== 'battle' && !G.matchMedia('(prefers-reduced-motion: reduce)').matches) App.R.cam.gyaw += dt * 0.05; if (App.Battle && App.screen === 'battle') App.Battle.frame(dt); };
   App.bindSetup();
   App.bindRoster && App.bindRoster();
   App.Battle && App.Battle.bind();
-  $('#btnQuick').onclick = () => {
-    const p = U.pick(D.presets.filter(x => x.id !== 'training'));
+  App.launchPreset = (p, guided = false) => {
     App.setup.pl = p.pl; App.setup.map = p.map; App.setup.foes = p.foes.map(id => ({ id, adj: null }));
     App.setup.party = App.defaultParty(); App.saveSetup();
-    App.startBattle({ map: p.map, partyLevel: p.pl, pcs: App.partyDefs(), foes: p.foes.map(id => ({ id })), title: p.name });
+    $('#autoParty').checked = false;
+    App.startBattle({ map: p.map, partyLevel: p.pl, pcs: App.partyDefs(), foes: p.foes.map(id => ({ id })), title: guided ? 'First skirmish' : p.name, guided });
   };
+  $('#btnQuick').onclick = () => App.launchPreset(U.pick(D.presets.filter(x => x.id !== 'training' && x.pl <= 3)));
+  $('#btnLearn').onclick = () => App.launchPreset(D.presets.find(x => x.id === 'training'), true);
   $('#btnSetup').onclick = () => App.show('setup');
   $('#btnRoster').onclick = () => App.show('roster');
   $('#btnHomeSettings').onclick = App.openSettings;

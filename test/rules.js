@@ -116,3 +116,4 @@ B = mkMC(['diabolicDragonYoungSpellcaster'], 10); { const [, , Dr] = B.units;
 }
 B.drain();
 console.log(fails ? fails + ' FAILURES' : 'all passed');
+process.exitCode = fails ? 1 : 0;

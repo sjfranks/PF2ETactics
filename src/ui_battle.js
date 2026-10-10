@@ -10,12 +10,45 @@ const pct = x => Math.round(x * 100);
 const SAVEN = { fort: 'Fortitude', ref: 'Reflex', will: 'Will', per: 'Perception' };
 const reduced = () => G.matchMedia && G.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const isTargetMode = m => m && (m.type === 'unit' || m.type === 'spell' || m.type === 'move+unit' || m.type === 'step+unit');
+const compact = () => G.matchMedia('(max-width: 760px), (max-height: 500px) and (pointer: coarse)').matches;
+
+BC.clearPreview = () => { BC.pendingMove = null; BC._tp = null; BC._areaChip = null; };
+BC.renderCue = () => {
+  const B = BC.B, u = BC.cur, el = $('#turnCue');
+  if (!B || B.over) { el.textContent = ''; return; }
+  const playing = BC.isPlayerTurn();
+  $('#battle').dataset.phase = BC.phase;
+  el.classList.toggle('enemy', !!u && u.team === 'foe');
+  el.innerHTML = BC.phase === 'deploy' ? '<b>Prepare your party</b><span>Reposition, then roll initiative</span>' :
+    playing ? '<b>Your turn</b><span>' + (u.turn.attacks ? 'Attacks get harder. Try a shield, a skill, or a Step.' : 'Move. Strike. Improvise.') + '</span>' :
+    '<b>' + (u && u.team === 'foe' ? 'Enemy turn' : 'Resolving action') + '</b><span>' + esc(u ? u.name : '') + '</span>';
+  BC.renderGuide();
+};
+BC.renderGuide = () => {
+  const el = $('#battleGuide');
+  if (!BC.cfg || !BC.cfg.guided || BC.guideClosed || !BC.B || BC.B.over) { el.hidden = true; return; }
+  const done = BC.lessons || {};
+  let title, detail;
+  if (BC.phase === 'deploy') { title = 'Welcome, tactician'; detail = 'Your four heroes are ready. Tap Roll initiative to begin. Defeat both undead to win.'; }
+  else if (!BC.isPlayerTurn()) { el.hidden = true; return; }
+  else if (!done.move) { title = '01 · Find your footing'; detail = 'Tap a blue square to preview a route. Each Stride costs one action. Use Move here to confirm.'; }
+  else if (!done.attack) { title = '02 · Make it count'; detail = 'Choose a weapon, then a foe. Check the hit chance before confirming. Get closer if your weapon cannot reach.'; }
+  else if (!done.tactic) { title = '03 · More than attacking'; detail = 'Open Tactics to Raise Shield, or try a skill. Repeated attacks take a penalty; a good third action can save a hero.'; }
+  else { title = 'You have the rhythm'; detail = 'Flank with two heroes to make a foe off-guard. Spells and damage types matter: skeletons resist slashing.'; }
+  const sig = title + detail;
+  if (BC._guideSig !== sig) {
+    BC._guideSig = sig;
+    el.innerHTML = '<div><b>' + title + '</b><p>' + detail + '</p></div><button class="x" data-guide-close aria-label="Dismiss skirmish guide">×</button>';
+  }
+  el.hidden = false;
+};
 
 /* ================= START / TEARDOWN ================= */
 App.startBattle = cfg => {
   BC.teardown();
   const B = PF.Battle(cfg); B.deploy();
   BC.B = B; App.B = B; BC.cfg = U.clone(cfg); BC.phase = 'deploy'; BC.cur = null; BC.sel = null; BC.mode = null; BC.busy = false; BC.tgtSel = null; BC.tgtHover = null; BC.tabs = {}; BC.endArm = 0;
+  BC.clearPreview(); BC.lessons = {}; BC.guideClosed = false; BC._guideSig = null;
   BC.stats = { dmg: { pc: 0, foe: 0 }, crits: { pc: 0, foe: 0 }, kills: { pc: 0, foe: 0 } };
   BC.ustats = {}; BC.lastAtk = {}; BC.playCur = null; BC.foeBanner = false;
   B.units.forEach(u => { BC.ustats[u.id] = { dmg: 0, taken: 0, kills: 0, crits: 0, heal: 0 }; });
@@ -39,6 +72,8 @@ App.startBattle = cfg => {
 };
 BC.threatText = () => { const B = BC.B; const pcs = B.units.filter(u => u.team === 'pc').length; const xp = D.encounterXP(BC.cfg.foes.filter(f => D.creatures[f.id]), BC.cfg.partyLevel); const th = PF.threatFor(xp, pcs); return th.label + ' threat (' + xp + ' XP for ' + pcs + ' heroes).'; };
 BC.teardown = () => {
+  BC.clearPreview(); BC.keys = {}; clearTimeout(BC._ea); clearTimeout(BC._ft);
+  $('#battleGuide').hidden = true;
   Object.values(BC.rings).forEach(r => { r.visible = false; r.userData.id = null; });
   if (!BC.B) return;
   Object.values(BC.plates).forEach(p => p.el.remove()); BC.plates = {}; BC.disp = {};
@@ -101,6 +136,7 @@ BC.frame = () => {
   if (!BC.B) return;
   const R = App.R;
   const hb = $('#hudBottom').offsetHeight; if (hb !== BC._hb) { BC._hb = hb; $('#battle').style.setProperty('--hudb', hb + 'px'); }
+  R.setViewportInsets($('.hud-top').offsetHeight, hb);
   // position nameplates, then nudge overlapping ones upward (declutter), keeping the nearest-to-camera plate in place
   const vis = [];
   Object.keys(BC.plates).forEach(id => { const p = BC.plates[id]; const sc = R.unitScreen(id); if (!sc || sc.behind) { p.el.style.display = 'none'; return; } p.el.style.display = ''; vis.push({ p, x: sc.x, y: sc.y, w: p.w || (p.w = p.el.offsetWidth || 90), h: p.h || (p.h = p.el.offsetHeight || 28) }); });
@@ -150,6 +186,7 @@ BC.playOne = async e => {
       const a = B.get(e.a); BC.lastAtk[e.b] = e.a;
       if (a && BC.stats && e.deg === 3) { BC.stats.crits[a.team]++; credit(e.a, 'crits', 1); }
       await R.animAttack(e.a, e.b, e.ranged, e.deg, e.c, e.w);
+      App.feedback(e.deg === 3 ? 'crit' : e.deg >= 2 ? 'hit' : 'miss');
       if (e.deg <= 1) BC.float(e.b, e.deg === 0 ? 'Critical miss' : 'Miss', 'miss');
       else if (e.deg === 3) BC.float(e.b, 'Critical hit', 'critlbl');
       break;
@@ -157,7 +194,7 @@ BC.playOne = async e => {
     case 'bolt': { BC.lastAtk[e.b] = e.a; await R.animBolt(e.a, e.b, e.c, e.n || 1); break; }
     case 'area': await R.animArea(e.cells, e.c, e.shape, e.origin, e.u); break;
     case 'pulse': await R.animPulse(e.u, e.r, e.c); break;
-    case 'cast': BC.lastCaster = e.u; await R.animCast(e.u, e.c); break;
+    case 'cast': BC.lastCaster = e.u; App.feedback('cast'); await R.animCast(e.u, e.c); break;
     case 'float': {
       BC.float(e.u, e.text, e.c);
       const t = B.get(e.u);
@@ -195,11 +232,12 @@ BC.playOne = async e => {
 BC.dirtyInit = () => { if (BC._di) return; BC._di = requestAnimationFrame(() => { BC._di = 0; BC.renderInit(); }); };
 // banner: {kind:'round'|'pc'|'foe'|'flash', k, t, s}; awaits dur seconds (scaled by animation speed)
 BC.banner = async (o, dur = 0.6) => {
-  const b = $('#banner'); clearTimeout(BC._ft);
+  const b = $('#banner'), gen = BC.gen; clearTimeout(BC._ft);
   b.className = 'banner ' + (o.kind || ''); b.innerHTML = (o.k ? '<div class="bk">' + esc(o.k) + '</div>' : '') + '<div class="bt">' + esc(o.t || '') + '</div>' + (o.s ? '<div class="bs">' + esc(o.s) + '</div>' : '');
   b.hidden = false;
   await App.R.wait(dur);
-  b.classList.add('out'); await App.R.wait(0.12); if (b.classList.contains('out')) b.hidden = true;
+  if (gen !== BC.gen) return;
+  b.classList.add('out'); await App.R.wait(0.12); if (gen === BC.gen && b.classList.contains('out')) b.hidden = true;
 };
 
 /* ================= LOG ================= */
@@ -217,8 +255,9 @@ BC.toggleLog = force => { const l = $('#logPanel'); const open = force != null ?
 /* ================= TURN FLOW ================= */
 BC.begin = async () => {
   if (BC.phase !== 'deploy' || BC.busy) return;
+  const gen = BC.gen;
   BC.phase = 'battle'; $('#deployBar').hidden = true; App.R.clearLayers(['zonePC', 'zoneFoe']);
-  BC.busy = true; BC.B.begin(); await BC.play(); BC.busy = false;
+  BC.busy = true; BC.B.begin(); await BC.play(); if (gen !== BC.gen) return; BC.busy = false;
   BC.advance();
 };
 BC.advance = async () => {
@@ -240,6 +279,7 @@ BC.advance = async () => {
   }
 };
 BC.startPlayerTurn = u => {
+  BC.clearPreview(); App.feedback('turn');
   BC.mode = { type: 'move' }; BC.tgtSel = null; BC.tgtHover = null; BC.endArm = 0; $('#spellbook').hidden = true;
   BC.tab = BC.tabs[u.id] || 'combat';
   BC.renderUnitCard(u); BC.shown = u;
@@ -249,7 +289,8 @@ BC.startPlayerTurn = u => {
 const B_acts = u => BC.B ? BC.B.actsTotal(u) : 3;
 BC.refresh = () => {
   const B = BC.B, u = BC.cur; if (!B || !u) return;
-  BC.P = B.paths(u, B.speedOf(u) * Math.max(0, B.actsTotal(u)));
+  const strides = u.turn.acts + (u.turn.quick && u.turn.quick.includes('stride') ? 1 : 0);
+  BC.P = B.paths(u, B.speedOf(u) * Math.max(0, strides));
   BC.renderUnitCard(u); BC.renderActions(); BC.drawMode();
 };
 BC.isPlayerTurn = () => BC.B && BC.cur && BC.B.cur === BC.cur && !BC.busy && BC.phase === 'battle' && !BC.B.over && !BC.cur.ai && !$('#autoParty').checked;
@@ -265,11 +306,15 @@ BC.after = async () => {
 };
 BC.act = async (id, p) => {
   if (!BC.isPlayerTurn()) return;
+  BC.clearPreview();
   BC.busy = true; $('#spellbook').hidden = true; $('#tip').hidden = true; BC.hideShot(); BC.ring('sel', null, '#f5b942');
   App.R.clearLayers(['move1', 'move2', 'move3', 'valid', 'area', 'hoverArea']); App.R.showPath(null); App.R.setTargeted([]);
   $('#targetBar').innerHTML = ''; BC.renderActions(true);
   const r = BC.B.doAction(BC.cur, id, p);
   if (!r.ok) { BC.busy = false; BC.addLog({ text: r.err, cls: 'warn' }); BC.flash(r.err); BC.mode = { type: 'move' }; BC.refresh(); return; }
+  if (['move', 'stride', 'step', 'mobility'].includes(id)) { BC.lessons.move = true; App.feedback('move'); }
+  else if (id === 'strike' || id === 'cast') BC.lessons.attack = true;
+  else if (id !== 'cast') { BC.lessons.tactic = true; App.feedback('select'); }
   await BC.after();
 };
 BC.endTurn = async force => {
@@ -279,13 +324,15 @@ BC.endTurn = async force => {
     BC.endArm = performance.now(); BC.flash(left + ' action' + (left > 1 ? 's' : '') + ' left — End turn again to confirm'); BC.renderEnd(); return;
   }
   BC.endArm = 0;
+  BC.clearPreview(); const gen = BC.gen;
   BC.busy = true; App.R.clearLayers(); App.R.showPath(null); $('#spellbook').hidden = true; $('#tip').hidden = true; BC.hideShot(); BC.ring('sel', null, '#f5b942');
   $('#targetBar').innerHTML = ''; BC.renderActions(true);
-  BC.B.endTurn(BC.cur); await BC.play(); BC.busy = false; BC.advance();
+  BC.B.endTurn(BC.cur); await BC.play(); if (gen !== BC.gen) return; BC.busy = false; BC.advance();
 };
 BC.flash = msg => { const b = $('#banner'); clearTimeout(BC._ft); b.className = 'banner flash'; b.innerHTML = '<div class="bt">' + esc(msg) + '</div>'; b.hidden = false; BC._ft = setTimeout(() => { b.hidden = true; }, 1600); };
 BC.finish = () => {
   const B = BC.B; if (!B) return; BC.busy = false;
+  BC.clearPreview(); $('#battleGuide').hidden = true; App.feedback(B.over === 'win' ? 'win' : 'loss');
   App.R.clearLayers(); App.R.showPath(null); App.R.setActive(null); BC.hideShot(); BC.ring('sel', null, '#f5b942'); BC.ring('hl', null, '#4bd8e8');
   $('#targetBar').innerHTML = ''; $('#spellbook').hidden = true; BC.renderActions();
   const win = B.over === 'win'; const st = BC.stats;
@@ -317,7 +364,7 @@ BC.renderInit = curId => {
     const u = B.get(id); if (!u) return '';
     const s = BC.disp[id] || B.snap(u); const pc = Math.max(0, s.hp / Math.max(1, s.maxHP));
     const dots = (s.conds || []).filter(c => c.k !== 'prey').slice(0, 3).map(c => '<i class="' + (c.bad ? '' : 'g') + '"></i>').join('');
-    return '<div class="icard ' + u.team + (id === curId && BC.phase === 'battle' ? ' cur' : '') + (s.dead || s.down ? ' down' : '') + (BC.phase === 'battle' && ci >= 0 && i < ci ? ' done' : '') + '" role="listitem" data-uid="' + id + '" title="' + esc(u.name + ' · initiative ' + (u.initRoll != null ? u.initRoll : '–') + ' · HP ' + s.hp + '/' + s.maxHP + (s.conds.length ? ' · ' + s.conds.map(c => c.n).join(', ') : '')) + '">' + (u.initRoll != null ? '<span class="in">' + u.initRoll + '</span>' : '') + '<span class="cd">' + dots + '</span>' + App.emblem(u, { foe: u.team !== 'pc' }) + '<span class="nm">' + esc(u.name) + '</span><span class="hp"><i style="width:' + (pc * 100) + '%"></i></span></div>';
+    return '<button class="icard ' + u.team + (id === curId && BC.phase === 'battle' ? ' cur' : '') + (s.dead || s.down ? ' down' : '') + (BC.phase === 'battle' && ci >= 0 && i < ci ? ' done' : '') + '" type="button" data-uid="' + id + '" title="' + esc(u.name + ' · initiative ' + (u.initRoll != null ? u.initRoll : '–') + ' · HP ' + s.hp + '/' + s.maxHP + (s.conds.length ? ' · ' + s.conds.map(c => c.n).join(', ') : '')) + '">' + (u.initRoll != null ? '<span class="in">' + u.initRoll + '</span>' : '') + '<span class="cd">' + dots + '</span>' + App.emblem(u, { foe: u.team !== 'pc' }) + '<span class="nm">' + esc(u.name) + '</span><span class="hp"><i style="width:' + (pc * 100) + '%"></i></span></button>';
   }).join('');
   const cur = $('#initBar .icard.cur'); if (cur && cur.scrollIntoView) { const bar = $('#initBar'); const r = cur.offsetLeft - bar.clientWidth / 2 + cur.clientWidth / 2; bar.scrollLeft = Math.max(0, r); }
   BC.markPlates();
@@ -335,7 +382,7 @@ BC.renderUnitCard = (u, quiet) => {
   const sh = u.shield ? '<span class="econ-tag shield' + (u.shield.raised ? ' up' : '') + '" title="' + esc((u.shield.name || 'Shield') + (u.shield.raised ? ' (raised)' : '') + ' · hardness ' + (u.shield.hard || 0) + (u.shield.broken ? ' · broken' : '')) + '">' + ico('shield') + (u.shield.broken ? 'broken' : (u.shield.cur != null ? u.shield.cur + '/' + (u.shield.hp || u.shield.cur) : '')) + '</span>' : '';
   const sub = u.team === 'pc' ? '<span class="tag">Level ' + u.level + ' ' + esc(u.clsName || '') + '</span>' + (u.sheet ? ' · ' + esc(u.sheet.ancName) : '') : '<span class="tag">Creature ' + u.level + '</span> · ' + esc((u.traits || []).slice(0, 2).join(' '));
   el.className = 'unitcard' + (u.team !== 'pc' ? ' foe' : '');
-  el.innerHTML = '<div class="uc-head">' + App.emblem(u, { foe: u.team !== 'pc', size: 'lg', lv: u.level }) + '<div class="uc-name"><b>' + esc(u.name) + '</b><span>' + sub + '</span></div></div>' +
+  el.innerHTML = '<div class="uc-head">' + App.emblem(u, { foe: u.team !== 'pc', size: 'lg', lv: u.level }) + '<div class="uc-name"><b>' + esc(u.name) + '</b><span>' + sub + '</span></div><button class="unit-details" data-unit-details aria-label="Inspect ' + esc(u.name) + '">' + ico('info') + '</button></div>' +
     '<div class="hpline"><div class="hpt"><span>HP <b>' + s.hp + '</b>/' + s.maxHP + (s.temp ? ' <span class="tmp">+' + s.temp + ' temp</span>' : '') + '</span>' + (s.dying ? '<span class="dy">Dying ' + s.dying + '</span>' : s.dead ? '<span class="dy">Dead</span>' : '') + '</div><div class="hpbar' + (pc <= 25 ? ' low' : pc <= 55 ? ' mid' : '') + '"><i style="width:' + pc + '%"></i><em style="left:' + pc + '%;width:' + tp + '%"></em><div class="seg" style="--seg:' + segFor(s.maxHP) + '%"></div></div></div>' +
     '<div class="uc-stats"><div class="ac"><small>AC</small><b>' + B.stat(u, 'ac') + '</b></div><div><small>Fort</small><b>' + sv('fort') + '</b></div><div><small>Ref</small><b>' + sv('ref') + '</b></div><div><small>Will</small><b>' + sv('will') + '</b></div><div><small>Per</small><b>' + sv('per') + '</b></div><div><small>Spd</small><b>' + B.speedOf(u) + '</b></div></div>' +
     '<div class="uc-econ"><span class="pips">' + pips + react + '</span>' + map + (u.hero ? '<span class="econ-tag hero" title="Hero Points">' + ico('hero') + u.hero + '</span>' : '') + (u.focus ? '<span class="econ-tag focus" title="Focus Points">' + ico('focus') + u.focus.cur + '/' + u.focus.max + '</span>' : '') + sh + '</div>' +
@@ -384,6 +431,7 @@ BC.catalog = u => {
 const SHORT = { potion: 'Potion', raiseShield: 'Raise Shield', takeCover: 'Take Cover', medicine: 'Battle Medicine', mobility: 'Mobility' };
 const btnCls = a => a.id === 'cast' ? 'spell' : a.group === 'strike' ? 'strike' : a.group === 'skill' ? 'skill' : a.group === 'item' || a.id === 'potion' ? 'itm' : a.group === 'monster' ? 'monster' : a.group === 'class' ? 'class' : '';
 BC.renderActions = waiting => {
+  BC.renderCue();
   const B = BC.B; const bar = $('#actionBar'); const tabs = $('#trayTabs');
   const u = BC.cur;
   BC.hot = [];
@@ -401,11 +449,14 @@ BC.renderActions = waiting => {
   const anySpell = g.spell.some(s => !s.why);
   BC.keyMap.spells = { id: 'spells', name: 'Spells', costN: 0, why: g.spell.length ? (anySpell ? '' : 'No castable spells') : 'No spells', desc: 'Open your spellbook' };
   if (BC.tab === 'skills' && !g.skill.length) BC.tab = 'combat';
+  if (BC.tab === 'tactics' && !g.class.length && !g.tactic.length) BC.tab = 'combat';
   const sbOpen = !$('#spellbook').hidden;
-  tabs.innerHTML = '<button class="ttab' + (BC.tab === 'combat' && !sbOpen ? ' on' : '') + '" data-tab="combat" role="tab">' + ico('swords2') + 'Combat <span class="n">' + (g.strike.length + g.move.length + g.class.length + g.tactic.length) + '</span></button>' +
+  tabs.innerHTML = '<button class="ttab' + (BC.tab === 'combat' && !sbOpen ? ' on' : '') + '" data-tab="combat" role="tab">' + ico('swords2') + 'Combat <span class="n">' + (g.strike.length + g.move.length) + '</span></button>' +
+    (g.class.length || g.tactic.length ? '<button class="ttab' + (BC.tab === 'tactics' && !sbOpen ? ' on' : '') + '" data-tab="tactics" role="tab">' + ico('shield') + 'Tactics</button>' : '') +
     (g.skill.length ? '<button class="ttab' + (BC.tab === 'skills' && !sbOpen ? ' on' : '') + '" data-tab="skills" role="tab">' + ico('d20') + 'Skills <span class="n">' + g.skill.length + '</span></button>' : '') +
     (g.spell.length ? '<button class="ttab spells' + (sbOpen ? ' on' : '') + '" data-akey="spells" role="tab" title="Spellbook (B)">' + ico('spellbook') + 'Spells <span class="n">' + g.spell.filter(s => !s.why).length + '</span></button>' : '');
-  const groups = BC.tab === 'skills' ? [['Skills', g.skill]] : [['Strikes', g.strike], ['Move', g.move], ['Class', g.class], ['Tactics', g.tactic]];
+  const groups = BC.tab === 'skills' ? [['Skills', g.skill]] : BC.tab === 'tactics' ? [['Class', g.class], ['Tactics', g.tactic]] : [['Strikes', g.strike], ['Move', g.move]];
+  $$('[role="tab"]', tabs).forEach(b => b.setAttribute('aria-selected', b.classList.contains('on')));
   const btn = a => {
     const key = keyOf(a); const idx = BC.hot.length; BC.hot.push(key);
     const sel = BC.mode && BC.mode.key === key;
@@ -413,7 +464,7 @@ BC.renderActions = waiting => {
     if (a.sref) { const s = a.sref; cnt = App.sgn(s.atk.base + s.atk.item + B.mapPen(u, s)); if (s.qty != null && s.thrown) cnt += ' ×' + s.qty; if (s.reload && !s.loaded) cnt = 'empty'; }
     if (a.id === 'potion' && u.potions) cnt = '×' + u.potions.n;
     const cost = GLYPH(a.costN);
-    return '<button class="abtn ' + btnCls(a) + (a.why ? ' off' : '') + (sel ? ' sel' : '') + '" data-akey="' + esc(key) + '" aria-label="' + esc(a.name + (a.why ? ' (' + a.why + ')' : '')) + '" title="' + esc(a.name + (a.why ? ' — ' + a.why : '')) + '"><span class="cost' + (a.costN === 0 ? ' free' : '') + '">' + cost + '</span><span class="hk">' + (idx < 10 ? (idx + 1) % 10 : '') + '</span><span class="ai">' + ico(Icons.forAction(a)) + '</span><span class="nm">' + esc(SHORT[a.id] || a.name) + '</span>' + (cnt ? '<span class="cnt">' + esc(cnt) + '</span>' : '') + '</button>';
+    return '<button class="abtn ' + btnCls(a) + (a.why ? ' off' : '') + (sel ? ' sel' : '') + '" data-akey="' + esc(key) + '" aria-pressed="' + !!sel + '" aria-disabled="' + !!a.why + '" aria-label="' + esc(a.name + (a.why ? ' (' + a.why + ')' : '')) + '" title="' + esc(a.name + (a.why ? ' — ' + a.why : '')) + '"><span class="cost' + (a.costN === 0 ? ' free' : '') + '">' + cost + '</span><span class="hk">' + (idx < 10 ? (idx + 1) % 10 : '') + '</span><span class="ai">' + ico(Icons.forAction(a)) + '</span><span class="nm">' + esc(SHORT[a.id] || a.name) + '</span>' + (cnt ? '<span class="cnt">' + esc(cnt) + '</span>' : '') + '</button>';
   };
   bar.innerHTML = groups.filter(([, l]) => l.length).map(([n, l]) => '<div class="agroup"><span class="gl">' + n + '</span>' + l.map(btn).join('') + '</div>').join('');
   BC.renderEnd(); BC.showInfo();
@@ -428,7 +479,7 @@ BC.showInfo = key => {
   const el = $('#abilityInfo'); if (!BC.isPlayerTurn()) { el.innerHTML = ''; return; }
   let a = key ? BC.keyMap[key] : null;
   if (!a && BC.mode && BC.mode.act) a = BC.mode.act;
-  if (!a) { el.innerHTML = '<span class="d">Click a highlighted square to Stride: <span style="color:#6cc4f0">blue</span> ◆ · <span style="color:var(--amber)">gold</span> ◆◆ · <span style="color:#ff9a5c">orange</span> ◆◆◆. Choose an ability below or press 1–0.</span>'; return; }
+  if (!a) { el.innerHTML = '<span class="d">Tap a highlighted square to move · Blue ◆ · Gold ◆◆ · Orange ◆◆◆</span>'; return; }
   const tr = (a.traits || (a.cast && a.cast.spell && a.cast.spell.traits) || []).filter(t => t !== 'concentrate' && t !== 'manipulate');
   el.innerHTML = '<span class="dia-txt">' + GLYPH(a.costN) + '</span><b>' + esc(a.name) + '</b>' + (a.why ? '<span class="why">' + esc(a.why) + '</span>' : '') + (tr.length ? '<span class="trs">' + esc(tr.slice(0, 4).join(' · ')) + '</span>' : '') + '<span class="d">' + esc(a.desc || '') + '</span>';
 };
@@ -485,6 +536,7 @@ BC.toggleSpellbook = () => { if (!BC.isPlayerTurn()) return; const sb = $('#spel
 /* ================= CHOOSING ACTIONS ================= */
 BC.choose = key => {
   if (!BC.isPlayerTurn()) return;
+  BC.clearPreview(); BC.hideShot(); App.R.showPath(null);
   if (key === 'end') return BC.endTurn();
   if (key === 'spells') return BC.toggleSpellbook();
   const a = BC.keyMap[key]; if (!a) return;
@@ -525,7 +577,7 @@ BC.chooseSpell = (a, key) => {
   $('#costPick').innerHTML = '<div class="costpick"><b>' + esc(sp.name) + '</b>' + costs.map(n => '<button class="btn small" data-cost="' + n + '"><span class="dia-txt">' + GLYPH(n) + '</span> ' + esc(lab(n)) + '</button>').join('') + '</div>';
   $$('[data-cost]').forEach(b => b.onclick = () => go(+b.dataset.cost));
 };
-BC.cancel = () => { BC.mode = { type: 'move' }; BC.tgtSel = null; BC.tgtHover = null; $('#tip').hidden = true; BC.hideShot(); App.R.setTargeted([]); BC.ring('sel', null, '#f5b942'); BC.renderActions(); BC.drawMode(); };
+BC.cancel = () => { BC.clearPreview(); BC.mode = { type: 'move' }; BC.tgtSel = null; BC.tgtHover = null; $('#tip').hidden = true; BC.hideShot(); App.R.setTargeted([]); BC.ring('sel', null, '#f5b942'); BC.renderActions(); BC.drawMode(); };
 
 /* ================= MODE DRAWING ================= */
 BC.drawMode = () => {
@@ -653,6 +705,7 @@ BC.renderTargets = () => {
   const host = $('#targetBar'); const B = BC.B, u = BC.cur, m = BC.mode;
   if (!B || !BC.isPlayerTurn() || !u) { host.innerHTML = ''; return; }
   const tm = isTargetMode(m); const area = m && m.type === 'area';
+  if (compact() && !tm && !area) { host.innerHTML = ''; BC.markPlates(); return; }
   const list = BC.candidates().slice(0, 12);
   host.innerHTML = list.map(t => {
     const s = BC.disp[t.id] || B.snap(t); const hp = Math.max(0, s.hp / Math.max(1, s.maxHP));
@@ -661,7 +714,7 @@ BC.renderTargets = () => {
     else if (area && m.spell && m.spell.save || area && !m.spell) { const sp = m.spell; const dc = sp ? B.spellDC(u) : B.classDC(u); const kind = sp ? sp.save : 'ref'; if (kind) { const p = PF.pdeg(B.stat(t, kind), dc); const f = pct(p[0] + p[1]); pctTxt = f + '<small>%fail</small>'; cls = f >= 65 ? ' hi' : f >= 40 ? ' mid' : ' lo'; } }
     else pctTxt = '<span class="num" style="font-size:13px">' + s.hp + '<small>hp</small></span>';
     const picked = m && m.picked && m.picked.includes(t.id);
-    return '<button class="tchip ' + t.team + (why && !picked ? ' off' : '') + (BC.tgtSel === t.id && tm ? ' sel' : '') + (picked ? ' picked' : '') + cls + '" role="listitem" data-tgt="' + t.id + '" title="' + esc(t.name + (why ? ' — ' + why : '')) + '">' + App.emblem(t, { foe: t.team !== 'pc' }) + '<span class="pct">' + pctTxt + '</span><span class="tn">' + esc(t.name) + '</span><span class="thp"><i style="width:' + (hp * 100) + '%"></i></span></button>';
+    return '<button class="tchip ' + t.team + (why && !picked ? ' off' : '') + (BC.tgtSel === t.id && tm ? ' sel' : '') + (picked ? ' picked' : '') + cls + '" data-tgt="' + t.id + '" title="' + esc(t.name + (why ? ' — ' + why : '')) + '">' + App.emblem(t, { foe: t.team !== 'pc' }) + '<span class="pct">' + pctTxt + '</span><span class="tn">' + esc(t.name) + '</span><span class="thp"><i style="width:' + (hp * 100) + '%"></i></span></button>';
   }).join('');
   BC.markPlates();
   const t = BC.tgtShown(); BC.ring('sel', tm && t ? t.id : null, '#f5b942');
@@ -699,6 +752,16 @@ BC.castPicked = () => { const m = BC.mode; if (m && m.type === 'spell' && m.pick
 
 /* ================= SHOT PREVIEW PANEL ================= */
 BC.hideShot = () => { $('#shotPanel').hidden = true; };
+// Keep the decision and confirm button visible; the complete PF2e math is one tap away.
+BC.shotDetails = el => {
+  if (el.classList.contains('bad')) return;
+  const rows = [...el.children].filter(n => n.matches('.distr, .dlegend, .vs, .sect:not(.notes)'));
+  if (!rows.length) return;
+  const details = document.createElement('details'); details.className = 'roll-details';
+  details.innerHTML = '<summary>Roll & damage details</summary>';
+  rows.forEach(n => details.appendChild(n));
+  el.insertBefore(details, el.querySelector('.sh-foot'));
+};
 const modRows = (list, base) => {
   const all = list.filter(x => x && x.v); const used = new Set(PF.sumMods(all).used);
   return all.map(x => { const v = x.v; const nm = x.s === 'base' ? (base || 'base') : x.s || (x.t === 'item' ? 'item' : x.t); return '<div class="mrow' + (used.has(x) ? '' : ' off') + '" title="' + esc((x.t === 'circ' ? 'circumstance' : x.t === 'unt' ? 'untyped' : x.t) + (used.has(x) ? '' : ' — does not stack')) + '"><span>' + esc(nm) + '</span><span class="v ' + (x.s === 'base' ? 'z' : v > 0 ? 'p' : 'n') + '">' + (x.s === 'base' ? v : App.sgn(v)) + '</span></div>'; }).join('');
@@ -763,8 +826,9 @@ BC.renderShot = () => {
   if (m.type === 'spell' && m.need > 1) notes.push(['dim', 'Targets chosen ' + m.picked.length + ' of ' + m.need + (m.picked.length ? ': ' + m.picked.map(id => B.get(id).name).join(', ') : '')]);
   if (notes.length) h += '<div class="sect notes">' + notes.map(([k, txt]) => k === 'warn' ? '<div class="warn">' + ico('warn') + esc(txt) + '</div>' : k === 'ok' ? '<div class="ok">' + ico('check') + esc(txt) + '</div>' : '<div class="dim">' + esc(txt) + '</div>').join('') + '</div>';
   const multi = m.type === 'spell' && m.need > 1;
-  h += '<div class="sh-foot">' + (e.why ? '<button class="btn ghost" data-shot="cancel">Cancel</button>' : '<button class="btn primary" data-shot="go">' + (multi ? 'Add target ' + (m.picked.length + 1) + '/' + m.need : 'Confirm <span class="dia-txt" style="color:inherit">' + cost + '</span>') + '</button>' + (multi && m.picked.length ? '<button class="btn" data-shot="cast">Cast now</button>' : '<span class="hint">Enter · Tab</span>')) + '</div>';
+  h += '<div class="sh-foot">' + (e.why ? '<button class="btn ghost" data-shot="cancel">Cancel</button>' : '<button class="btn primary" data-shot="go">' + (multi ? 'Add target ' + (m.picked.length + 1) + '/' + m.need : 'Confirm <span class="dia-txt" style="color:inherit">' + cost + '</span>') + '</button>' + (multi && m.picked.length ? '<button class="btn" data-shot="cast">Cast now</button>' : '<button class="btn ghost" data-shot="cancel">Cancel</button>')) + '</div>';
   el.className = 'shot' + (e.why ? ' bad' : ''); el.innerHTML = h; el.hidden = false; el.dataset.tid = t.id;
+  BC.shotDetails(el);
 };
 BC.renderAreaShot = () => {
   const el = $('#shotPanel'); const B = BC.B, u = BC.cur, m = BC.mode; const shape = m.shape; const p = m.areaP;
@@ -780,7 +844,7 @@ BC.renderAreaShot = () => {
   else h += '<div class="sect"><div class="dim">No creatures in the area.</div></div>';
   if (sp && sp.dmg) h += '<div class="sect"><h5>Damage</h5><div class="dmg">' + esc(dmgTxt(sp.dmg(m.cast.rank, {}))) + (sp.basic ? ' <span class="avg">basic ' + SAVEN[sp.save] + '</span>' : '') + '</div></div>';
   if (allies.length) h += '<div class="sect notes"><div class="warn">' + ico('warn') + 'Also hits ' + esc(allies.map(x => x.name).join(', ')) + '</div></div>';
-  h += '<div class="sh-foot"><button class="btn primary" data-shot="area"' + (m.areaBad ? ' disabled' : '') + '>Confirm <span class="dia-txt" style="color:inherit">' + GLYPH(m.actions || m.act.costN) + '</span></button><span class="hint">Click · Enter</span></div>';
+  h += '<div class="sh-foot"><button class="btn ghost" data-shot="cancel">Cancel</button><button class="btn primary" data-shot="area"' + (m.areaBad ? ' disabled' : '') + '>Confirm <span class="dia-txt" style="color:inherit">' + GLYPH(m.actions || m.act.costN) + '</span></button></div>';
   el.className = 'shot' + (m.areaBad ? ' bad' : ''); el.innerHTML = h; el.hidden = false;
 };
 
@@ -859,6 +923,36 @@ BC.planApproach = t => {
 };
 
 /* ================= CLICK ================= */
+BC.previewMove = pk => {
+  const B = BC.B, u = BC.cur, m = BC.mode;
+  if (!BC.isPlayerTurn() || !m || !B.canEnd(u, pk.x, pk.y) || (pk.x === u.x && pk.y === u.y)) return false;
+  const teleport = m.type === 'tile';
+  const P = m.type === 'move' && !m.act ? BC.P : m.P;
+  const path = teleport ? [[u.x, u.y], [pk.x, pk.y]] : P && B.pathFrom(P, pk.x, pk.y);
+  if (!path || path.length < 2 || (teleport && B.distPt(u, pk.x, pk.y) > (m.spell.range || 0))) {
+    BC.clearPreview(); BC.hideShot(); App.R.showPath(null); BC.flash('Choose a highlighted, reachable square'); return false;
+  }
+  const cost = !m.act ? B.splitStrides(u, path, B.speedOf(u)).length : m.actions || m.act.costN || 1;
+  const ft = teleport ? B.distPt(u, pk.x, pk.y) : P.best.get(pk.x + ',' + pk.y);
+  const tile = B.tile(pk.x, pk.y);
+  const safe = teleport || m.type === 'step' || (m.act && m.act.id === 'mobility');
+  const reactions = safe ? [] : BC.rsAlong(u, path);
+  const lava = path.some(([x, y]) => B.tile(x, y).hazard);
+  BC.pendingMove = { pk: Object.assign({}, pk), unit: u, mode: m, gen: BC.gen };
+  App.R.showPath(path, cost > 1 ? '#f5b942' : '#6cc4f0');
+  const el = $('#shotPanel'); el.className = 'shot move-preview';
+  el.innerHTML = '<div class="sh-head"><span class="sh-ico">' + ico(teleport ? 'spellbook' : 'boots') + '</span><div class="sh-t"><b>' + esc(m.act ? m.act.name : 'Stride') + ' · ' + ft + ' ft</b><small>' + cost + ' action' + (cost === 1 ? '' : 's') + ' · ' + Math.max(0, B.actsTotal(u) - cost) + ' left after moving</small></div><span class="sh-cost">' + GLYPH(cost) + '</span></div>' +
+    '<div class="move-terrain">' + esc(PF.TERR[tile.terr].name) + (tile.diff ? ' · difficult terrain' : '') + (tile.h ? ' · elevation ' + tile.h * 5 + ' ft' : '') + '</div>' +
+    (reactions.length || lava ? '<div class="sect notes">' + (reactions.length ? '<div class="warn">' + ico('warn') + 'Provokes Reactive Strike: ' + esc(reactions.join(', ')) + '</div>' : '') + (lava ? '<div class="warn">' + ico('fire') + 'This route crosses damaging lava.</div>' : '') + '</div>' : '') +
+    '<div class="sh-foot"><button class="btn ghost" data-shot="cancel">Cancel</button><button class="btn primary" data-shot="move">Move here ' + GLYPH(cost) + '</button></div>';
+  el.hidden = false; $('#tip').hidden = true;
+  App.feedback('select'); return true;
+};
+BC.confirmMove = () => {
+  const p = BC.pendingMove;
+  if (!p || !BC.isPlayerTurn() || p.unit !== BC.cur || p.mode !== BC.mode || p.gen !== BC.gen) { BC.clearPreview(); return; }
+  BC.clearPreview(); BC.click(p.pk, false);
+};
 BC.click = (pk, touch) => {
   const B = BC.B; if (!B) return;
   if (BC.phase === 'deploy') {
@@ -870,6 +964,12 @@ BC.click = (pk, touch) => {
   const u = BC.cur, m = BC.mode || { type: 'move' };
   if (!pk) return;
   const t = pk.unit ? B.get(pk.unit) : null;
+  if (touch && ['move', 'move2', 'step', 'tile'].includes(m.type) && !(m.type === 'move' && !m.act && t)) {
+    const prev = BC.pendingMove;
+    if (prev && prev.mode === m && prev.unit === u && prev.pk.x === pk.x && prev.pk.y === pk.y) BC.confirmMove();
+    else { BC.clearPreview(); BC.hideShot(); App.R.showPath(null); BC.previewMove(pk); }
+    return;
+  }
   // touch: first tap previews, second tap on the same spot confirms
   if (touch) { const k = (t ? 'u' + t.id : pk.x + ',' + pk.y) + '|' + (m.key || m.type); if (BC._tp !== k && !(m.type === 'move' && !m.act && t)) { BC._tp = k; if (isTargetMode(m) && t) { if (!BC.evalTarget(t).why) BC.selectTarget(t.id); else BC.flash(BC.evalTarget(t).why); return; } BC.hover(pk, 0, 0); if (m.type !== 'unit' && m.type !== 'spell') return; } BC._tp = null; }
   if (m.type === 'move' && !m.act) {
@@ -890,6 +990,7 @@ BC.click = (pk, touch) => {
 BC.confirmArea = () => { const m = BC.mode; if (!m || m.type !== 'area' || !m.areaP) return; if (m.areaBad) { BC.flash(m.areaBad); return; } BC.act(m.act.id === 'cast' ? 'cast' : m.act.id, Object.assign({}, m.p, m.areaP)); };
 BC.confirm = () => {
   const m = BC.mode; if (!BC.isPlayerTurn() || !m) return;
+  if (BC.pendingMove) return BC.confirmMove();
   if (m.type === 'area') return BC.confirmArea();
   if (m.type === 'spell' && m.picked.length && (!BC.tgtSel || m.picked.includes(BC.tgtSel) || BC.evalTarget(BC.B.get(BC.tgtSel)).why)) return BC.castPicked();
   if (isTargetMode(m) && BC.tgtSel) BC.confirmTarget(BC.B.get(BC.tgtSel));
@@ -898,36 +999,59 @@ BC.confirm = () => {
 /* ================= INPUT BINDING ================= */
 BC.bind = () => {
   const cv = App.R.renderer.domElement;
-  let down = null; let raf = 0; let lastMove = null;
+  let down = null, gesture = null, raf = 0, lastMove = null;
+  const pointers = new Map();
+  const measure = () => {
+    const [a, b] = [...pointers.values()];
+    return { distance: Math.max(1, Math.hypot(b.x - a.x, b.y - a.y)), angle: Math.atan2(b.y - a.y, b.x - a.x), x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 };
+  };
+  const resetPointers = () => { pointers.clear(); down = null; gesture = null; };
   cv.addEventListener('contextmenu', e => e.preventDefault());
-  cv.addEventListener('pointerdown', e => { down = { x: e.clientX, y: e.clientY, b: e.button, moved: false, lx: e.clientX, ly: e.clientY }; cv.setPointerCapture(e.pointerId); });
+  cv.addEventListener('pointerdown', e => {
+    pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    cv.setPointerCapture(e.pointerId);
+    if (pointers.size > 1) { down = null; gesture = measure(); $('#tip').hidden = true; return; }
+    down = { id: e.pointerId, x: e.clientX, y: e.clientY, b: e.button, moved: false, lx: e.clientX, ly: e.clientY };
+  });
   cv.addEventListener('pointermove', e => {
-    if (down) {
+    if (pointers.has(e.pointerId)) pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    if (pointers.size > 1) {
+      const next = measure();
+      if (gesture) {
+        App.R.zoom(gesture.distance / next.distance);
+        const angle = Math.atan2(Math.sin(next.angle - gesture.angle), Math.cos(next.angle - gesture.angle));
+        App.R.rotate(-angle);
+        App.R.pan(-(next.x - gesture.x) * .035, -(next.y - gesture.y) * .035);
+      }
+      gesture = next; return;
+    }
+    if (down && down.id === e.pointerId) {
       const dx = e.clientX - down.lx, dy = e.clientY - down.ly; down.lx = e.clientX; down.ly = e.clientY;
-      if (Math.abs(e.clientX - down.x) + Math.abs(e.clientY - down.y) > 6) down.moved = true;
-      if (down.moved) { if (down.b === 2 || down.b === 1 || e.shiftKey) { App.R.rotate(-dx * 0.006); App.R.tilt(dy * 0.004); } else App.R.pan(-dx * 0.035, -dy * 0.035); }
+      if (Math.hypot(e.clientX - down.x, e.clientY - down.y) > (e.pointerType === 'touch' ? 10 : 6)) down.moved = true;
+      if (down.moved) { $('#tip').hidden = true; if (down.b === 2 || down.b === 1 || e.shiftKey) { App.R.rotate(-dx * .006); App.R.tilt(dy * .004); } else App.R.pan(-dx * .035, -dy * .035); }
       return;
     }
     if (e.pointerType === 'touch') return;
     lastMove = e; if (!raf) raf = requestAnimationFrame(() => { raf = 0; if (App.screen === 'battle' && BC.B && lastMove) BC.hover(App.R.pick(lastMove.clientX, lastMove.clientY), lastMove.clientX, lastMove.clientY); });
   });
   cv.addEventListener('pointerup', e => {
-    const d = down; down = null; if (!d) return;
+    const d = down; pointers.delete(e.pointerId); down = null; gesture = null;
+    if (!d || d.id !== e.pointerId) return;
     if (!d.moved && d.b === 0 && App.screen === 'battle') { const pk = App.R.pick(e.clientX, e.clientY); BC.click(pk, e.pointerType === 'touch'); if (BC.B && e.pointerType !== 'touch') BC.hover(pk, e.clientX, e.clientY); }
     if (!d.moved && d.b === 2 && App.screen === 'battle') BC.cancel();
   });
+  cv.addEventListener('pointercancel', resetPointers);
+  cv.addEventListener('lostpointercapture', e => { if (pointers.has(e.pointerId)) resetPointers(); });
+  G.addEventListener('blur', resetPointers);
   cv.addEventListener('pointerleave', () => { $('#tip').hidden = true; if (BC.tgtHover) { BC.tgtHover = null; BC.renderShot(); BC.renderTargets(); } });
-  cv.addEventListener('wheel', e => { e.preventDefault(); App.R.zoom(e.deltaY > 0 ? 1.1 : 0.9); }, { passive: false });
-  let pinch = null;
-  cv.addEventListener('touchstart', e => { if (e.touches.length === 2) { const [a, b] = e.touches; pinch = Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY); down = null; } }, { passive: true });
-  cv.addEventListener('touchmove', e => { if (e.touches.length === 2 && pinch) { const [a, b] = e.touches; const d = Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY); App.R.zoom(pinch / d); pinch = d; } }, { passive: true });
-  cv.addEventListener('touchend', () => { pinch = null; }, { passive: true });
+  cv.addEventListener('wheel', e => { e.preventDefault(); App.R.zoom(e.deltaY > 0 ? 1.1 : .9); }, { passive: false });
   document.addEventListener('keydown', e => {
     if (App.screen !== 'battle' || !$('#modal').hidden || e.target.tagName === 'INPUT' && e.target.type !== 'checkbox' || e.target.tagName === 'SELECT' || e.target.tagName === 'TEXTAREA') return;
     const k = e.key.toLowerCase();
+    if ((k === 'enter' || k === ' ') && e.target.closest('button, summary, a')) return;
     if (['w', 'a', 's', 'd', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright'].includes(k) && !e.ctrlKey && !e.metaKey) { BC.keys[k] = true; e.preventDefault(); return; }
     if (k === 'q') App.R.rotate(Math.PI / 4); if (k === 'e') App.R.rotate(-Math.PI / 4);
-    if (k === 'escape') { if (!$('#spellbook').hidden) { $('#spellbook').hidden = true; BC.renderActions(); } else if (BC.mode && BC.mode.type !== 'move' || BC.mode && BC.mode.act) BC.cancel(); else if (!$('#inspect').hidden) $('#inspect').hidden = true; else if (!$('#helpPanel').hidden) $('#helpPanel').hidden = true; }
+    if (k === 'escape') { if (BC.pendingMove) { BC.cancel(); return; } if (!$('#spellbook').hidden) { $('#spellbook').hidden = true; BC.renderActions(); } else if (BC.mode && BC.mode.type !== 'move' || BC.mode && BC.mode.act) BC.cancel(); else if (!$('#inspect').hidden) $('#inspect').hidden = true; else if (!$('#helpPanel').hidden) $('#helpPanel').hidden = true; }
     if (k === ' ') { e.preventDefault(); if (BC.phase === 'deploy') BC.begin(); else BC.endTurn(); }
     if (k === 'enter') { if (BC.phase === 'deploy') { BC.begin(); return; } e.preventDefault(); BC.confirm(); }
     if (k === 'tab') { if (isTargetMode(BC.mode) && BC.isPlayerTurn()) { e.preventDefault(); BC.cycleTarget(e.shiftKey ? -1 : 1); } }
@@ -958,13 +1082,26 @@ BC.bind = () => {
   $('#actionBar').addEventListener('mouseleave', () => BC.showInfo());
   $('#spellbook').addEventListener('click', e => { const b = e.target.closest('[data-akey]'); if (b) BC.choose(b.dataset.akey); });
   $('#spellbook').addEventListener('mouseover', e => { const b = e.target.closest('[data-akey]'); if (b) BC.showInfo(b.dataset.akey); });
-  $('#shotPanel').addEventListener('click', e => { const b = e.target.closest('[data-shot]'); if (!b) return; const k = b.dataset.shot; if (k === 'go') { const t = BC.B && BC.B.get($('#shotPanel').dataset.tid); if (t) { BC.tgtSel = t.id; BC.confirmTarget(t); } } if (k === 'cast') BC.castPicked(); if (k === 'area') BC.confirmArea(); if (k === 'cancel') BC.cancel(); });
+  $('#shotPanel').addEventListener('click', e => { const b = e.target.closest('[data-shot]'); if (!b) return; const k = b.dataset.shot; if (k === 'go') { const t = BC.B && BC.B.get($('#shotPanel').dataset.tid); if (t) { BC.tgtSel = t.id; BC.confirmTarget(t); } } if (k === 'cast') BC.castPicked(); if (k === 'area') BC.confirmArea(); if (k === 'cancel') BC.cancel(); if (k === 'move') BC.confirmMove(); });
   const ib = $('#initBar');
   ib.addEventListener('click', e => { const c = e.target.closest('[data-uid]'); if (!c || !BC.B) return; const u = BC.B.get(c.dataset.uid); if (!u) return; App.R.focus(u.x + u.sq / 2, u.y + u.sq / 2); BC.inspect(u); });
   ib.addEventListener('mouseover', e => { const c = e.target.closest('[data-uid]'); BC.ring('hl', c ? c.dataset.uid : null, '#4bd8e8'); $$('.icard', ib).forEach(x => x.classList.toggle('hl', x === c)); });
   ib.addEventListener('mouseleave', () => { BC.ring('hl', null, '#4bd8e8'); $$('.icard', ib).forEach(x => x.classList.remove('hl')); });
   $('#btnBegin').onclick = () => BC.begin();
-  $('#btnLeave').onclick = () => { BC.teardown(); App.show('setup'); };
+  $('#btnLeave').onclick = () => {
+    const leave = () => { App.closeModal(); BC.teardown(); App.show('setup'); };
+    if (BC.phase !== 'battle' || !BC.B || BC.B.over) return leave();
+    App.modal(App.mhead('Leave this battle?') + '<p>Your encounter setup is kept, but this battle’s progress will be lost.</p><div class="row gap"><button class="btn primary" id="keepPlaying">Keep playing</button><button class="btn ghost" id="leaveBattle">Leave battle</button></div>', el => {
+      $('#keepPlaying', el).onclick = App.closeModal; $('#leaveBattle', el).onclick = leave;
+    });
+  };
+  $('#battleGuide').onclick = e => { if (e.target.closest('[data-guide-close]')) { BC.guideClosed = true; BC.renderGuide(); } };
+  $$('[data-camera]').forEach(b => b.onclick = () => {
+    const kind = b.dataset.camera;
+    if (kind === 'left' || kind === 'right') App.R.rotate((kind === 'left' ? 1 : -1) * Math.PI / 4);
+    else { const u = BC.cur || BC.sel; if (u) App.R.focus(u.x + u.sq / 2, u.y + u.sq / 2); }
+  });
+  $('#unitCard').addEventListener('click', e => { if (e.target.closest('[data-unit-details]') && BC.shown) BC.inspect(BC.shown); });
   $('#btnLog').onclick = () => BC.toggleLog();
   $('#logClose').onclick = () => BC.toggleLog(false);
   $('#btnSettings').onclick = App.openSettings;
@@ -975,5 +1112,5 @@ BC.bind = () => {
   G.addEventListener('tat:settings', () => { if (BC.B && BC.isPlayerTurn()) BC.renderEnd(); });
 };
 BC.isPlayerTurnRaw = () => BC.B && BC.cur && BC.B.cur === BC.cur && !BC.busy && BC.phase === 'battle' && !BC.B.over;
-BC.advanceFromPlayer = async () => { const B = BC.B, u = BC.cur; BC.busy = true; BC.renderActions(); $('#targetBar').innerHTML = ''; B.aiTurn(u); await BC.play(); if (!B.over && B.cur === u) B.endTurn(u); await BC.play(); BC.busy = false; BC.advance(); };
+BC.advanceFromPlayer = async () => { const B = BC.B, u = BC.cur, gen = BC.gen; BC.clearPreview(); BC.busy = true; BC.renderActions(); $('#targetBar').innerHTML = ''; B.aiTurn(u); await BC.play(); if (gen !== BC.gen) return; if (!B.over && B.cur === u) B.endTurn(u); await BC.play(); if (gen !== BC.gen) return; BC.busy = false; BC.advance(); };
 })(typeof window !== 'undefined' ? window : globalThis);

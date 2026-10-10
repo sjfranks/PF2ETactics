@@ -1,13 +1,15 @@
 {
   "name": "pf2e",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "A mobile-friendly Pathfinder Second Edition tactics sandbox",
   "directories": {
     "test": "test"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "python3 build.py",
+    "test": "node test/rules.js",
+    "test:ui": "python3 test/mobile_smoke.py",
+    "test:sim": "node test/sim.js"
   },
   "keywords": [],
   "author": "",

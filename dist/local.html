@@ -1,4 +1,4 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"></head><body><title>Three-Action Tactics</title>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#071015"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="description" content="XCOM-style 3D tactics sandbox for the Pathfinder 2e rules."><title>Three-Action Tactics</title>
 <meta name="color-scheme" content="dark">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1190,7 +1190,217 @@ details[open] summary { margin-bottom: 8px; }
   .log { height: 70%; }
 }
 
-</style>
+/* Expedition presentation and touch command dock. Loaded after the base UI. */
+:root {
+  --muted: #a0b4ba;
+  --dim: #82999f;
+  --sheen: linear-gradient(125deg, rgba(155, 211, 204, .025), transparent 55%);
+}
+button:focus-visible, summary:focus-visible, [tabindex]:focus-visible {
+  outline: 2px solid var(--amber); outline-offset: 3px;
+}
+.home-tagline { color: #e4d6af; font-family: var(--f-display); font-size: 18px; margin: 0; }
+.home-facts { display: flex; flex-wrap: wrap; gap: 8px 16px; color: var(--muted); font-size: 12px; }
+.home-facts span::before { content: '◆'; color: var(--amber); font-size: 7px; margin-right: 6px; vertical-align: middle; }
+.home-panel { gap: 15px; }
+.home-menu { max-width: 520px; gap: 10px; }
+.menu-card { border-radius: 10px; min-height: 76px; }
+.menu-card.primary { border-color: #aa823e; background: linear-gradient(115deg, #49371b, #1c241e); }
+.menu-card.learn { border-left-color: #8daead; }
+.menu-card:active, .abtn:active, .ibtn:active { transform: translateY(1px) scale(.98); }
+.home-side { margin-left: auto; border-radius: 14px; padding: 25px; gap: 22px; border-top: 2px solid #aa823e; }
+.home-legal { max-width: 510px; font-size: 12px; color: var(--muted); }
+.home-legal summary { font-weight: 400; }
+.home-legal .home-foot { padding-top: 8px; }
+.btn, .ibtn { border-radius: 6px; }
+.x { min-width: 44px; min-height: 44px; }
+.brow { height: 56px; min-height: 56px; }
+.brow.grp { height: 56px; }
+.brow .act .btn { min-width: 40px; min-height: 40px; }
+.camera-tools { position: absolute; top: 150px; right: 14px; display: flex; gap: 4px; }
+.camera-tools .ibtn { font-size: 25px; width: 44px; height: 44px; }
+.camera-tools .ibtn svg { width: 20px; height: 20px; }
+.turn-cue { grid-column: 1 / -1; display: flex; align-items: center; gap: 14px; color: var(--text2); font-size: 13px; min-height: 28px; }
+.turn-cue:empty { display: none; }
+.turn-cue b { color: var(--cyan); font-size: 12px; text-transform: uppercase; letter-spacing: .12em; white-space: nowrap; }
+.turn-cue b::before { content: ''; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: currentColor; margin-right: 7px; box-shadow: 0 0 9px currentColor; }
+.turn-cue.enemy b { color: #ff8f86; }
+.turn-cue span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.unit-details { display: grid; place-items: center; width: 44px; height: 44px; border: 0; background: none; color: var(--muted); cursor: pointer; border-radius: 6px; }
+.unit-details:hover { background: #ffffff0c; color: var(--text); }
+.unit-details svg { width: 19px; height: 19px; }
+.uc-head { grid-template-columns: 56px minmax(0, 1fr) 44px; }
+.battle-guide { position: absolute; top: 112px; left: 12px; width: 330px; display: flex; align-items: flex-start; gap: 4px; padding: 12px 6px 12px 16px; border: 1px solid #8c713d; border-radius: 10px; background: linear-gradient(130deg, #282a20f5, #0c1a20f5); box-shadow: var(--shadow); z-index: 8; }
+.battle-guide b { color: #f1d197; font-size: 15px; }
+.battle-guide p { font-size: 14px; line-height: 1.45; color: #c9d3d1; margin: 6px 0 0; }
+.shot { border-radius: 12px; overflow-y: auto; overscroll-behavior: contain; }
+.shot .sh-foot { position: sticky; bottom: 0; background: #0d1c23; z-index: 2; }
+.shot .sh-foot .btn { min-height: 44px; }
+.shot .big { padding-top: 8px; padding-bottom: 8px; }
+.roll-details { border-top: 1px solid var(--line); }
+.roll-details summary { padding: 8px 12px; min-height: 44px; color: var(--text2); font-size: 13px; }
+.roll-details summary::before { content: '+'; color: var(--amber); margin-right: 8px; }
+.roll-details[open] summary::before { content: '−'; }
+.move-preview { --tick: #6cc4f0; border-color: #47758b; }
+.move-terrain { padding: 0 12px 10px; color: var(--muted); font-size: 13px; }
+.abtn { border-radius: 7px; }
+.abtn.sel { background: radial-gradient(ellipse at 50% 20%, #92753955, transparent), #252a22; border-color: #e1b563; box-shadow: inset 0 -3px #e1b563, 0 0 16px #d8a04222; }
+.abtn.off { opacity: .48; }
+.abtn.off::after { background: none; }
+.hpbar i, .thp i, .pl-hp i { transition: width .3s ease-out; }
+.icard { border-radius: 6px; }
+.icard.cur { box-shadow: 0 0 16px #f5b94233, inset 0 -2px var(--amber); }
+.result { border-radius: 16px; border-top: 3px solid var(--amber); }
+.result.win .res-head h2 { text-shadow: 0 0 28px #f5b94244; }
+.modal-card, .inspect, .help, .spellbook { border-radius: 12px; }
+
+@media (max-width: 760px), (max-height: 500px) and (pointer: coarse) {
+  #home { align-items: center; padding: max(24px, env(safe-area-inset-top)) 22px max(18px, env(safe-area-inset-bottom)); background: radial-gradient(ellipse at 90% 0, #31545444, transparent 50%), linear-gradient(180deg, #081518bb, #071015f5 48%, #050c10); }
+  .home-wrap { max-height: none; margin: auto 0; }
+  .home-panel { width: 100%; max-width: 560px; gap: 14px; }
+  .eyebrow { font-size: 11px; letter-spacing: .13em; }
+  .title { font-size: clamp(42px, 11vw, 68px); line-height: 1.04; }
+  .home-tagline { font-size: 15px; }
+  .lede { font-size: 15px; line-height: 1.5; }
+  .home-facts { font-size: 11px; gap: 6px 12px; }
+  .home-menu { gap: 9px; margin-top: 6px; }
+  .menu-card { min-height: 72px; grid-template-columns: 38px minmax(0, 1fr) 14px; gap: 12px; padding: 11px; }
+  .mc-ico { width: 38px; height: 42px; }
+  .mc-ico svg.ico { width: 25px; height: 25px; }
+  .mc-txt b { font-size: 17px; }
+  .mc-txt small { font-size: 13px; line-height: 1.35; margin-top: 3px; }
+  .home-row .btn { flex: 1; }
+  .home-legal summary { min-height: 36px; font-size: 12px; }
+  .home-foot { font-size: 12px; }
+  .hud-top { grid-template-columns: minmax(0, 1fr) auto; gap: 4px; padding: calc(6px + env(safe-area-inset-top)) 10px 10px; }
+  .hud-tl { gap: 5px; min-width: 0; }
+  .hud-tools { gap: 4px; }
+  #btnHelp { display: none; }
+  .roundbox { flex: 1; min-width: 0; max-width: 145px; padding: 3px 8px; overflow: hidden; }
+  .roundbox small { max-width: 130px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .roundbox b { font-family: var(--f-ui); font-size: 17px; }
+  .init { gap: 4px; padding: 2px 0 6px; }
+  .icard, .icard.cur { width: 76px; padding: 4px; grid-template-columns: 22px minmax(0, 1fr); align-items: center; min-height: 47px; gap: 2px; }
+  .icard .emb, .icard.cur .emb { width: 22px; height: 24px; }
+  .icard .nm { font-size: 11px; max-width: 44px; }
+  .icard .hp { grid-column: 1 / -1; width: 100%; }
+  .icard .cd { display: none; }
+  .camera-tools { top: calc(119px + env(safe-area-inset-top)); right: 10px; gap: 3px; }
+  .camera-tools .ibtn { background: #0b1b22ed; border-color: #668a8f66; }
+  .hud-bottom {
+    grid-template-columns: minmax(0, 1fr) 102px;
+    grid-template-areas: 'cue cue' 'unit end' 'tray tray';
+    gap: 4px 10px; padding: 7px 10px calc(8px + env(safe-area-inset-bottom));
+    border-top: 1px solid #61898988; border-radius: 17px 17px 0 0;
+    background: linear-gradient(160deg, #14272cf5, #09161bf9 65%);
+    box-shadow: 0 -12px 34px #00000044;
+  }
+  .turn-cue { grid-area: cue; gap: 10px; min-height: 22px; font-size: 11px; }
+  .turn-cue b { font-size: 10px; letter-spacing: .07em; }
+  .unitcard { grid-area: unit; display: grid; grid-template-columns: minmax(0, 1fr); gap: 4px; padding: 0; background: none; border: 0; box-shadow: none; backdrop-filter: none; -webkit-backdrop-filter: none; min-width: 0; }
+  .unitcard::after { display: none; }
+  .uc-head { grid-template-columns: 28px minmax(0, 1fr) 32px; gap: 6px; height: 32px; }
+  .uc-head .emb { width: 28px; height: 30px; }
+  .uc-name b { font-size: 16px; }
+  .uc-name > span { display: none; }
+  .unit-details { width: 44px; height: 44px; margin-left: -6px; }
+  .hpline { display: flex; align-items: center; gap: 7px; }
+  .hpline .hpt { font-size: 11px; white-space: nowrap; }
+  .hpline .hpbar { flex: 1; height: 7px; }
+  .uc-econ { min-height: 20px; gap: 7px; padding: 2px 0; border: 0; flex-wrap: nowrap; }
+  .pip { width: 11px; height: 11px; }
+  .pips { gap: 5px; }
+  .pip.react { width: 17px; height: 17px; }
+  .econ-tag { font-size: 11px; padding: 0 3px; }
+  .econ-tag.hero, .econ-tag.shield:not(.up) { display: none; }
+  .unitcard .chips { max-width: 100%; }
+  .unitcard .chip { min-height: 20px; font-size: 11px; padding: 1px 4px; }
+  .unitcard .chip .ct { display: inline; }
+  .endwrap { grid-area: end; align-self: center; }
+  .endbtn { width: 102px; min-height: 60px; display: flex; flex-direction: column; justify-content: center; gap: 6px; padding: 8px 5px; border-radius: 9px; clip-path: none; }
+  .endbtn svg { display: none; }
+  .endbtn b { font-size: 14px; letter-spacing: .04em; }
+  .endbtn small { font-size: 10px; }
+  .tray-wrap { grid-area: tray; gap: 3px; min-width: 0; }
+  .ainfo { display: none; }
+  .tray { background: transparent; border: 0; padding: 0; box-shadow: none; }
+  .tray-tabs { gap: 4px; justify-content: stretch; }
+  .ttab { flex: 1; justify-content: center; min-height: 44px; font-size: 12px; padding: 5px 7px; letter-spacing: .02em; border-radius: 6px 6px 0 0; background: transparent; }
+  .ttab .n { display: none; }
+  .ttab svg { width: 15px; height: 15px; }
+  .actions { justify-content: flex-start; gap: 4px; padding: 5px 0 3px; scroll-padding: 2px; scrollbar-width: thin; }
+  .agroup { gap: 5px; }
+  .agroup + .agroup { margin-left: 2px; padding-left: 7px; }
+  .abtn { width: 76px; height: 74px; background: linear-gradient(150deg, #203941, #101f27); }
+  .abtn .nm { font-size: 12px; padding: 0 1px; }
+  .abtn .ai svg { width: 26px; height: 26px; }
+  .abtn .cost, .abtn .cnt { font-size: 10px; }
+  .targets { padding: 2px 0; gap: 5px; }
+  .tchip { min-height: 42px; padding: 3px 6px; grid-template-columns: 24px auto; border-radius: 6px; }
+  .tchip .emb { width: 24px; height: 26px; }
+  .tchip .pct { font-size: 16px; }
+  .tchip .tn { font-size: 11px; }
+  .shot { left: 10px; right: 10px; width: auto; bottom: calc(var(--hudb, 250px) + 8px); max-height: calc(100% - var(--hudb, 250px) - 174px - env(safe-area-inset-top)); font-size: 14px; z-index: 12; }
+  .shot .sh-head { padding: 8px 10px; }
+  .shot .sh-t b { font-size: 16px; }
+  .shot .sh-t small { font-size: 12px; }
+  .shot .big { padding: 5px 12px; }
+  .shot .big b { font-size: 30px; }
+  .shot .notes { font-size: 12px; padding: 7px 10px; }
+  .shot .sh-foot { padding: 6px 8px; }
+  .shot .sh-foot .btn { min-height: 44px; font-size: 14px; }
+  .shot .hint { display: none; }
+  .battle-guide { top: calc(172px + env(safe-area-inset-top)); left: 10px; width: calc(100% - 20px); padding: 9px 4px 9px 12px; }
+  .battle-guide b { font-size: 13px; }
+  .battle-guide p { font-size: 12px; line-height: 1.4; margin-top: 4px; }
+  .hud:has(.shot:not([hidden])) .battle-guide { display: none; }
+  .deploybar { bottom: calc(var(--hudb, 140px) + 14px); padding: 14px; border-radius: 12px; width: calc(100% - 20px); max-width: 440px; gap: 10px; }
+  .deploybar b { font-size: 16px; }
+  .deploybar span { font-size: 13px; }
+  .deploybar .btn { width: 100%; min-height: 48px; }
+  .hud[data-phase=deploy] .tray-wrap { display: none; }
+  .hud[data-phase=deploy] .unitcard { grid-column: 1 / -1; }
+  .hud[data-phase=deploy] .hpline { max-width: 300px; }
+  .spellbook { left: 10px; right: 10px; transform: none; width: auto; bottom: calc(var(--hudb, 250px) + 8px); max-height: calc(100% - var(--hudb, 250px) - 118px); }
+  .sbk-head { gap: 6px; flex-wrap: wrap; }
+  .sbk-head .num { font-size: 11px; }
+  .sbk-head .pill { display: none; }
+  .inspect, .help { top: auto; left: 8px; right: 8px; bottom: 8px; width: auto; max-height: calc(100% - 125px); z-index: 30; }
+  .log { left: 8px; right: 8px; bottom: 8px; height: 65%; border-radius: 12px; }
+  .banner { top: 27%; font-size: 26px; }
+  .banner.flash { max-width: calc(100% - 28px); font-size: 16px; background: #102129ef; border: 1px solid var(--amber2); border-radius: 8px; padding: 12px; }
+  .plate:not(.cur):not(.tgt) .pl-top, .plate:not(.cur):not(.tgt) .pl-cs { display: none; }
+  .plate:not(.cur):not(.tgt) .pl-hp { width: 36px; height: 5px; opacity: .85; }
+  .plate.cur .pl-hp, .plate.tgt .pl-hp { width: 64px; height: 6px; }
+  .plate b { font-size: 12px; }
+  .plate .pl-lv { display: none; }
+  .set-row { gap: 8px; }
+  .set-row:has(.seg) { grid-template-columns: minmax(0, 1fr); }
+  .set-row .seg { flex-wrap: wrap; }
+  .set-row .seg button { min-height: 44px; }
+  .switch { height: 44px; }
+  .switch span { inset: 9px 0; }
+}
+@media (max-width: 360px) { .ttab svg { display: none; } }
+@media (max-height: 500px) and (pointer: coarse) {
+  #home { display: block; }
+  .home-panel { margin: 0 auto; }
+  .hud-top { grid-template-columns: auto minmax(0, 1fr) auto; }
+  .init { grid-column: 2; grid-row: 1; }
+  .hud-tools { grid-column: 3; }
+  .hud-bottom { grid-template-columns: 165px minmax(0, 1fr) 100px; grid-template-areas: 'unit tray end'; gap: 10px; padding-top: 6px; }
+  .turn-cue { display: none; }
+  .camera-tools { top: 64px; }
+  .battle-guide { top: 64px; width: 310px; }
+  .tray-tabs .ttab { min-height: 36px; }
+  .abtn { width: 64px; height: 62px; }
+  .shot { left: auto; width: 330px; max-height: calc(100% - var(--hudb, 130px) - 64px); }
+  .spellbook { max-height: calc(100% - var(--hudb, 130px) - 64px); }
+  .hud[data-phase=deploy] .unitcard { grid-column: 1; }
+  .deploybar { bottom: 14px; left: auto; right: 12px; transform: none; width: 380px; }
+}
+
+</style></head><body>
 <div id="app">
   <div id="stage"></div>
   <div id="plates"></div>
@@ -1200,11 +1410,14 @@ details[open] summary { margin-bottom: 8px; }
   <section id="home" class="screen">
     <div class="home-wrap">
       <div class="home-panel">
-        <div class="eyebrow"><span class="acts" aria-hidden="true">◆◆◆</span> Pathfinder Second Edition · tactical rules sandbox</div>
+        <div class="eyebrow"><span class="acts" aria-hidden="true">◆◆◆</span> Pathfinder Second Edition</div>
         <h1 class="title">Three&#8209;Action<br><span>Tactics</span></h1>
-        <p class="lede">Build heroes from level 1 to 20, budget encounters with the GM Core XP tables, and fight them turn by turn on a 3D grid. Every Strike, save, flank and Reactive Strike is rolled and explained.</p>
+        <p class="home-tagline">Three actions. Endless possibilities.</p>
+        <p class="lede">Lead your party into danger. Find the flank, land the critical, and make every action count.</p>
+        <div class="home-facts"><span>Level 1–20 heroes</span><span>26 encounters</span><span>Every roll explained</span></div>
         <nav class="home-menu" aria-label="Main menu">
-          <button class="menu-card primary" id="btnQuick"><span class="mc-ico" data-ico="swords2"></span><span class="mc-txt"><b>Quick battle</b><small>A random prebuilt encounter with the pregenerated heroes</small></span><span class="mc-go" data-ico="next"></span></button>
+          <button class="menu-card primary" id="btnQuick"><span class="mc-ico" data-ico="swords2"></span><span class="mc-txt"><b>Quick battle</b><small>A ready-to-play adventure · levels 1–3</small></span><span class="mc-go" data-ico="next"></span></button>
+          <button class="menu-card learn" id="btnLearn"><span class="mc-ico" data-ico="d20"></span><span class="mc-txt"><b>First skirmish</b><small>Learn the rhythm with a guided level-1 battle</small></span><span class="mc-go" data-ico="next"></span></button>
           <button class="menu-card" id="btnSetup"><span class="mc-ico" data-ico="map"></span><span class="mc-txt"><b>Build a skirmish</b><small>Pick heroes, monsters, threat and battlefield</small></span><span class="mc-go" data-ico="next"></span></button>
           <button class="menu-card" id="btnRoster"><span class="mc-ico" data-ico="users"></span><span class="mc-txt"><b>Characters</b><small>Create and level your own heroes</small></span><span class="mc-go" data-ico="next"></span></button>
         </nav>
@@ -1212,7 +1425,7 @@ details[open] summary { margin-bottom: 8px; }
           <button class="btn ghost small" id="btnHomeSettings"><span data-ico="gear"></span> Settings</button>
           <button class="btn ghost small" id="btnHomeHelp"><span data-ico="help"></span> How to play</button>
         </div>
-        <div class="home-foot">Remaster rules (Player Core, GM Core, Monster Core). Unofficial fan tool; not affiliated with or endorsed by Paizo. Contains material from Pathfinder Monster Core and Player Core (Paizo Inc.), used under the ORC License. <a href="https://sjfranks.github.io/PF2ETactics/" target="_blank" rel="noopener">Play online</a> · <a href="https://github.com/sjfranks/PF2ETactics" target="_blank" rel="noopener">Source on GitHub</a></div>
+        <details class="home-legal"><summary>Unofficial fan project · Credits &amp; license</summary><div class="home-foot">Remaster rules (Player Core, GM Core, Monster Core). Unofficial fan tool; not affiliated with or endorsed by Paizo. Contains material from Pathfinder Monster Core and Player Core (Paizo Inc.), used under the ORC License. <a href="https://sjfranks.github.io/PF2ETactics/" target="_blank" rel="noopener">Play online</a> · <a href="https://github.com/sjfranks/PF2ETactics" target="_blank" rel="noopener">Source on GitHub</a></div></details>
       </div>
       <aside class="home-side" aria-label="How a turn works">
         <div class="hs-title">Every turn</div>
@@ -1316,7 +1529,7 @@ details[open] summary { margin-bottom: 8px; }
         <button class="ibtn" id="btnLeave" title="Leave battle" aria-label="Leave battle"><span data-ico="back"></span></button>
         <div class="roundbox"><small id="roundSub">Encounter</small><b id="roundLbl">Deployment</b></div>
       </div>
-      <div class="init" id="initBar" role="list" aria-label="Initiative order"></div>
+      <div class="init" id="initBar" role="group" aria-label="Initiative order"></div>
       <div class="hud-tools">
         <label class="ibtn tgl" title="Autoplay: let the AI play your heroes"><input type="checkbox" id="autoParty"><span data-ico="auto"></span><span class="tl">Auto</span></label>
         <label class="spd" title="Animation speed"><span data-ico="speed"></span><select id="animSpeed" aria-label="Animation speed"><option value="0.75">Slow</option><option value="1" selected>Normal</option><option value="2">Fast</option><option value="5">Instant</option></select></label>
@@ -1326,6 +1539,12 @@ details[open] summary { margin-bottom: 8px; }
       </div>
     </div>
     <div class="banner" id="banner" hidden aria-live="polite"></div>
+    <div class="camera-tools" role="group" aria-label="Battlefield camera">
+      <button class="ibtn" data-camera="left" aria-label="Rotate camera left" title="Rotate left">↶</button>
+      <button class="ibtn" data-camera="focus" aria-label="Focus active hero" title="Focus active hero"><span data-ico="target"></span></button>
+      <button class="ibtn" data-camera="right" aria-label="Rotate camera right" title="Rotate right">↷</button>
+    </div>
+    <aside class="battle-guide" id="battleGuide" hidden aria-label="Skirmish guide"></aside>
     <div class="deploybar" id="deployBar" hidden>
       <span data-ico="flag" class="db-ico"></span>
       <div><b>Deployment</b><span>Select a hero, then a highlighted square in the blue zone to reposition. Enemies hold the red zone.</span></div>
@@ -1339,9 +1558,10 @@ details[open] summary { margin-bottom: 8px; }
     <div class="tip" id="tip" hidden></div>
     <aside class="shot" id="shotPanel" hidden aria-live="polite"></aside>
     <div class="hud-bottom" id="hudBottom">
+      <div class="turn-cue" id="turnCue" role="status"></div>
       <div class="unitcard" id="unitCard"></div>
       <div class="tray-wrap" id="trayWrap">
-        <div class="targets" id="targetBar" role="list" aria-label="Targets"></div>
+        <div class="targets" id="targetBar" role="group" aria-label="Targets"></div>
         <div class="ainfo" id="abilityInfo"></div>
         <div class="tray" id="tray">
           <div class="tray-tabs" id="trayTabs" role="tablist"></div>
@@ -1355,6 +1575,8 @@ details[open] summary { margin-bottom: 8px; }
     <div class="help" id="helpPanel" hidden>
       <div class="row" style="justify-content:space-between"><h3>Controls</h3><button class="x" id="btnHelpClose" aria-label="Close">×</button></div>
       <ul class="keys">
+        <li><b>On a phone:</b> drag with one finger to pan. Pinch to zoom; twist two fingers to rotate. Use the camera buttons to rotate or return to your hero.</li>
+        <li><b>Tap a square</b> to preview the route and action cost, then tap <b>Move here</b> to commit. Tap a target to preview your chances, then confirm. Cancel costs no actions.</li>
         <li><kbd>W A S D</kbd> / arrows or <b>left-drag</b> — pan</li>
         <li><kbd>Q</kbd> <kbd>E</kbd> or <b>right-drag</b> — rotate · <b>wheel</b> / pinch — zoom</li>
         <li><kbd>1</kbd>–<kbd>0</kbd> — abilities in the open tab · <kbd>Tab</kbd> / <kbd>Shift+Tab</kbd> — cycle targets</li>
@@ -13602,6 +13824,13 @@ PF.Render = function (host) {
   const cam = { tx: 10, tz: 10, yaw: 0.6, pitch: 0.95, dist: 26, gyaw: 0.6, gtx: 10, gtz: 10, gdist: 26, gpitch: 0.95, ty: 0, gty: 0 };
   R.cam = cam;
   const tgtV = new THREE.Vector3();
+  let insetTop = 0, insetBottom = 0;
+  R.setViewportInsets = (top, bottom) => {
+    if (top === insetTop && bottom === insetBottom) return;
+    insetTop = top; insetBottom = bottom;
+    const w = host.clientWidth || 800, h = host.clientHeight || 600;
+    camera.setViewOffset(w, h, 0, (bottom - top) / 2, w, h);
+  };
   const applyCam = () => {
     const cp = Math.cos(cam.pitch), sp = Math.sin(cam.pitch);
     camera.position.set(cam.tx + Math.sin(cam.yaw) * cp * cam.dist, cam.ty + sp * cam.dist, cam.tz + Math.cos(cam.yaw) * cp * cam.dist);
@@ -13611,6 +13840,7 @@ PF.Render = function (host) {
     const w = host.clientWidth || 800, h = host.clientHeight || 600;
     renderer.setSize(w, h, false); renderer.domElement.style.width = w + 'px'; renderer.domElement.style.height = h + 'px';
     camera.aspect = w / h; camera.fov = w / h < 0.8 ? 55 : 38; camera.updateProjectionMatrix();
+    camera.setViewOffset(w, h, 0, (insetBottom - insetTop) / 2, w, h);
     R.post.setSize(w, h, renderer.getPixelRatio());
   };
   R.focus = (x, y, instant) => { cam.gtx = x; cam.gtz = y; cam.gty = R.tileTop ? R.tileTop(x, y) * 0.6 : 0; if (instant) { cam.tx = x; cam.tz = y; cam.ty = cam.gty; } };
@@ -13625,6 +13855,7 @@ PF.Render = function (host) {
   // action camera: swing behind the attacker toward the target, then restore
   R.camFollow = () => { const s = PF.App && PF.App.settings; return !s || s.follow !== false; };
   R.actionCam = (aid, bid) => {
+    if (G.matchMedia('(prefers-reduced-motion: reduce)').matches) return null;
     const a = R.units[aid], b = R.units[bid]; if (!a || !b || !R.camFollow()) return null;
     const saved = { gtx: cam.gtx, gtz: cam.gtz, gdist: cam.gdist, gyaw: cam.gyaw, gpitch: cam.gpitch, gty: cam.gty };
     const pa = a.g.position, pb = b.g.position;
@@ -13897,7 +14128,7 @@ PF.Render = function (host) {
       if (deg >= 2) R.fx.burst(deg === 3 ? 'crit' : spell ? 'magic' : 'impact', R.anchor(bid, 'chest'), { color: R.fxColor(c) });
       R.hitReact(b, deg, deg === 3);
     }
-    if (restore) { await R.wait(0.35); restore(); }
+    if (restore) { await R.wait(0.35); if (R.units[aid] === a && R.units[bid] === b) restore(); }
   };
   R.animBolt = async (aid, bid, c, n) => {
     const a = R.units[aid], b = R.units[bid]; if (!a || !b) return;
@@ -14378,7 +14609,7 @@ App.saveSetup = () => store.set('tat.setup.v1', { pl: App.setup.pl, party: App.s
    App.settings.gfx: 'high'|'medium'|'low'|'off' (also mirrored raw in localStorage 'tat.gfx' for the renderer)
    App.settings.reactions: 'auto'|'defensive'|'never'   App.settings.heroPoints: 'death'|'reroll'
    A 'tat:settings' window event fires after every change with detail = App.settings. */
-const SET_DEF = { gfx: 'high', speed: 1, follow: true, grid: true, confirmEnd: true, reactions: 'auto', heroPoints: 'death', banners: true, logOpen: null };
+const SET_DEF = { gfx: Math.min(G.innerWidth, G.innerHeight) < 700 ? 'medium' : 'high', speed: 1, follow: true, grid: true, confirmEnd: true, reactions: 'auto', heroPoints: 'death', banners: true, logOpen: null, sound: false, haptics: false };
 App.settings = Object.assign({}, SET_DEF, store.get('tat.settings.v1', {}));
 try { const g = localStorage.getItem('tat.gfx'); if (['high', 'medium', 'low', 'off'].includes(g)) App.settings.gfx = g; } catch (e) { /* no storage */ }
 App.saveSettings = () => {
@@ -14430,6 +14661,7 @@ App.show = name => {
   $$('.screen').forEach(s => { s.hidden = s.id !== name; });
   if (name !== App.screen) App.prev = App.screen;
   App.screen = name;
+  if (name !== 'battle' && App.R) App.R.setViewportInsets(0, 0);
   if (name !== 'setup') App.closeFly && App.closeFly();
   if (name === 'home' || name === 'setup' || name === 'roster') App.showDiorama();
   if (name === 'setup') App.renderSetup();
@@ -14437,8 +14669,23 @@ App.show = name => {
 };
 
 /* ---------- modal / toast ---------- */
-App.modal = (html, onBind) => { const m = $('#modal'); $('#modalCard').innerHTML = html; App.hydrateIcons($('#modalCard')); m.hidden = false; if (onBind) onBind($('#modalCard')); const f = $('#modalCard').querySelector('button, select, input'); if (f) f.focus({ preventScroll: true }); };
-App.closeModal = () => { $('#modal').hidden = true; };
+App.modal = (html, onBind) => {
+  const m = $('#modal'), card = $('#modalCard');
+  if (m.hidden) App.modalReturn = document.activeElement;
+  if (App.Battle) App.Battle.keys = {};
+  card.innerHTML = html; App.hydrateIcons(card); m.hidden = false;
+  const heading = card.querySelector('h3'); if (heading) { heading.id = 'modalTitle'; card.setAttribute('aria-labelledby', heading.id); }
+  if (onBind) onBind(card);
+  const f = card.querySelector('button, select, input'); if (f) f.focus({ preventScroll: true });
+};
+App.closeModal = () => { $('#modal').hidden = true; if (App.modalReturn && App.modalReturn.isConnected) App.modalReturn.focus({ preventScroll: true }); };
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Tab' || $('#modal').hidden) return;
+  const els = $$('button, input, select, textarea, a[href], [tabindex="0"]', $('#modalCard')).filter(el => !el.disabled && el.getClientRects().length);
+  const first = els[0], last = els[els.length - 1]; if (!first) return;
+  if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+  else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+});
 document.addEventListener('click', e => { if (e.target.id === 'modal') App.closeModal(); });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') { if (!$('#modal').hidden) { App.closeModal(); e.stopPropagation(); } else if (App.flyOpen) App.closeFly(); } }, true);
 App.toast = msg => { const t = $('#toast'); t.textContent = msg; t.hidden = false; clearTimeout(App._tt); App._tt = setTimeout(() => { t.hidden = true; }, 2000); };
@@ -14457,10 +14704,12 @@ App.openSettings = () => {
     row('Camera follow', 'Pan to whoever is acting.', sw('follow')) +
     row('Show grid', 'Draw square outlines on the battlefield.', sw('grid')) +
     row('Turn banners', '“Your turn” and “Enemy activity” announcements.', sw('banners')) +
+    row('Sound effects', 'Soft cues for actions, hits, spells and the start of your turn.', sw('sound')) +
+    row('Touch feedback', 'Short vibrations for actions and critical hits, on supported devices.', sw('haptics')) +
     row('Confirm end turn', 'Ask before ending a turn with actions left.', sw('confirmEnd')) +
     row('Reactions', 'Which reactions your heroes use automatically: all (Reactive Strike, Shield Block, Nimble Dodge…), only Shield Block, or none.', seg('reactions', [['auto', 'All'], ['defensive', 'Shield only'], ['never', 'None']])) +
     row('Hero Points', 'Spend Hero Points to avoid death, or to reroll a failed saving throw (the point is then gone).', seg('heroPoints', [['death', 'Avoid death'], ['reroll', 'Reroll']])) +
-    '</div><div class="row gap" style="justify-content:flex-end"><button class="btn" onclick="PF.App.closeModal()">Done</button></div>', el => {
+    '</div><div class="row gap" style="justify-content:flex-end"><button class="btn ghost" onclick="PF.App.openHelp()">How to play</button><button class="btn" onclick="PF.App.closeModal()">Done</button></div>', el => {
     $$('[data-set]', el).forEach(b => b.onclick = () => { const k = b.dataset.set; let v = b.dataset.val; if (k === 'speed') v = +v; S[k] = v; $$('[data-set="' + k + '"]', el).forEach(x => x.classList.toggle('on', x === b)); App.saveSettings(); });
     $$('[data-sw]', el).forEach(c => c.onchange = () => { S[c.dataset.sw] = c.checked; App.saveSettings(); });
   });
@@ -14632,7 +14881,8 @@ App.renderSetup = () => {
 App.themes = () => { const s = new Set(); Object.values(D.creatures).forEach(c => (c.theme || []).forEach(t => s.add(t))); return ['any'].concat([...s].sort()); };
 
 /* ---------- bestiary (filterable, virtualized) ---------- */
-const ROW_H = 44;
+// Keep this in sync with .brow: virtual rows must not overlap on touch screens.
+const ROW_H = 56;
 App.bf = { q: '', tag: 'any', size: 'any', lmin: '', lmax: '', sort: 'lvl', group: true, sel: null };
 App.bestiaryTags = () => {
   const cnt = {}; Object.values(D.creatures).forEach(c => (c.traits || []).forEach(t => { cnt[t] = (cnt[t] || 0) + 1; }));
@@ -14782,16 +15032,18 @@ App.boot = () => {
   App.hydrateIcons();
   if (!G.THREE) { document.getElementById('app').innerHTML = '<div style="padding:24px">The 3D engine (three.js) could not be loaded. Check your connection and reload.</div>'; return; }
   App.R = PF.Render($('#stage'));
-  App.R.onFrame = dt => { if (App.screen !== 'battle') App.R.cam.gyaw += dt * 0.05; if (App.Battle && App.screen === 'battle') App.Battle.frame(dt); };
+  App.R.onFrame = dt => { if (App.screen !== 'battle' && !G.matchMedia('(prefers-reduced-motion: reduce)').matches) App.R.cam.gyaw += dt * 0.05; if (App.Battle && App.screen === 'battle') App.Battle.frame(dt); };
   App.bindSetup();
   App.bindRoster && App.bindRoster();
   App.Battle && App.Battle.bind();
-  $('#btnQuick').onclick = () => {
-    const p = U.pick(D.presets.filter(x => x.id !== 'training'));
+  App.launchPreset = (p, guided = false) => {
     App.setup.pl = p.pl; App.setup.map = p.map; App.setup.foes = p.foes.map(id => ({ id, adj: null }));
     App.setup.party = App.defaultParty(); App.saveSetup();
-    App.startBattle({ map: p.map, partyLevel: p.pl, pcs: App.partyDefs(), foes: p.foes.map(id => ({ id })), title: p.name });
+    $('#autoParty').checked = false;
+    App.startBattle({ map: p.map, partyLevel: p.pl, pcs: App.partyDefs(), foes: p.foes.map(id => ({ id })), title: guided ? 'First skirmish' : p.name, guided });
   };
+  $('#btnQuick').onclick = () => App.launchPreset(U.pick(D.presets.filter(x => x.id !== 'training' && x.pl <= 3)));
+  $('#btnLearn').onclick = () => App.launchPreset(D.presets.find(x => x.id === 'training'), true);
   $('#btnSetup').onclick = () => App.show('setup');
   $('#btnRoster').onclick = () => App.show('roster');
   $('#btnHomeSettings').onclick = App.openSettings;
@@ -14802,6 +15054,53 @@ App.boot = () => {
   App.applySettings();
 };
 })(typeof window !== 'undefined' ? window : globalThis);
+
+/* Small, optional feedback cues. No downloads; audio starts only after a gesture. */
+(function (G) {
+'use strict';
+const App = G.PF.App;
+let ctx = null;
+const unlock = () => {
+  if (!App.settings.sound) return;
+  try {
+    const Audio = G.AudioContext || G.webkitAudioContext;
+    if (!Audio) return;
+    if (!ctx) ctx = new Audio();
+    if (ctx.state === 'suspended') ctx.resume().catch(() => {});
+  } catch (_) { /* audio is optional */ }
+};
+document.addEventListener('pointerdown', unlock, { passive: true });
+document.addEventListener('keydown', unlock);
+G.addEventListener('tat:settings', unlock);
+const cues = {
+  select: [[440, 0, .045]], move: [[220, 0, .07], [330, .065, .09]],
+  hit: [[150, 0, .1], [75, .025, .13]], miss: [[220, 0, .06], [145, .07, .08]],
+  crit: [[330, 0, .12], [494, .06, .13], [660, .13, .18]],
+  cast: [[330, 0, .12], [440, .09, .15], [660, .18, .18]],
+  heal: [[392, 0, .14], [523, .12, .2]], turn: [[440, 0, .1], [587, .1, .16]],
+  win: [[392, 0, .18], [494, .14, .18], [587, .28, .18], [784, .42, .32]],
+  loss: [[294, 0, .2], [247, .18, .2], [196, .36, .3]]
+};
+App.feedback = kind => {
+  if (App.settings.haptics && G.navigator.vibrate) {
+    try { G.navigator.vibrate(kind === 'crit' ? [18, 35, 28] : kind === 'hit' ? 18 : 8); } catch (_) { /* unsupported */ }
+  }
+  if (!App.settings.sound || !ctx || ctx.state !== 'running' || document.hidden) return;
+  try {
+    (cues[kind] || cues.select).forEach(([hz, delay, duration]) => {
+      const osc = ctx.createOscillator(), gain = ctx.createGain(), start = ctx.currentTime + delay;
+      osc.type = kind === 'hit' ? 'triangle' : 'sine';
+      osc.frequency.setValueAtTime(hz, start);
+      gain.gain.setValueAtTime(0, start);
+      gain.gain.linearRampToValueAtTime(.065, start + .008);
+      gain.gain.exponentialRampToValueAtTime(.001, start + duration);
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.start(start); osc.stop(start + duration + .02);
+      osc.onended = () => { osc.disconnect(); gain.disconnect(); };
+    });
+  } catch (_) { /* feedback must never interrupt a turn */ }
+};
+})(window);
 
 /* ui_builder.js — roster list and stepped character builder with a sticky live sheet */
 (function (G) {
@@ -14986,12 +15285,45 @@ const pct = x => Math.round(x * 100);
 const SAVEN = { fort: 'Fortitude', ref: 'Reflex', will: 'Will', per: 'Perception' };
 const reduced = () => G.matchMedia && G.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const isTargetMode = m => m && (m.type === 'unit' || m.type === 'spell' || m.type === 'move+unit' || m.type === 'step+unit');
+const compact = () => G.matchMedia('(max-width: 760px), (max-height: 500px) and (pointer: coarse)').matches;
+
+BC.clearPreview = () => { BC.pendingMove = null; BC._tp = null; BC._areaChip = null; };
+BC.renderCue = () => {
+  const B = BC.B, u = BC.cur, el = $('#turnCue');
+  if (!B || B.over) { el.textContent = ''; return; }
+  const playing = BC.isPlayerTurn();
+  $('#battle').dataset.phase = BC.phase;
+  el.classList.toggle('enemy', !!u && u.team === 'foe');
+  el.innerHTML = BC.phase === 'deploy' ? '<b>Prepare your party</b><span>Reposition, then roll initiative</span>' :
+    playing ? '<b>Your turn</b><span>' + (u.turn.attacks ? 'Attacks get harder. Try a shield, a skill, or a Step.' : 'Move. Strike. Improvise.') + '</span>' :
+    '<b>' + (u && u.team === 'foe' ? 'Enemy turn' : 'Resolving action') + '</b><span>' + esc(u ? u.name : '') + '</span>';
+  BC.renderGuide();
+};
+BC.renderGuide = () => {
+  const el = $('#battleGuide');
+  if (!BC.cfg || !BC.cfg.guided || BC.guideClosed || !BC.B || BC.B.over) { el.hidden = true; return; }
+  const done = BC.lessons || {};
+  let title, detail;
+  if (BC.phase === 'deploy') { title = 'Welcome, tactician'; detail = 'Your four heroes are ready. Tap Roll initiative to begin. Defeat both undead to win.'; }
+  else if (!BC.isPlayerTurn()) { el.hidden = true; return; }
+  else if (!done.move) { title = '01 · Find your footing'; detail = 'Tap a blue square to preview a route. Each Stride costs one action. Use Move here to confirm.'; }
+  else if (!done.attack) { title = '02 · Make it count'; detail = 'Choose a weapon, then a foe. Check the hit chance before confirming. Get closer if your weapon cannot reach.'; }
+  else if (!done.tactic) { title = '03 · More than attacking'; detail = 'Open Tactics to Raise Shield, or try a skill. Repeated attacks take a penalty; a good third action can save a hero.'; }
+  else { title = 'You have the rhythm'; detail = 'Flank with two heroes to make a foe off-guard. Spells and damage types matter: skeletons resist slashing.'; }
+  const sig = title + detail;
+  if (BC._guideSig !== sig) {
+    BC._guideSig = sig;
+    el.innerHTML = '<div><b>' + title + '</b><p>' + detail + '</p></div><button class="x" data-guide-close aria-label="Dismiss skirmish guide">×</button>';
+  }
+  el.hidden = false;
+};
 
 /* ================= START / TEARDOWN ================= */
 App.startBattle = cfg => {
   BC.teardown();
   const B = PF.Battle(cfg); B.deploy();
   BC.B = B; App.B = B; BC.cfg = U.clone(cfg); BC.phase = 'deploy'; BC.cur = null; BC.sel = null; BC.mode = null; BC.busy = false; BC.tgtSel = null; BC.tgtHover = null; BC.tabs = {}; BC.endArm = 0;
+  BC.clearPreview(); BC.lessons = {}; BC.guideClosed = false; BC._guideSig = null;
   BC.stats = { dmg: { pc: 0, foe: 0 }, crits: { pc: 0, foe: 0 }, kills: { pc: 0, foe: 0 } };
   BC.ustats = {}; BC.lastAtk = {}; BC.playCur = null; BC.foeBanner = false;
   B.units.forEach(u => { BC.ustats[u.id] = { dmg: 0, taken: 0, kills: 0, crits: 0, heal: 0 }; });
@@ -15015,6 +15347,8 @@ App.startBattle = cfg => {
 };
 BC.threatText = () => { const B = BC.B; const pcs = B.units.filter(u => u.team === 'pc').length; const xp = D.encounterXP(BC.cfg.foes.filter(f => D.creatures[f.id]), BC.cfg.partyLevel); const th = PF.threatFor(xp, pcs); return th.label + ' threat (' + xp + ' XP for ' + pcs + ' heroes).'; };
 BC.teardown = () => {
+  BC.clearPreview(); BC.keys = {}; clearTimeout(BC._ea); clearTimeout(BC._ft);
+  $('#battleGuide').hidden = true;
   Object.values(BC.rings).forEach(r => { r.visible = false; r.userData.id = null; });
   if (!BC.B) return;
   Object.values(BC.plates).forEach(p => p.el.remove()); BC.plates = {}; BC.disp = {};
@@ -15077,6 +15411,7 @@ BC.frame = () => {
   if (!BC.B) return;
   const R = App.R;
   const hb = $('#hudBottom').offsetHeight; if (hb !== BC._hb) { BC._hb = hb; $('#battle').style.setProperty('--hudb', hb + 'px'); }
+  R.setViewportInsets($('.hud-top').offsetHeight, hb);
   // position nameplates, then nudge overlapping ones upward (declutter), keeping the nearest-to-camera plate in place
   const vis = [];
   Object.keys(BC.plates).forEach(id => { const p = BC.plates[id]; const sc = R.unitScreen(id); if (!sc || sc.behind) { p.el.style.display = 'none'; return; } p.el.style.display = ''; vis.push({ p, x: sc.x, y: sc.y, w: p.w || (p.w = p.el.offsetWidth || 90), h: p.h || (p.h = p.el.offsetHeight || 28) }); });
@@ -15126,6 +15461,7 @@ BC.playOne = async e => {
       const a = B.get(e.a); BC.lastAtk[e.b] = e.a;
       if (a && BC.stats && e.deg === 3) { BC.stats.crits[a.team]++; credit(e.a, 'crits', 1); }
       await R.animAttack(e.a, e.b, e.ranged, e.deg, e.c, e.w);
+      App.feedback(e.deg === 3 ? 'crit' : e.deg >= 2 ? 'hit' : 'miss');
       if (e.deg <= 1) BC.float(e.b, e.deg === 0 ? 'Critical miss' : 'Miss', 'miss');
       else if (e.deg === 3) BC.float(e.b, 'Critical hit', 'critlbl');
       break;
@@ -15133,7 +15469,7 @@ BC.playOne = async e => {
     case 'bolt': { BC.lastAtk[e.b] = e.a; await R.animBolt(e.a, e.b, e.c, e.n || 1); break; }
     case 'area': await R.animArea(e.cells, e.c, e.shape, e.origin, e.u); break;
     case 'pulse': await R.animPulse(e.u, e.r, e.c); break;
-    case 'cast': BC.lastCaster = e.u; await R.animCast(e.u, e.c); break;
+    case 'cast': BC.lastCaster = e.u; App.feedback('cast'); await R.animCast(e.u, e.c); break;
     case 'float': {
       BC.float(e.u, e.text, e.c);
       const t = B.get(e.u);
@@ -15171,11 +15507,12 @@ BC.playOne = async e => {
 BC.dirtyInit = () => { if (BC._di) return; BC._di = requestAnimationFrame(() => { BC._di = 0; BC.renderInit(); }); };
 // banner: {kind:'round'|'pc'|'foe'|'flash', k, t, s}; awaits dur seconds (scaled by animation speed)
 BC.banner = async (o, dur = 0.6) => {
-  const b = $('#banner'); clearTimeout(BC._ft);
+  const b = $('#banner'), gen = BC.gen; clearTimeout(BC._ft);
   b.className = 'banner ' + (o.kind || ''); b.innerHTML = (o.k ? '<div class="bk">' + esc(o.k) + '</div>' : '') + '<div class="bt">' + esc(o.t || '') + '</div>' + (o.s ? '<div class="bs">' + esc(o.s) + '</div>' : '');
   b.hidden = false;
   await App.R.wait(dur);
-  b.classList.add('out'); await App.R.wait(0.12); if (b.classList.contains('out')) b.hidden = true;
+  if (gen !== BC.gen) return;
+  b.classList.add('out'); await App.R.wait(0.12); if (gen === BC.gen && b.classList.contains('out')) b.hidden = true;
 };
 
 /* ================= LOG ================= */
@@ -15193,8 +15530,9 @@ BC.toggleLog = force => { const l = $('#logPanel'); const open = force != null ?
 /* ================= TURN FLOW ================= */
 BC.begin = async () => {
   if (BC.phase !== 'deploy' || BC.busy) return;
+  const gen = BC.gen;
   BC.phase = 'battle'; $('#deployBar').hidden = true; App.R.clearLayers(['zonePC', 'zoneFoe']);
-  BC.busy = true; BC.B.begin(); await BC.play(); BC.busy = false;
+  BC.busy = true; BC.B.begin(); await BC.play(); if (gen !== BC.gen) return; BC.busy = false;
   BC.advance();
 };
 BC.advance = async () => {
@@ -15216,6 +15554,7 @@ BC.advance = async () => {
   }
 };
 BC.startPlayerTurn = u => {
+  BC.clearPreview(); App.feedback('turn');
   BC.mode = { type: 'move' }; BC.tgtSel = null; BC.tgtHover = null; BC.endArm = 0; $('#spellbook').hidden = true;
   BC.tab = BC.tabs[u.id] || 'combat';
   BC.renderUnitCard(u); BC.shown = u;
@@ -15225,7 +15564,8 @@ BC.startPlayerTurn = u => {
 const B_acts = u => BC.B ? BC.B.actsTotal(u) : 3;
 BC.refresh = () => {
   const B = BC.B, u = BC.cur; if (!B || !u) return;
-  BC.P = B.paths(u, B.speedOf(u) * Math.max(0, B.actsTotal(u)));
+  const strides = u.turn.acts + (u.turn.quick && u.turn.quick.includes('stride') ? 1 : 0);
+  BC.P = B.paths(u, B.speedOf(u) * Math.max(0, strides));
   BC.renderUnitCard(u); BC.renderActions(); BC.drawMode();
 };
 BC.isPlayerTurn = () => BC.B && BC.cur && BC.B.cur === BC.cur && !BC.busy && BC.phase === 'battle' && !BC.B.over && !BC.cur.ai && !$('#autoParty').checked;
@@ -15241,11 +15581,15 @@ BC.after = async () => {
 };
 BC.act = async (id, p) => {
   if (!BC.isPlayerTurn()) return;
+  BC.clearPreview();
   BC.busy = true; $('#spellbook').hidden = true; $('#tip').hidden = true; BC.hideShot(); BC.ring('sel', null, '#f5b942');
   App.R.clearLayers(['move1', 'move2', 'move3', 'valid', 'area', 'hoverArea']); App.R.showPath(null); App.R.setTargeted([]);
   $('#targetBar').innerHTML = ''; BC.renderActions(true);
   const r = BC.B.doAction(BC.cur, id, p);
   if (!r.ok) { BC.busy = false; BC.addLog({ text: r.err, cls: 'warn' }); BC.flash(r.err); BC.mode = { type: 'move' }; BC.refresh(); return; }
+  if (['move', 'stride', 'step', 'mobility'].includes(id)) { BC.lessons.move = true; App.feedback('move'); }
+  else if (id === 'strike' || id === 'cast') BC.lessons.attack = true;
+  else if (id !== 'cast') { BC.lessons.tactic = true; App.feedback('select'); }
   await BC.after();
 };
 BC.endTurn = async force => {
@@ -15255,13 +15599,15 @@ BC.endTurn = async force => {
     BC.endArm = performance.now(); BC.flash(left + ' action' + (left > 1 ? 's' : '') + ' left — End turn again to confirm'); BC.renderEnd(); return;
   }
   BC.endArm = 0;
+  BC.clearPreview(); const gen = BC.gen;
   BC.busy = true; App.R.clearLayers(); App.R.showPath(null); $('#spellbook').hidden = true; $('#tip').hidden = true; BC.hideShot(); BC.ring('sel', null, '#f5b942');
   $('#targetBar').innerHTML = ''; BC.renderActions(true);
-  BC.B.endTurn(BC.cur); await BC.play(); BC.busy = false; BC.advance();
+  BC.B.endTurn(BC.cur); await BC.play(); if (gen !== BC.gen) return; BC.busy = false; BC.advance();
 };
 BC.flash = msg => { const b = $('#banner'); clearTimeout(BC._ft); b.className = 'banner flash'; b.innerHTML = '<div class="bt">' + esc(msg) + '</div>'; b.hidden = false; BC._ft = setTimeout(() => { b.hidden = true; }, 1600); };
 BC.finish = () => {
   const B = BC.B; if (!B) return; BC.busy = false;
+  BC.clearPreview(); $('#battleGuide').hidden = true; App.feedback(B.over === 'win' ? 'win' : 'loss');
   App.R.clearLayers(); App.R.showPath(null); App.R.setActive(null); BC.hideShot(); BC.ring('sel', null, '#f5b942'); BC.ring('hl', null, '#4bd8e8');
   $('#targetBar').innerHTML = ''; $('#spellbook').hidden = true; BC.renderActions();
   const win = B.over === 'win'; const st = BC.stats;
@@ -15293,7 +15639,7 @@ BC.renderInit = curId => {
     const u = B.get(id); if (!u) return '';
     const s = BC.disp[id] || B.snap(u); const pc = Math.max(0, s.hp / Math.max(1, s.maxHP));
     const dots = (s.conds || []).filter(c => c.k !== 'prey').slice(0, 3).map(c => '<i class="' + (c.bad ? '' : 'g') + '"></i>').join('');
-    return '<div class="icard ' + u.team + (id === curId && BC.phase === 'battle' ? ' cur' : '') + (s.dead || s.down ? ' down' : '') + (BC.phase === 'battle' && ci >= 0 && i < ci ? ' done' : '') + '" role="listitem" data-uid="' + id + '" title="' + esc(u.name + ' · initiative ' + (u.initRoll != null ? u.initRoll : '–') + ' · HP ' + s.hp + '/' + s.maxHP + (s.conds.length ? ' · ' + s.conds.map(c => c.n).join(', ') : '')) + '">' + (u.initRoll != null ? '<span class="in">' + u.initRoll + '</span>' : '') + '<span class="cd">' + dots + '</span>' + App.emblem(u, { foe: u.team !== 'pc' }) + '<span class="nm">' + esc(u.name) + '</span><span class="hp"><i style="width:' + (pc * 100) + '%"></i></span></div>';
+    return '<button class="icard ' + u.team + (id === curId && BC.phase === 'battle' ? ' cur' : '') + (s.dead || s.down ? ' down' : '') + (BC.phase === 'battle' && ci >= 0 && i < ci ? ' done' : '') + '" type="button" data-uid="' + id + '" title="' + esc(u.name + ' · initiative ' + (u.initRoll != null ? u.initRoll : '–') + ' · HP ' + s.hp + '/' + s.maxHP + (s.conds.length ? ' · ' + s.conds.map(c => c.n).join(', ') : '')) + '">' + (u.initRoll != null ? '<span class="in">' + u.initRoll + '</span>' : '') + '<span class="cd">' + dots + '</span>' + App.emblem(u, { foe: u.team !== 'pc' }) + '<span class="nm">' + esc(u.name) + '</span><span class="hp"><i style="width:' + (pc * 100) + '%"></i></span></button>';
   }).join('');
   const cur = $('#initBar .icard.cur'); if (cur && cur.scrollIntoView) { const bar = $('#initBar'); const r = cur.offsetLeft - bar.clientWidth / 2 + cur.clientWidth / 2; bar.scrollLeft = Math.max(0, r); }
   BC.markPlates();
@@ -15311,7 +15657,7 @@ BC.renderUnitCard = (u, quiet) => {
   const sh = u.shield ? '<span class="econ-tag shield' + (u.shield.raised ? ' up' : '') + '" title="' + esc((u.shield.name || 'Shield') + (u.shield.raised ? ' (raised)' : '') + ' · hardness ' + (u.shield.hard || 0) + (u.shield.broken ? ' · broken' : '')) + '">' + ico('shield') + (u.shield.broken ? 'broken' : (u.shield.cur != null ? u.shield.cur + '/' + (u.shield.hp || u.shield.cur) : '')) + '</span>' : '';
   const sub = u.team === 'pc' ? '<span class="tag">Level ' + u.level + ' ' + esc(u.clsName || '') + '</span>' + (u.sheet ? ' · ' + esc(u.sheet.ancName) : '') : '<span class="tag">Creature ' + u.level + '</span> · ' + esc((u.traits || []).slice(0, 2).join(' '));
   el.className = 'unitcard' + (u.team !== 'pc' ? ' foe' : '');
-  el.innerHTML = '<div class="uc-head">' + App.emblem(u, { foe: u.team !== 'pc', size: 'lg', lv: u.level }) + '<div class="uc-name"><b>' + esc(u.name) + '</b><span>' + sub + '</span></div></div>' +
+  el.innerHTML = '<div class="uc-head">' + App.emblem(u, { foe: u.team !== 'pc', size: 'lg', lv: u.level }) + '<div class="uc-name"><b>' + esc(u.name) + '</b><span>' + sub + '</span></div><button class="unit-details" data-unit-details aria-label="Inspect ' + esc(u.name) + '">' + ico('info') + '</button></div>' +
     '<div class="hpline"><div class="hpt"><span>HP <b>' + s.hp + '</b>/' + s.maxHP + (s.temp ? ' <span class="tmp">+' + s.temp + ' temp</span>' : '') + '</span>' + (s.dying ? '<span class="dy">Dying ' + s.dying + '</span>' : s.dead ? '<span class="dy">Dead</span>' : '') + '</div><div class="hpbar' + (pc <= 25 ? ' low' : pc <= 55 ? ' mid' : '') + '"><i style="width:' + pc + '%"></i><em style="left:' + pc + '%;width:' + tp + '%"></em><div class="seg" style="--seg:' + segFor(s.maxHP) + '%"></div></div></div>' +
     '<div class="uc-stats"><div class="ac"><small>AC</small><b>' + B.stat(u, 'ac') + '</b></div><div><small>Fort</small><b>' + sv('fort') + '</b></div><div><small>Ref</small><b>' + sv('ref') + '</b></div><div><small>Will</small><b>' + sv('will') + '</b></div><div><small>Per</small><b>' + sv('per') + '</b></div><div><small>Spd</small><b>' + B.speedOf(u) + '</b></div></div>' +
     '<div class="uc-econ"><span class="pips">' + pips + react + '</span>' + map + (u.hero ? '<span class="econ-tag hero" title="Hero Points">' + ico('hero') + u.hero + '</span>' : '') + (u.focus ? '<span class="econ-tag focus" title="Focus Points">' + ico('focus') + u.focus.cur + '/' + u.focus.max + '</span>' : '') + sh + '</div>' +
@@ -15360,6 +15706,7 @@ BC.catalog = u => {
 const SHORT = { potion: 'Potion', raiseShield: 'Raise Shield', takeCover: 'Take Cover', medicine: 'Battle Medicine', mobility: 'Mobility' };
 const btnCls = a => a.id === 'cast' ? 'spell' : a.group === 'strike' ? 'strike' : a.group === 'skill' ? 'skill' : a.group === 'item' || a.id === 'potion' ? 'itm' : a.group === 'monster' ? 'monster' : a.group === 'class' ? 'class' : '';
 BC.renderActions = waiting => {
+  BC.renderCue();
   const B = BC.B; const bar = $('#actionBar'); const tabs = $('#trayTabs');
   const u = BC.cur;
   BC.hot = [];
@@ -15377,11 +15724,14 @@ BC.renderActions = waiting => {
   const anySpell = g.spell.some(s => !s.why);
   BC.keyMap.spells = { id: 'spells', name: 'Spells', costN: 0, why: g.spell.length ? (anySpell ? '' : 'No castable spells') : 'No spells', desc: 'Open your spellbook' };
   if (BC.tab === 'skills' && !g.skill.length) BC.tab = 'combat';
+  if (BC.tab === 'tactics' && !g.class.length && !g.tactic.length) BC.tab = 'combat';
   const sbOpen = !$('#spellbook').hidden;
-  tabs.innerHTML = '<button class="ttab' + (BC.tab === 'combat' && !sbOpen ? ' on' : '') + '" data-tab="combat" role="tab">' + ico('swords2') + 'Combat <span class="n">' + (g.strike.length + g.move.length + g.class.length + g.tactic.length) + '</span></button>' +
+  tabs.innerHTML = '<button class="ttab' + (BC.tab === 'combat' && !sbOpen ? ' on' : '') + '" data-tab="combat" role="tab">' + ico('swords2') + 'Combat <span class="n">' + (g.strike.length + g.move.length) + '</span></button>' +
+    (g.class.length || g.tactic.length ? '<button class="ttab' + (BC.tab === 'tactics' && !sbOpen ? ' on' : '') + '" data-tab="tactics" role="tab">' + ico('shield') + 'Tactics</button>' : '') +
     (g.skill.length ? '<button class="ttab' + (BC.tab === 'skills' && !sbOpen ? ' on' : '') + '" data-tab="skills" role="tab">' + ico('d20') + 'Skills <span class="n">' + g.skill.length + '</span></button>' : '') +
     (g.spell.length ? '<button class="ttab spells' + (sbOpen ? ' on' : '') + '" data-akey="spells" role="tab" title="Spellbook (B)">' + ico('spellbook') + 'Spells <span class="n">' + g.spell.filter(s => !s.why).length + '</span></button>' : '');
-  const groups = BC.tab === 'skills' ? [['Skills', g.skill]] : [['Strikes', g.strike], ['Move', g.move], ['Class', g.class], ['Tactics', g.tactic]];
+  const groups = BC.tab === 'skills' ? [['Skills', g.skill]] : BC.tab === 'tactics' ? [['Class', g.class], ['Tactics', g.tactic]] : [['Strikes', g.strike], ['Move', g.move]];
+  $$('[role="tab"]', tabs).forEach(b => b.setAttribute('aria-selected', b.classList.contains('on')));
   const btn = a => {
     const key = keyOf(a); const idx = BC.hot.length; BC.hot.push(key);
     const sel = BC.mode && BC.mode.key === key;
@@ -15389,7 +15739,7 @@ BC.renderActions = waiting => {
     if (a.sref) { const s = a.sref; cnt = App.sgn(s.atk.base + s.atk.item + B.mapPen(u, s)); if (s.qty != null && s.thrown) cnt += ' ×' + s.qty; if (s.reload && !s.loaded) cnt = 'empty'; }
     if (a.id === 'potion' && u.potions) cnt = '×' + u.potions.n;
     const cost = GLYPH(a.costN);
-    return '<button class="abtn ' + btnCls(a) + (a.why ? ' off' : '') + (sel ? ' sel' : '') + '" data-akey="' + esc(key) + '" aria-label="' + esc(a.name + (a.why ? ' (' + a.why + ')' : '')) + '" title="' + esc(a.name + (a.why ? ' — ' + a.why : '')) + '"><span class="cost' + (a.costN === 0 ? ' free' : '') + '">' + cost + '</span><span class="hk">' + (idx < 10 ? (idx + 1) % 10 : '') + '</span><span class="ai">' + ico(Icons.forAction(a)) + '</span><span class="nm">' + esc(SHORT[a.id] || a.name) + '</span>' + (cnt ? '<span class="cnt">' + esc(cnt) + '</span>' : '') + '</button>';
+    return '<button class="abtn ' + btnCls(a) + (a.why ? ' off' : '') + (sel ? ' sel' : '') + '" data-akey="' + esc(key) + '" aria-pressed="' + !!sel + '" aria-disabled="' + !!a.why + '" aria-label="' + esc(a.name + (a.why ? ' (' + a.why + ')' : '')) + '" title="' + esc(a.name + (a.why ? ' — ' + a.why : '')) + '"><span class="cost' + (a.costN === 0 ? ' free' : '') + '">' + cost + '</span><span class="hk">' + (idx < 10 ? (idx + 1) % 10 : '') + '</span><span class="ai">' + ico(Icons.forAction(a)) + '</span><span class="nm">' + esc(SHORT[a.id] || a.name) + '</span>' + (cnt ? '<span class="cnt">' + esc(cnt) + '</span>' : '') + '</button>';
   };
   bar.innerHTML = groups.filter(([, l]) => l.length).map(([n, l]) => '<div class="agroup"><span class="gl">' + n + '</span>' + l.map(btn).join('') + '</div>').join('');
   BC.renderEnd(); BC.showInfo();
@@ -15404,7 +15754,7 @@ BC.showInfo = key => {
   const el = $('#abilityInfo'); if (!BC.isPlayerTurn()) { el.innerHTML = ''; return; }
   let a = key ? BC.keyMap[key] : null;
   if (!a && BC.mode && BC.mode.act) a = BC.mode.act;
-  if (!a) { el.innerHTML = '<span class="d">Click a highlighted square to Stride: <span style="color:#6cc4f0">blue</span> ◆ · <span style="color:var(--amber)">gold</span> ◆◆ · <span style="color:#ff9a5c">orange</span> ◆◆◆. Choose an ability below or press 1–0.</span>'; return; }
+  if (!a) { el.innerHTML = '<span class="d">Tap a highlighted square to move · Blue ◆ · Gold ◆◆ · Orange ◆◆◆</span>'; return; }
   const tr = (a.traits || (a.cast && a.cast.spell && a.cast.spell.traits) || []).filter(t => t !== 'concentrate' && t !== 'manipulate');
   el.innerHTML = '<span class="dia-txt">' + GLYPH(a.costN) + '</span><b>' + esc(a.name) + '</b>' + (a.why ? '<span class="why">' + esc(a.why) + '</span>' : '') + (tr.length ? '<span class="trs">' + esc(tr.slice(0, 4).join(' · ')) + '</span>' : '') + '<span class="d">' + esc(a.desc || '') + '</span>';
 };
@@ -15461,6 +15811,7 @@ BC.toggleSpellbook = () => { if (!BC.isPlayerTurn()) return; const sb = $('#spel
 /* ================= CHOOSING ACTIONS ================= */
 BC.choose = key => {
   if (!BC.isPlayerTurn()) return;
+  BC.clearPreview(); BC.hideShot(); App.R.showPath(null);
   if (key === 'end') return BC.endTurn();
   if (key === 'spells') return BC.toggleSpellbook();
   const a = BC.keyMap[key]; if (!a) return;
@@ -15501,7 +15852,7 @@ BC.chooseSpell = (a, key) => {
   $('#costPick').innerHTML = '<div class="costpick"><b>' + esc(sp.name) + '</b>' + costs.map(n => '<button class="btn small" data-cost="' + n + '"><span class="dia-txt">' + GLYPH(n) + '</span> ' + esc(lab(n)) + '</button>').join('') + '</div>';
   $$('[data-cost]').forEach(b => b.onclick = () => go(+b.dataset.cost));
 };
-BC.cancel = () => { BC.mode = { type: 'move' }; BC.tgtSel = null; BC.tgtHover = null; $('#tip').hidden = true; BC.hideShot(); App.R.setTargeted([]); BC.ring('sel', null, '#f5b942'); BC.renderActions(); BC.drawMode(); };
+BC.cancel = () => { BC.clearPreview(); BC.mode = { type: 'move' }; BC.tgtSel = null; BC.tgtHover = null; $('#tip').hidden = true; BC.hideShot(); App.R.setTargeted([]); BC.ring('sel', null, '#f5b942'); BC.renderActions(); BC.drawMode(); };
 
 /* ================= MODE DRAWING ================= */
 BC.drawMode = () => {
@@ -15629,6 +15980,7 @@ BC.renderTargets = () => {
   const host = $('#targetBar'); const B = BC.B, u = BC.cur, m = BC.mode;
   if (!B || !BC.isPlayerTurn() || !u) { host.innerHTML = ''; return; }
   const tm = isTargetMode(m); const area = m && m.type === 'area';
+  if (compact() && !tm && !area) { host.innerHTML = ''; BC.markPlates(); return; }
   const list = BC.candidates().slice(0, 12);
   host.innerHTML = list.map(t => {
     const s = BC.disp[t.id] || B.snap(t); const hp = Math.max(0, s.hp / Math.max(1, s.maxHP));
@@ -15637,7 +15989,7 @@ BC.renderTargets = () => {
     else if (area && m.spell && m.spell.save || area && !m.spell) { const sp = m.spell; const dc = sp ? B.spellDC(u) : B.classDC(u); const kind = sp ? sp.save : 'ref'; if (kind) { const p = PF.pdeg(B.stat(t, kind), dc); const f = pct(p[0] + p[1]); pctTxt = f + '<small>%fail</small>'; cls = f >= 65 ? ' hi' : f >= 40 ? ' mid' : ' lo'; } }
     else pctTxt = '<span class="num" style="font-size:13px">' + s.hp + '<small>hp</small></span>';
     const picked = m && m.picked && m.picked.includes(t.id);
-    return '<button class="tchip ' + t.team + (why && !picked ? ' off' : '') + (BC.tgtSel === t.id && tm ? ' sel' : '') + (picked ? ' picked' : '') + cls + '" role="listitem" data-tgt="' + t.id + '" title="' + esc(t.name + (why ? ' — ' + why : '')) + '">' + App.emblem(t, { foe: t.team !== 'pc' }) + '<span class="pct">' + pctTxt + '</span><span class="tn">' + esc(t.name) + '</span><span class="thp"><i style="width:' + (hp * 100) + '%"></i></span></button>';
+    return '<button class="tchip ' + t.team + (why && !picked ? ' off' : '') + (BC.tgtSel === t.id && tm ? ' sel' : '') + (picked ? ' picked' : '') + cls + '" data-tgt="' + t.id + '" title="' + esc(t.name + (why ? ' — ' + why : '')) + '">' + App.emblem(t, { foe: t.team !== 'pc' }) + '<span class="pct">' + pctTxt + '</span><span class="tn">' + esc(t.name) + '</span><span class="thp"><i style="width:' + (hp * 100) + '%"></i></span></button>';
   }).join('');
   BC.markPlates();
   const t = BC.tgtShown(); BC.ring('sel', tm && t ? t.id : null, '#f5b942');
@@ -15675,6 +16027,16 @@ BC.castPicked = () => { const m = BC.mode; if (m && m.type === 'spell' && m.pick
 
 /* ================= SHOT PREVIEW PANEL ================= */
 BC.hideShot = () => { $('#shotPanel').hidden = true; };
+// Keep the decision and confirm button visible; the complete PF2e math is one tap away.
+BC.shotDetails = el => {
+  if (el.classList.contains('bad')) return;
+  const rows = [...el.children].filter(n => n.matches('.distr, .dlegend, .vs, .sect:not(.notes)'));
+  if (!rows.length) return;
+  const details = document.createElement('details'); details.className = 'roll-details';
+  details.innerHTML = '<summary>Roll & damage details</summary>';
+  rows.forEach(n => details.appendChild(n));
+  el.insertBefore(details, el.querySelector('.sh-foot'));
+};
 const modRows = (list, base) => {
   const all = list.filter(x => x && x.v); const used = new Set(PF.sumMods(all).used);
   return all.map(x => { const v = x.v; const nm = x.s === 'base' ? (base || 'base') : x.s || (x.t === 'item' ? 'item' : x.t); return '<div class="mrow' + (used.has(x) ? '' : ' off') + '" title="' + esc((x.t === 'circ' ? 'circumstance' : x.t === 'unt' ? 'untyped' : x.t) + (used.has(x) ? '' : ' — does not stack')) + '"><span>' + esc(nm) + '</span><span class="v ' + (x.s === 'base' ? 'z' : v > 0 ? 'p' : 'n') + '">' + (x.s === 'base' ? v : App.sgn(v)) + '</span></div>'; }).join('');
@@ -15739,8 +16101,9 @@ BC.renderShot = () => {
   if (m.type === 'spell' && m.need > 1) notes.push(['dim', 'Targets chosen ' + m.picked.length + ' of ' + m.need + (m.picked.length ? ': ' + m.picked.map(id => B.get(id).name).join(', ') : '')]);
   if (notes.length) h += '<div class="sect notes">' + notes.map(([k, txt]) => k === 'warn' ? '<div class="warn">' + ico('warn') + esc(txt) + '</div>' : k === 'ok' ? '<div class="ok">' + ico('check') + esc(txt) + '</div>' : '<div class="dim">' + esc(txt) + '</div>').join('') + '</div>';
   const multi = m.type === 'spell' && m.need > 1;
-  h += '<div class="sh-foot">' + (e.why ? '<button class="btn ghost" data-shot="cancel">Cancel</button>' : '<button class="btn primary" data-shot="go">' + (multi ? 'Add target ' + (m.picked.length + 1) + '/' + m.need : 'Confirm <span class="dia-txt" style="color:inherit">' + cost + '</span>') + '</button>' + (multi && m.picked.length ? '<button class="btn" data-shot="cast">Cast now</button>' : '<span class="hint">Enter · Tab</span>')) + '</div>';
+  h += '<div class="sh-foot">' + (e.why ? '<button class="btn ghost" data-shot="cancel">Cancel</button>' : '<button class="btn primary" data-shot="go">' + (multi ? 'Add target ' + (m.picked.length + 1) + '/' + m.need : 'Confirm <span class="dia-txt" style="color:inherit">' + cost + '</span>') + '</button>' + (multi && m.picked.length ? '<button class="btn" data-shot="cast">Cast now</button>' : '<button class="btn ghost" data-shot="cancel">Cancel</button>')) + '</div>';
   el.className = 'shot' + (e.why ? ' bad' : ''); el.innerHTML = h; el.hidden = false; el.dataset.tid = t.id;
+  BC.shotDetails(el);
 };
 BC.renderAreaShot = () => {
   const el = $('#shotPanel'); const B = BC.B, u = BC.cur, m = BC.mode; const shape = m.shape; const p = m.areaP;
@@ -15756,7 +16119,7 @@ BC.renderAreaShot = () => {
   else h += '<div class="sect"><div class="dim">No creatures in the area.</div></div>';
   if (sp && sp.dmg) h += '<div class="sect"><h5>Damage</h5><div class="dmg">' + esc(dmgTxt(sp.dmg(m.cast.rank, {}))) + (sp.basic ? ' <span class="avg">basic ' + SAVEN[sp.save] + '</span>' : '') + '</div></div>';
   if (allies.length) h += '<div class="sect notes"><div class="warn">' + ico('warn') + 'Also hits ' + esc(allies.map(x => x.name).join(', ')) + '</div></div>';
-  h += '<div class="sh-foot"><button class="btn primary" data-shot="area"' + (m.areaBad ? ' disabled' : '') + '>Confirm <span class="dia-txt" style="color:inherit">' + GLYPH(m.actions || m.act.costN) + '</span></button><span class="hint">Click · Enter</span></div>';
+  h += '<div class="sh-foot"><button class="btn ghost" data-shot="cancel">Cancel</button><button class="btn primary" data-shot="area"' + (m.areaBad ? ' disabled' : '') + '>Confirm <span class="dia-txt" style="color:inherit">' + GLYPH(m.actions || m.act.costN) + '</span></button></div>';
   el.className = 'shot' + (m.areaBad ? ' bad' : ''); el.innerHTML = h; el.hidden = false;
 };
 
@@ -15835,6 +16198,36 @@ BC.planApproach = t => {
 };
 
 /* ================= CLICK ================= */
+BC.previewMove = pk => {
+  const B = BC.B, u = BC.cur, m = BC.mode;
+  if (!BC.isPlayerTurn() || !m || !B.canEnd(u, pk.x, pk.y) || (pk.x === u.x && pk.y === u.y)) return false;
+  const teleport = m.type === 'tile';
+  const P = m.type === 'move' && !m.act ? BC.P : m.P;
+  const path = teleport ? [[u.x, u.y], [pk.x, pk.y]] : P && B.pathFrom(P, pk.x, pk.y);
+  if (!path || path.length < 2 || (teleport && B.distPt(u, pk.x, pk.y) > (m.spell.range || 0))) {
+    BC.clearPreview(); BC.hideShot(); App.R.showPath(null); BC.flash('Choose a highlighted, reachable square'); return false;
+  }
+  const cost = !m.act ? B.splitStrides(u, path, B.speedOf(u)).length : m.actions || m.act.costN || 1;
+  const ft = teleport ? B.distPt(u, pk.x, pk.y) : P.best.get(pk.x + ',' + pk.y);
+  const tile = B.tile(pk.x, pk.y);
+  const safe = teleport || m.type === 'step' || (m.act && m.act.id === 'mobility');
+  const reactions = safe ? [] : BC.rsAlong(u, path);
+  const lava = path.some(([x, y]) => B.tile(x, y).hazard);
+  BC.pendingMove = { pk: Object.assign({}, pk), unit: u, mode: m, gen: BC.gen };
+  App.R.showPath(path, cost > 1 ? '#f5b942' : '#6cc4f0');
+  const el = $('#shotPanel'); el.className = 'shot move-preview';
+  el.innerHTML = '<div class="sh-head"><span class="sh-ico">' + ico(teleport ? 'spellbook' : 'boots') + '</span><div class="sh-t"><b>' + esc(m.act ? m.act.name : 'Stride') + ' · ' + ft + ' ft</b><small>' + cost + ' action' + (cost === 1 ? '' : 's') + ' · ' + Math.max(0, B.actsTotal(u) - cost) + ' left after moving</small></div><span class="sh-cost">' + GLYPH(cost) + '</span></div>' +
+    '<div class="move-terrain">' + esc(PF.TERR[tile.terr].name) + (tile.diff ? ' · difficult terrain' : '') + (tile.h ? ' · elevation ' + tile.h * 5 + ' ft' : '') + '</div>' +
+    (reactions.length || lava ? '<div class="sect notes">' + (reactions.length ? '<div class="warn">' + ico('warn') + 'Provokes Reactive Strike: ' + esc(reactions.join(', ')) + '</div>' : '') + (lava ? '<div class="warn">' + ico('fire') + 'This route crosses damaging lava.</div>' : '') + '</div>' : '') +
+    '<div class="sh-foot"><button class="btn ghost" data-shot="cancel">Cancel</button><button class="btn primary" data-shot="move">Move here ' + GLYPH(cost) + '</button></div>';
+  el.hidden = false; $('#tip').hidden = true;
+  App.feedback('select'); return true;
+};
+BC.confirmMove = () => {
+  const p = BC.pendingMove;
+  if (!p || !BC.isPlayerTurn() || p.unit !== BC.cur || p.mode !== BC.mode || p.gen !== BC.gen) { BC.clearPreview(); return; }
+  BC.clearPreview(); BC.click(p.pk, false);
+};
 BC.click = (pk, touch) => {
   const B = BC.B; if (!B) return;
   if (BC.phase === 'deploy') {
@@ -15846,6 +16239,12 @@ BC.click = (pk, touch) => {
   const u = BC.cur, m = BC.mode || { type: 'move' };
   if (!pk) return;
   const t = pk.unit ? B.get(pk.unit) : null;
+  if (touch && ['move', 'move2', 'step', 'tile'].includes(m.type) && !(m.type === 'move' && !m.act && t)) {
+    const prev = BC.pendingMove;
+    if (prev && prev.mode === m && prev.unit === u && prev.pk.x === pk.x && prev.pk.y === pk.y) BC.confirmMove();
+    else { BC.clearPreview(); BC.hideShot(); App.R.showPath(null); BC.previewMove(pk); }
+    return;
+  }
   // touch: first tap previews, second tap on the same spot confirms
   if (touch) { const k = (t ? 'u' + t.id : pk.x + ',' + pk.y) + '|' + (m.key || m.type); if (BC._tp !== k && !(m.type === 'move' && !m.act && t)) { BC._tp = k; if (isTargetMode(m) && t) { if (!BC.evalTarget(t).why) BC.selectTarget(t.id); else BC.flash(BC.evalTarget(t).why); return; } BC.hover(pk, 0, 0); if (m.type !== 'unit' && m.type !== 'spell') return; } BC._tp = null; }
   if (m.type === 'move' && !m.act) {
@@ -15866,6 +16265,7 @@ BC.click = (pk, touch) => {
 BC.confirmArea = () => { const m = BC.mode; if (!m || m.type !== 'area' || !m.areaP) return; if (m.areaBad) { BC.flash(m.areaBad); return; } BC.act(m.act.id === 'cast' ? 'cast' : m.act.id, Object.assign({}, m.p, m.areaP)); };
 BC.confirm = () => {
   const m = BC.mode; if (!BC.isPlayerTurn() || !m) return;
+  if (BC.pendingMove) return BC.confirmMove();
   if (m.type === 'area') return BC.confirmArea();
   if (m.type === 'spell' && m.picked.length && (!BC.tgtSel || m.picked.includes(BC.tgtSel) || BC.evalTarget(BC.B.get(BC.tgtSel)).why)) return BC.castPicked();
   if (isTargetMode(m) && BC.tgtSel) BC.confirmTarget(BC.B.get(BC.tgtSel));
@@ -15874,36 +16274,59 @@ BC.confirm = () => {
 /* ================= INPUT BINDING ================= */
 BC.bind = () => {
   const cv = App.R.renderer.domElement;
-  let down = null; let raf = 0; let lastMove = null;
+  let down = null, gesture = null, raf = 0, lastMove = null;
+  const pointers = new Map();
+  const measure = () => {
+    const [a, b] = [...pointers.values()];
+    return { distance: Math.max(1, Math.hypot(b.x - a.x, b.y - a.y)), angle: Math.atan2(b.y - a.y, b.x - a.x), x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 };
+  };
+  const resetPointers = () => { pointers.clear(); down = null; gesture = null; };
   cv.addEventListener('contextmenu', e => e.preventDefault());
-  cv.addEventListener('pointerdown', e => { down = { x: e.clientX, y: e.clientY, b: e.button, moved: false, lx: e.clientX, ly: e.clientY }; cv.setPointerCapture(e.pointerId); });
+  cv.addEventListener('pointerdown', e => {
+    pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    cv.setPointerCapture(e.pointerId);
+    if (pointers.size > 1) { down = null; gesture = measure(); $('#tip').hidden = true; return; }
+    down = { id: e.pointerId, x: e.clientX, y: e.clientY, b: e.button, moved: false, lx: e.clientX, ly: e.clientY };
+  });
   cv.addEventListener('pointermove', e => {
-    if (down) {
+    if (pointers.has(e.pointerId)) pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    if (pointers.size > 1) {
+      const next = measure();
+      if (gesture) {
+        App.R.zoom(gesture.distance / next.distance);
+        const angle = Math.atan2(Math.sin(next.angle - gesture.angle), Math.cos(next.angle - gesture.angle));
+        App.R.rotate(-angle);
+        App.R.pan(-(next.x - gesture.x) * .035, -(next.y - gesture.y) * .035);
+      }
+      gesture = next; return;
+    }
+    if (down && down.id === e.pointerId) {
       const dx = e.clientX - down.lx, dy = e.clientY - down.ly; down.lx = e.clientX; down.ly = e.clientY;
-      if (Math.abs(e.clientX - down.x) + Math.abs(e.clientY - down.y) > 6) down.moved = true;
-      if (down.moved) { if (down.b === 2 || down.b === 1 || e.shiftKey) { App.R.rotate(-dx * 0.006); App.R.tilt(dy * 0.004); } else App.R.pan(-dx * 0.035, -dy * 0.035); }
+      if (Math.hypot(e.clientX - down.x, e.clientY - down.y) > (e.pointerType === 'touch' ? 10 : 6)) down.moved = true;
+      if (down.moved) { $('#tip').hidden = true; if (down.b === 2 || down.b === 1 || e.shiftKey) { App.R.rotate(-dx * .006); App.R.tilt(dy * .004); } else App.R.pan(-dx * .035, -dy * .035); }
       return;
     }
     if (e.pointerType === 'touch') return;
     lastMove = e; if (!raf) raf = requestAnimationFrame(() => { raf = 0; if (App.screen === 'battle' && BC.B && lastMove) BC.hover(App.R.pick(lastMove.clientX, lastMove.clientY), lastMove.clientX, lastMove.clientY); });
   });
   cv.addEventListener('pointerup', e => {
-    const d = down; down = null; if (!d) return;
+    const d = down; pointers.delete(e.pointerId); down = null; gesture = null;
+    if (!d || d.id !== e.pointerId) return;
     if (!d.moved && d.b === 0 && App.screen === 'battle') { const pk = App.R.pick(e.clientX, e.clientY); BC.click(pk, e.pointerType === 'touch'); if (BC.B && e.pointerType !== 'touch') BC.hover(pk, e.clientX, e.clientY); }
     if (!d.moved && d.b === 2 && App.screen === 'battle') BC.cancel();
   });
+  cv.addEventListener('pointercancel', resetPointers);
+  cv.addEventListener('lostpointercapture', e => { if (pointers.has(e.pointerId)) resetPointers(); });
+  G.addEventListener('blur', resetPointers);
   cv.addEventListener('pointerleave', () => { $('#tip').hidden = true; if (BC.tgtHover) { BC.tgtHover = null; BC.renderShot(); BC.renderTargets(); } });
-  cv.addEventListener('wheel', e => { e.preventDefault(); App.R.zoom(e.deltaY > 0 ? 1.1 : 0.9); }, { passive: false });
-  let pinch = null;
-  cv.addEventListener('touchstart', e => { if (e.touches.length === 2) { const [a, b] = e.touches; pinch = Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY); down = null; } }, { passive: true });
-  cv.addEventListener('touchmove', e => { if (e.touches.length === 2 && pinch) { const [a, b] = e.touches; const d = Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY); App.R.zoom(pinch / d); pinch = d; } }, { passive: true });
-  cv.addEventListener('touchend', () => { pinch = null; }, { passive: true });
+  cv.addEventListener('wheel', e => { e.preventDefault(); App.R.zoom(e.deltaY > 0 ? 1.1 : .9); }, { passive: false });
   document.addEventListener('keydown', e => {
     if (App.screen !== 'battle' || !$('#modal').hidden || e.target.tagName === 'INPUT' && e.target.type !== 'checkbox' || e.target.tagName === 'SELECT' || e.target.tagName === 'TEXTAREA') return;
     const k = e.key.toLowerCase();
+    if ((k === 'enter' || k === ' ') && e.target.closest('button, summary, a')) return;
     if (['w', 'a', 's', 'd', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright'].includes(k) && !e.ctrlKey && !e.metaKey) { BC.keys[k] = true; e.preventDefault(); return; }
     if (k === 'q') App.R.rotate(Math.PI / 4); if (k === 'e') App.R.rotate(-Math.PI / 4);
-    if (k === 'escape') { if (!$('#spellbook').hidden) { $('#spellbook').hidden = true; BC.renderActions(); } else if (BC.mode && BC.mode.type !== 'move' || BC.mode && BC.mode.act) BC.cancel(); else if (!$('#inspect').hidden) $('#inspect').hidden = true; else if (!$('#helpPanel').hidden) $('#helpPanel').hidden = true; }
+    if (k === 'escape') { if (BC.pendingMove) { BC.cancel(); return; } if (!$('#spellbook').hidden) { $('#spellbook').hidden = true; BC.renderActions(); } else if (BC.mode && BC.mode.type !== 'move' || BC.mode && BC.mode.act) BC.cancel(); else if (!$('#inspect').hidden) $('#inspect').hidden = true; else if (!$('#helpPanel').hidden) $('#helpPanel').hidden = true; }
     if (k === ' ') { e.preventDefault(); if (BC.phase === 'deploy') BC.begin(); else BC.endTurn(); }
     if (k === 'enter') { if (BC.phase === 'deploy') { BC.begin(); return; } e.preventDefault(); BC.confirm(); }
     if (k === 'tab') { if (isTargetMode(BC.mode) && BC.isPlayerTurn()) { e.preventDefault(); BC.cycleTarget(e.shiftKey ? -1 : 1); } }
@@ -15934,13 +16357,26 @@ BC.bind = () => {
   $('#actionBar').addEventListener('mouseleave', () => BC.showInfo());
   $('#spellbook').addEventListener('click', e => { const b = e.target.closest('[data-akey]'); if (b) BC.choose(b.dataset.akey); });
   $('#spellbook').addEventListener('mouseover', e => { const b = e.target.closest('[data-akey]'); if (b) BC.showInfo(b.dataset.akey); });
-  $('#shotPanel').addEventListener('click', e => { const b = e.target.closest('[data-shot]'); if (!b) return; const k = b.dataset.shot; if (k === 'go') { const t = BC.B && BC.B.get($('#shotPanel').dataset.tid); if (t) { BC.tgtSel = t.id; BC.confirmTarget(t); } } if (k === 'cast') BC.castPicked(); if (k === 'area') BC.confirmArea(); if (k === 'cancel') BC.cancel(); });
+  $('#shotPanel').addEventListener('click', e => { const b = e.target.closest('[data-shot]'); if (!b) return; const k = b.dataset.shot; if (k === 'go') { const t = BC.B && BC.B.get($('#shotPanel').dataset.tid); if (t) { BC.tgtSel = t.id; BC.confirmTarget(t); } } if (k === 'cast') BC.castPicked(); if (k === 'area') BC.confirmArea(); if (k === 'cancel') BC.cancel(); if (k === 'move') BC.confirmMove(); });
   const ib = $('#initBar');
   ib.addEventListener('click', e => { const c = e.target.closest('[data-uid]'); if (!c || !BC.B) return; const u = BC.B.get(c.dataset.uid); if (!u) return; App.R.focus(u.x + u.sq / 2, u.y + u.sq / 2); BC.inspect(u); });
   ib.addEventListener('mouseover', e => { const c = e.target.closest('[data-uid]'); BC.ring('hl', c ? c.dataset.uid : null, '#4bd8e8'); $$('.icard', ib).forEach(x => x.classList.toggle('hl', x === c)); });
   ib.addEventListener('mouseleave', () => { BC.ring('hl', null, '#4bd8e8'); $$('.icard', ib).forEach(x => x.classList.remove('hl')); });
   $('#btnBegin').onclick = () => BC.begin();
-  $('#btnLeave').onclick = () => { BC.teardown(); App.show('setup'); };
+  $('#btnLeave').onclick = () => {
+    const leave = () => { App.closeModal(); BC.teardown(); App.show('setup'); };
+    if (BC.phase !== 'battle' || !BC.B || BC.B.over) return leave();
+    App.modal(App.mhead('Leave this battle?') + '<p>Your encounter setup is kept, but this battle’s progress will be lost.</p><div class="row gap"><button class="btn primary" id="keepPlaying">Keep playing</button><button class="btn ghost" id="leaveBattle">Leave battle</button></div>', el => {
+      $('#keepPlaying', el).onclick = App.closeModal; $('#leaveBattle', el).onclick = leave;
+    });
+  };
+  $('#battleGuide').onclick = e => { if (e.target.closest('[data-guide-close]')) { BC.guideClosed = true; BC.renderGuide(); } };
+  $$('[data-camera]').forEach(b => b.onclick = () => {
+    const kind = b.dataset.camera;
+    if (kind === 'left' || kind === 'right') App.R.rotate((kind === 'left' ? 1 : -1) * Math.PI / 4);
+    else { const u = BC.cur || BC.sel; if (u) App.R.focus(u.x + u.sq / 2, u.y + u.sq / 2); }
+  });
+  $('#unitCard').addEventListener('click', e => { if (e.target.closest('[data-unit-details]') && BC.shown) BC.inspect(BC.shown); });
   $('#btnLog').onclick = () => BC.toggleLog();
   $('#logClose').onclick = () => BC.toggleLog(false);
   $('#btnSettings').onclick = App.openSettings;
@@ -15951,7 +16387,7 @@ BC.bind = () => {
   G.addEventListener('tat:settings', () => { if (BC.B && BC.isPlayerTurn()) BC.renderEnd(); });
 };
 BC.isPlayerTurnRaw = () => BC.B && BC.cur && BC.B.cur === BC.cur && !BC.busy && BC.phase === 'battle' && !BC.B.over;
-BC.advanceFromPlayer = async () => { const B = BC.B, u = BC.cur; BC.busy = true; BC.renderActions(); $('#targetBar').innerHTML = ''; B.aiTurn(u); await BC.play(); if (!B.over && B.cur === u) B.endTurn(u); await BC.play(); BC.busy = false; BC.advance(); };
+BC.advanceFromPlayer = async () => { const B = BC.B, u = BC.cur, gen = BC.gen; BC.clearPreview(); BC.busy = true; BC.renderActions(); $('#targetBar').innerHTML = ''; B.aiTurn(u); await BC.play(); if (gen !== BC.gen) return; if (!B.over && B.cur === u) B.endTurn(u); await BC.play(); if (gen !== BC.gen) return; BC.busy = false; BC.advance(); };
 })(typeof window !== 'undefined' ? window : globalThis);
 
 PF.App.boot();
