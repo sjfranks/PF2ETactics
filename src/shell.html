@@ -15,11 +15,14 @@
   <section id="home" class="screen">
     <div class="home-wrap">
       <div class="home-panel">
-        <div class="eyebrow"><span class="acts" aria-hidden="true">◆◆◆</span> Pathfinder Second Edition · tactical rules sandbox</div>
+        <div class="eyebrow"><span class="acts" aria-hidden="true">◆◆◆</span> Pathfinder Second Edition</div>
         <h1 class="title">Three&#8209;Action<br><span>Tactics</span></h1>
-        <p class="lede">Build heroes from level 1 to 20, budget encounters with the GM Core XP tables, and fight them turn by turn on a 3D grid. Every Strike, save, flank and Reactive Strike is rolled and explained.</p>
+        <p class="home-tagline">Three actions. Endless possibilities.</p>
+        <p class="lede">Lead your party into danger. Find the flank, land the critical, and make every action count.</p>
+        <div class="home-facts"><span>Level 1–20 heroes</span><span>26 encounters</span><span>Every roll explained</span></div>
         <nav class="home-menu" aria-label="Main menu">
-          <button class="menu-card primary" id="btnQuick"><span class="mc-ico" data-ico="swords2"></span><span class="mc-txt"><b>Quick battle</b><small>A random prebuilt encounter with the pregenerated heroes</small></span><span class="mc-go" data-ico="next"></span></button>
+          <button class="menu-card primary" id="btnQuick"><span class="mc-ico" data-ico="swords2"></span><span class="mc-txt"><b>Quick battle</b><small>A ready-to-play adventure · levels 1–3</small></span><span class="mc-go" data-ico="next"></span></button>
+          <button class="menu-card learn" id="btnLearn"><span class="mc-ico" data-ico="d20"></span><span class="mc-txt"><b>First skirmish</b><small>Learn the rhythm with a guided level-1 battle</small></span><span class="mc-go" data-ico="next"></span></button>
           <button class="menu-card" id="btnSetup"><span class="mc-ico" data-ico="map"></span><span class="mc-txt"><b>Build a skirmish</b><small>Pick heroes, monsters, threat and battlefield</small></span><span class="mc-go" data-ico="next"></span></button>
           <button class="menu-card" id="btnRoster"><span class="mc-ico" data-ico="users"></span><span class="mc-txt"><b>Characters</b><small>Create and level your own heroes</small></span><span class="mc-go" data-ico="next"></span></button>
         </nav>
@@ -27,7 +30,7 @@
           <button class="btn ghost small" id="btnHomeSettings"><span data-ico="gear"></span> Settings</button>
           <button class="btn ghost small" id="btnHomeHelp"><span data-ico="help"></span> How to play</button>
         </div>
-        <div class="home-foot">Remaster rules (Player Core, GM Core, Monster Core). Unofficial fan tool; not affiliated with or endorsed by Paizo. Contains material from Pathfinder Monster Core and Player Core (Paizo Inc.), used under the ORC License. <a href="https://sjfranks.github.io/PF2ETactics/" target="_blank" rel="noopener">Play online</a> · <a href="https://github.com/sjfranks/PF2ETactics" target="_blank" rel="noopener">Source on GitHub</a></div>
+        <details class="home-legal"><summary>Unofficial fan project · Credits &amp; license</summary><div class="home-foot">Remaster rules (Player Core, GM Core, Monster Core). Unofficial fan tool; not affiliated with or endorsed by Paizo. Contains material from Pathfinder Monster Core and Player Core (Paizo Inc.), used under the ORC License. <a href="https://sjfranks.github.io/PF2ETactics/" target="_blank" rel="noopener">Play online</a> · <a href="https://github.com/sjfranks/PF2ETactics" target="_blank" rel="noopener">Source on GitHub</a></div></details>
       </div>
       <aside class="home-side" aria-label="How a turn works">
         <div class="hs-title">Every turn</div>
@@ -131,7 +134,7 @@
         <button class="ibtn" id="btnLeave" title="Leave battle" aria-label="Leave battle"><span data-ico="back"></span></button>
         <div class="roundbox"><small id="roundSub">Encounter</small><b id="roundLbl">Deployment</b></div>
       </div>
-      <div class="init" id="initBar" role="list" aria-label="Initiative order"></div>
+      <div class="init" id="initBar" role="group" aria-label="Initiative order"></div>
       <div class="hud-tools">
         <label class="ibtn tgl" title="Autoplay: let the AI play your heroes"><input type="checkbox" id="autoParty"><span data-ico="auto"></span><span class="tl">Auto</span></label>
         <label class="spd" title="Animation speed"><span data-ico="speed"></span><select id="animSpeed" aria-label="Animation speed"><option value="0.75">Slow</option><option value="1" selected>Normal</option><option value="2">Fast</option><option value="5">Instant</option></select></label>
@@ -141,6 +144,12 @@
       </div>
     </div>
     <div class="banner" id="banner" hidden aria-live="polite"></div>
+    <div class="camera-tools" role="group" aria-label="Battlefield camera">
+      <button class="ibtn" data-camera="left" aria-label="Rotate camera left" title="Rotate left">↶</button>
+      <button class="ibtn" data-camera="focus" aria-label="Focus active hero" title="Focus active hero"><span data-ico="target"></span></button>
+      <button class="ibtn" data-camera="right" aria-label="Rotate camera right" title="Rotate right">↷</button>
+    </div>
+    <aside class="battle-guide" id="battleGuide" hidden aria-label="Skirmish guide"></aside>
     <div class="deploybar" id="deployBar" hidden>
       <span data-ico="flag" class="db-ico"></span>
       <div><b>Deployment</b><span>Select a hero, then a highlighted square in the blue zone to reposition. Enemies hold the red zone.</span></div>
@@ -154,9 +163,10 @@
     <div class="tip" id="tip" hidden></div>
     <aside class="shot" id="shotPanel" hidden aria-live="polite"></aside>
     <div class="hud-bottom" id="hudBottom">
+      <div class="turn-cue" id="turnCue" role="status"></div>
       <div class="unitcard" id="unitCard"></div>
       <div class="tray-wrap" id="trayWrap">
-        <div class="targets" id="targetBar" role="list" aria-label="Targets"></div>
+        <div class="targets" id="targetBar" role="group" aria-label="Targets"></div>
         <div class="ainfo" id="abilityInfo"></div>
         <div class="tray" id="tray">
           <div class="tray-tabs" id="trayTabs" role="tablist"></div>
@@ -170,6 +180,8 @@
     <div class="help" id="helpPanel" hidden>
       <div class="row" style="justify-content:space-between"><h3>Controls</h3><button class="x" id="btnHelpClose" aria-label="Close">×</button></div>
       <ul class="keys">
+        <li><b>On a phone:</b> drag with one finger to pan. Pinch to zoom; twist two fingers to rotate. Use the camera buttons to rotate or return to your hero.</li>
+        <li><b>Tap a square</b> to preview the route and action cost, then tap <b>Move here</b> to commit. Tap a target to preview your chances, then confirm. Cancel costs no actions.</li>
         <li><kbd>W A S D</kbd> / arrows or <b>left-drag</b> — pan</li>
         <li><kbd>Q</kbd> <kbd>E</kbd> or <b>right-drag</b> — rotate · <b>wheel</b> / pinch — zoom</li>
         <li><kbd>1</kbd>–<kbd>0</kbd> — abilities in the open tab · <kbd>Tab</kbd> / <kbd>Shift+Tab</kbd> — cycle targets</li>

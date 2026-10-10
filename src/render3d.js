@@ -37,6 +37,13 @@ PF.Render = function (host) {
   const cam = { tx: 10, tz: 10, yaw: 0.6, pitch: 0.95, dist: 26, gyaw: 0.6, gtx: 10, gtz: 10, gdist: 26, gpitch: 0.95, ty: 0, gty: 0 };
   R.cam = cam;
   const tgtV = new THREE.Vector3();
+  let insetTop = 0, insetBottom = 0;
+  R.setViewportInsets = (top, bottom) => {
+    if (top === insetTop && bottom === insetBottom) return;
+    insetTop = top; insetBottom = bottom;
+    const w = host.clientWidth || 800, h = host.clientHeight || 600;
+    camera.setViewOffset(w, h, 0, (bottom - top) / 2, w, h);
+  };
   const applyCam = () => {
     const cp = Math.cos(cam.pitch), sp = Math.sin(cam.pitch);
     camera.position.set(cam.tx + Math.sin(cam.yaw) * cp * cam.dist, cam.ty + sp * cam.dist, cam.tz + Math.cos(cam.yaw) * cp * cam.dist);
@@ -46,6 +53,7 @@ PF.Render = function (host) {
     const w = host.clientWidth || 800, h = host.clientHeight || 600;
     renderer.setSize(w, h, false); renderer.domElement.style.width = w + 'px'; renderer.domElement.style.height = h + 'px';
     camera.aspect = w / h; camera.fov = w / h < 0.8 ? 55 : 38; camera.updateProjectionMatrix();
+    camera.setViewOffset(w, h, 0, (insetBottom - insetTop) / 2, w, h);
     R.post.setSize(w, h, renderer.getPixelRatio());
   };
   R.focus = (x, y, instant) => { cam.gtx = x; cam.gtz = y; cam.gty = R.tileTop ? R.tileTop(x, y) * 0.6 : 0; if (instant) { cam.tx = x; cam.tz = y; cam.ty = cam.gty; } };
@@ -60,6 +68,7 @@ PF.Render = function (host) {
   // action camera: swing behind the attacker toward the target, then restore
   R.camFollow = () => { const s = PF.App && PF.App.settings; return !s || s.follow !== false; };
   R.actionCam = (aid, bid) => {
+    if (G.matchMedia('(prefers-reduced-motion: reduce)').matches) return null;
     const a = R.units[aid], b = R.units[bid]; if (!a || !b || !R.camFollow()) return null;
     const saved = { gtx: cam.gtx, gtz: cam.gtz, gdist: cam.gdist, gyaw: cam.gyaw, gpitch: cam.gpitch, gty: cam.gty };
     const pa = a.g.position, pb = b.g.position;
@@ -332,7 +341,7 @@ PF.Render = function (host) {
       if (deg >= 2) R.fx.burst(deg === 3 ? 'crit' : spell ? 'magic' : 'impact', R.anchor(bid, 'chest'), { color: R.fxColor(c) });
       R.hitReact(b, deg, deg === 3);
     }
-    if (restore) { await R.wait(0.35); restore(); }
+    if (restore) { await R.wait(0.35); if (R.units[aid] === a && R.units[bid] === b) restore(); }
   };
   R.animBolt = async (aid, bid, c, n) => {
     const a = R.units[aid], b = R.units[bid]; if (!a || !b) return;

@@ -2,3 +2,5 @@ vendor/threejs/
 shots/
 node_modules/
 .claude/
+test/artifacts/
+__pycache__/
