@@ -31,7 +31,7 @@ App.startBattle = cfg => {
   BC.showZones();
   const cen = team => { const us = B.units.filter(u => u.team === team); return { x: us.reduce((a, u) => a + u.x + u.sq / 2, 0) / Math.max(1, us.length), y: us.reduce((a, u) => a + u.y + u.sq / 2, 0) / Math.max(1, us.length) }; };
   const a = cen('pc'), b = cen('foe');
-  R.cam.gyaw = R.cam.yaw = Math.atan2(a.x - b.x, a.y - b.y); R.cam.gdist = innerWidth < 760 ? 20 : 17; R.cam.gpitch = 0.88;
+  R.cam.gyaw = R.cam.yaw = Math.atan2(a.x - b.x, a.y - b.y); R.cam.gdist = innerWidth < 760 ? (innerHeight > innerWidth ? 15 : 13) : 17; R.cam.gpitch = 0.88;
   R.focus(a.x * 0.65 + b.x * 0.35, a.y * 0.65 + b.y * 0.35, true);
   BC.addLog({ text: (cfg.title ? cfg.title + ' — ' : '') + D.maps[cfg.map].name + '. Party level ' + cfg.partyLevel + '. ' + BC.threatText(), cls: 'head' });
   const first = B.units.find(u => u.team === 'pc'); BC.sel = first || null; if (first) R.setActive(first.id);
@@ -101,7 +101,20 @@ BC.frame = () => {
   if (!BC.B) return;
   const R = App.R;
   const hb = $('#hudBottom').offsetHeight; if (hb !== BC._hb) { BC._hb = hb; $('#battle').style.setProperty('--hudb', hb + 'px'); }
-  Object.keys(BC.plates).forEach(id => { const p = BC.plates[id]; const sc = R.unitScreen(id); if (!sc || sc.behind) { p.el.style.display = 'none'; return; } p.el.style.display = ''; p.el.style.left = sc.x + 'px'; p.el.style.top = sc.y + 'px'; });
+  // position nameplates, then nudge overlapping ones upward (declutter), keeping the nearest-to-camera plate in place
+  const vis = [];
+  Object.keys(BC.plates).forEach(id => { const p = BC.plates[id]; const sc = R.unitScreen(id); if (!sc || sc.behind) { p.el.style.display = 'none'; return; } p.el.style.display = ''; vis.push({ p, x: sc.x, y: sc.y, w: p.w || (p.w = p.el.offsetWidth || 90), h: p.h || (p.h = p.el.offsetHeight || 28) }); });
+  vis.sort((a, b) => b.y - a.y);
+  for (let i = 0; i < vis.length; i++) {
+    const a = vis[i];
+    for (let k = 0; k < 6; k++) {
+      let moved = false;
+      for (let j = 0; j < i; j++) { const b = vis[j]; if (Math.abs(a.x - b.x) < (a.w + b.w) / 2 - 4 && Math.abs(a.y - b.y) < a.h) { a.y = b.y - a.h - 1; moved = true; } }
+      if (!moved) break;
+    }
+    a.p.el.style.left = a.x + 'px'; a.p.el.style.top = a.y + 'px';
+  }
+  if (!BC._plateMeasure || BC._plateMeasure++ > 120) { BC._plateMeasure = 1; Object.values(BC.plates).forEach(p => { p.w = 0; p.h = 0; }); }
   const t = performance.now() / 1000;
   Object.values(BC.rings).forEach(r => { if (!r.visible) return; const ru = R.units[r.userData.id]; if (!ru || ru.dead) { r.visible = false; return; } const pz = ru.g.position; r.position.set(pz.x, pz.y + 0.07, pz.z); const s = (ru.sq || 1) * (1 + (reduced() ? 0 : 0.05 * Math.sin(t * 5))); r.scale.set(s, s, s); r.rotation.y = reduced() ? 0 : t * 0.6; });
   const k = BC.keys; const sp = 0.35;

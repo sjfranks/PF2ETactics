@@ -462,7 +462,9 @@ details[open] summary { margin-bottom: 8px; }
 .log-head { display: flex; align-items: center; gap: 8px; padding: 4px 4px 4px 10px; border-bottom: 1px solid var(--line2); font-size: 12px; }
 .log-head b { display: inline-flex; gap: 6px; align-items: center; font-family: var(--f-cond); font-size: 13px; letter-spacing: .14em; text-transform: uppercase; color: var(--cyan); }
 .log-head .dim { flex: 1; text-align: right; font-size: 11.5px; }
-.log-body { flex: 1; overflow-y: auto; overflow-x: hidden; padding: 6px 6px 10px; font-size: 13px; display: grid; grid-template-columns: minmax(0, 1fr); align-content: start; gap: 1px; }
+.log-body { flex: 1; min-height: 0; overflow-y: auto; overflow-x: hidden; padding: 6px 6px 10px; font-size: 13px; display: block; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; }
+.log-body > .ll { display: block; margin-bottom: 1px; }
+.log-body > .ll.round { display: flex; }
 .ll { position: relative; padding: 3px 6px 3px 10px; cursor: default; overflow-wrap: anywhere; color: var(--text2); border-left: 2px solid transparent; line-height: 1.35; }
 .ll.has { cursor: pointer; }
 .ll.has::after { content: '+'; position: absolute; right: 4px; top: 2px; font-family: var(--f-mono); font-size: 11px; color: var(--dim); }
@@ -940,3 +942,244 @@ details[open] summary { margin-bottom: 8px; }
 .abtn .cnt { white-space: nowrap; }
 @media (max-width: 760px) { .shot { width: auto; } }
 .deploybar { z-index: 14; max-width: min(860px, calc(100% - 24px)); }
+
+/* =====================================================================
+   PHONE PASS — larger type and touch targets for small screens.
+   Generated type bumps first (every style ≤14px gains ~1.5px, floor 12.5px),
+   then hand-tuned layout overrides.
+   ===================================================================== */
+@media (max-width: 760px), (max-height: 500px) and (pointer: coarse) {
+  .btn.small { font-size: 14.5px; }
+  .btn.tiny { font-size: 14.5px; }
+  label { font-size: 14.5px; }
+  .pill { font-size: 14.5px; }
+  .label, .eyebrow, .sec-label { font-size: 13.5px; }
+  .note { font-size: 14.5px; }
+  .empty { font-size: 14.5px; }
+  .seg button { font-size: 13.5px; }
+  kbd { font-size: 12.5px; }
+  .emb .lv { font-size: 12.5px; }
+  .mc-txt small { font-size: 15.5px; }
+  .home-foot { font-size: 13.5px; }
+  .hs-title { font-size: 13.5px; }
+  .hs-row small { font-size: 14.5px; }
+  .dia.m { font-size: 15.5px; }
+  .dia.c { font-size: 15.5px; }
+  .bar-title small { font-size: 12.5px; }
+  .preset .pm { font-size: 13.5px; }
+  .preset .pd { font-size: 14px; }
+  .stepper { font-size: 13.5px; }
+  .item .meta span { font-size: 14px; }
+  .item .meta .num { font-size: 13.5px; }
+  .aitog { font-size: 13.5px; }
+  .xpbar .zone span { font-size: 12.5px; }
+  .xpbar .mark { font-size: 12.5px; }
+  .xpbar .cur { font-size: 13.5px; }
+  .btable-head { font-size: 12.5px; }
+  .brow .lv { font-size: 15.5px; }
+  .brow .nm small { font-size: 13px; }
+  .brow .sz { font-size: 13.5px; }
+  .brow.grp { font-size: 13.5px; }
+  .xp { font-size: 14px; }
+  .badge-t { font-size: 12.5px; }
+  .bestiary-empty { font-size: 14.5px; }
+  .mapcard.on::before { font-size: 12.5px; }
+  .mapcard b { font-size: 15.5px; }
+  .mapcard span { font-size: 13.5px; }
+  .mapcard .msz { font-size: 12.5px; }
+  .rchar span { font-size: 13.5px; }
+  .bf-head h3 small { font-size: 12.5px; }
+  .bf-steps button { font-size: 14.5px; }
+  .bf-steps button i { font-size: 12.5px; }
+  .fsec h4 i { font-size: 13.5px; }
+  .fsec h4 small { font-size: 14.5px; }
+  .field > span { font-size: 13.5px; }
+  .desc { font-size: 14.5px; }
+  .clscard b { font-size: 15.5px; }
+  .clscard small { font-size: 12.5px; }
+  .attrchip { font-size: 14.5px; }
+  .attrchip .an small { font-size: 12.5px; }
+  .skillgrid .rk { font-size: 12.5px; }
+  .sheet .sheet-tag { font-size: 12.5px; }
+  /* ---------- stat block ---------- */
+.sb { font-size: 15.5px; }
+  .sb .sub { font-size: 14.5px; }
+  .sb .trait { font-size: 13px; }
+  .sb .stat small { font-size: 12.5px; }
+  .sb .line { font-size: 15.5px; }
+  .sb .line .act { font-size: 14.5px; }
+  .sb .abil .mk { font-size: 12.5px; }
+  .sb .abil .tr { font-size: 14px; }
+  .sb .abil p { font-size: 15px; }
+  .set-row small { font-size: 14px; }
+  .set-row .seg button { font-size: 14.5px; }
+  /* ---------- battle HUD ---------- */
+.hud { font-size: 15.5px; }
+  .ibtn .tl { font-size: 14.5px; }
+  .roundbox small { font-size: 12.5px; }
+  .spd select { font-size: 14.5px; }
+  .icard .nm { font-size: 13px; }
+  .icard .in { font-size: 12.5px; }
+  .banner .bk { font-size: 14.5px; }
+  .banner .bs { font-size: 15.5px; }
+  /* deploy bar */
+.deploybar { font-size: 15.5px; }
+  .deploybar b { font-size: 14.5px; }
+  .log-head { font-size: 13.5px; }
+  .log-head b { font-size: 14.5px; }
+  .log-head .dim { font-size: 13px; }
+  .log-body { font-size: 14.5px; }
+  .ll.has::after { font-size: 12.5px; }
+  .ll .det { font-size: 12.5px; }
+  .ll.round { font-size: 13.5px; }
+  .ll.turn { font-size: 13.5px; }
+  /* cursor tip */
+.tip { font-size: 14.5px; }
+  .tip .tt .dia-txt { font-size: 14.5px; }
+  .tip .mods { font-size: 13px; }
+  .tip .cv { font-size: 13.5px; }
+  .tip .hint { font-size: 12.5px; }
+  .shot .sh-t small { font-size: 13.5px; }
+  .shot .big small { font-size: 13px; }
+  .shot .big .crit b sup { font-size: 15.5px; }
+  .shot .dlegend { font-size: 12.5px; }
+  .shot .vs { font-size: 14px; }
+  .shot .sect h5 { font-size: 13px; }
+  .shot .sect h5 span { font-size: 13.5px; }
+  .shot .mrow { font-size: 14px; }
+  .shot .dmg { font-size: 14.5px; }
+  .shot .dmg .avg { font-size: 13.5px; }
+  .shot .notes { font-size: 14px; }
+  .shot .ah { font-size: 14.5px; }
+  .shot .ah b { font-size: 14px; }
+  .shot .sh-foot .hint { font-size: 12.5px; }
+  .uc-name > span { font-size: 14.5px; }
+  .hpline .hpt { font-size: 13.5px; }
+  .uc-stats small { font-size: 12.5px; }
+  .uc-stats b { font-size: 15.5px; }
+  .econ-tag { font-size: 13.5px; }
+  .chip { font-size: 13.5px; }
+  .tchip .pct small { font-size: 12.5px; }
+  .tchip .tn { font-size: 13px; }
+  .tchip.picked::after { font-size: 12.5px; }
+  /* ability info strip */
+.ainfo { font-size: 15px; }
+  .ainfo .trs { font-size: 13.5px; }
+  .ttab { font-size: 14.5px; }
+  .ttab .n { font-size: 12.5px; }
+  .agroup > .gl { font-size: 12.5px; }
+  .abtn .nm { font-size: 13px; }
+  .abtn .cost { font-size: 12.5px; }
+  .abtn .hk { font-size: 12.5px; }
+  .abtn .cnt { font-size: 12.5px; }
+  .endbtn small { font-size: 12.5px; }
+  .sbk-head b { font-size: 15.5px; }
+  .sbk-head .num { font-size: 14px; }
+  .sbrank .rk { font-size: 13.5px; }
+  .scard b { font-size: 15.5px; }
+  .scard small { font-size: 13px; }
+  .scard .cost { font-size: 13.5px; }
+  .res-head small { font-size: 13.5px; }
+  .res-head .dim { font-size: 14.5px; }
+  .res-stats small { font-size: 12.5px; }
+  .mvp small { font-size: 13.5px; }
+  .mvp span { font-size: 14.5px; }
+  .rr { font-size: 15px; }
+  .rr .st { font-size: 13.5px; }
+  .rr .fate { font-size: 13.5px; }
+  /* help */
+.help { font-size: 15.5px; }
+  .plate .pl-lv { font-size: 12.5px; }
+  .plate b { font-size: 14px; }
+  .plate .pl-dy { font-size: 12.5px; }
+  .float.crit::before { font-size: 13.5px; }
+  .float.critlbl { font-size: 15.5px; }
+  .toast { font-size: 15.5px; }
+}
+@media (max-width: 760px), (max-height: 500px) and (pointer: coarse) {
+  body { font-size: 16px; -webkit-text-size-adjust: 100%; }
+  input[type=text], input[type=search], input[type=number], select, textarea { font-size: 16px !important; min-height: 44px; }  /* iOS zooms on focus below 16px */
+  .btn { min-height: 44px; }
+  button, .abtn, .tchip, .icard, .ttab, .menu-card, .rchar, .brow { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+
+  /* --- top HUD --- */
+  .hud-top { padding: calc(6px + env(safe-area-inset-top, 0px)) 8px 8px; }
+  .ibtn { min-width: 44px; height: 44px; }
+  .ibtn svg { width: 22px; height: 22px; }
+  .roundbox b { font-size: 17px; }
+  .roundbox small, .roundbox span { font-size: 11.5px; }
+  .icard { width: 58px; padding: 4px 3px; }
+  .icard.cur { width: 66px; }
+  .icard .emb { width: 32px; height: 32px; }
+  .icard.cur .emb { width: 36px; height: 36px; }
+  .icard .nm { font-size: 12.5px; max-width: 54px; }
+
+  /* --- nameplates & floating numbers --- */
+  .plate b { font-size: 13.5px; padding: 2px 6px; }
+  .plate .pl-hp { width: 82px; height: 8px; }
+  .plate .pl-lv { font-size: 12px; }
+  .plate .lv, .plate small { font-size: 12px; }
+  .float { font-size: 24px; }
+  .float.crit { font-size: 32px; }
+  .float.info, .float.react, .float.good, .float.miss { font-size: 17px; }
+
+  /* --- bottom HUD --- */
+  .hud-bottom { gap: 6px; padding: 6px 6px calc(8px + env(safe-area-inset-bottom, 0px)); }
+  .ainfo { font-size: 14px; padding: 3px 8px; }
+  .ttab { min-height: 42px; padding: 6px 14px; font-size: 14px; }
+  .abtn { width: 76px; height: 80px; }
+  .abtn .ai svg { width: 30px; height: 30px; }
+  .abtn .nm { font-size: 13px; line-height: 1.1; }
+  .abtn .cost, .abtn .bon, .abtn .hk, .abtn .cnt { font-size: 12px; }
+  .abtn .hk { display: none; }
+  .actions { scroll-snap-type: x proximity; -webkit-overflow-scrolling: touch; padding: 4px 2px 6px; }
+  .uc-name b { font-size: 17px; }
+  .uc-name span { font-size: 13px; }
+  .uc-head .emb { width: 40px; height: 40px; }
+  .pip { width: 16px; height: 16px; }
+  .unitcard .chip { font-size: 13px; min-height: 28px; }
+  .endbtn { min-height: 64px; }
+  .endbtn b { font-size: 17px; }
+  .endbtn small { font-size: 12.5px; }
+
+  /* --- targeting --- */
+  .tchip { min-height: 50px; grid-template-columns: 38px auto; }
+  .tchip .emb { width: 38px; height: 38px; }
+  .tchip .pct { font-size: 19px; }
+  .tchip .tn { font-size: 13px; max-width: 110px; }
+  .shot { font-size: 15px; }
+  .shot .big b { font-size: 38px; }
+  .shot .btn { min-height: 48px; font-size: 16px; }
+
+  /* --- panels --- */
+  .log-body { font-size: 15px; }
+  .ll { padding: 5px 8px 5px 12px; line-height: 1.4; }
+  .ll .det { font-size: 13px; }
+  .spellbook .abtn { width: 100%; height: auto; min-height: 60px; grid-template-columns: 36px minmax(0, 1fr) auto; grid-template-rows: auto; justify-items: start; text-align: left; padding: 8px 10px; gap: 10px; }
+  .spellbook .abtn .nm { font-size: 15px; }
+  .inspect, .help, .modal-card { font-size: 15px; }
+  .sb .line, .sb .stat small { font-size: 14px; }
+  .sb .stat b { font-size: 18px; }
+  .banner { font-size: 30px; }
+
+  /* --- menus --- */
+  .mc-txt b { font-size: 19px; }
+  .mc-txt small { font-size: 14.5px; }
+  .lede { font-size: 16.5px; }
+  .item .meta b { font-size: 16.5px; }
+  .item .meta span { font-size: 14px; }
+  .preset b { font-size: 16.5px; }
+  .preset { width: 236px; }
+  .brow { min-height: 52px; }
+  .seg button { min-height: 36px; padding: 4px 10px; font-size: 13.5px; }
+  .field > span { font-size: 13px; }
+  .desc, .note { font-size: 14.5px; }
+}
+/* short landscape phones: keep the battlefield visible */
+@media (max-height: 500px) and (pointer: coarse) {
+  .hud-bottom { grid-template-columns: auto minmax(0, 1fr) auto; grid-template-areas: 'unit tray end'; align-items: end; }
+  .ainfo { display: none; }
+  .uc-stats, .unitcard .chips { display: none; }
+  .abtn { width: 68px; height: 70px; }
+  .log { height: 70%; }
+}

@@ -468,7 +468,9 @@ details[open] summary { margin-bottom: 8px; }
 .log-head { display: flex; align-items: center; gap: 8px; padding: 4px 4px 4px 10px; border-bottom: 1px solid var(--line2); font-size: 12px; }
 .log-head b { display: inline-flex; gap: 6px; align-items: center; font-family: var(--f-cond); font-size: 13px; letter-spacing: .14em; text-transform: uppercase; color: var(--cyan); }
 .log-head .dim { flex: 1; text-align: right; font-size: 11.5px; }
-.log-body { flex: 1; overflow-y: auto; overflow-x: hidden; padding: 6px 6px 10px; font-size: 13px; display: grid; grid-template-columns: minmax(0, 1fr); align-content: start; gap: 1px; }
+.log-body { flex: 1; min-height: 0; overflow-y: auto; overflow-x: hidden; padding: 6px 6px 10px; font-size: 13px; display: block; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; }
+.log-body > .ll { display: block; margin-bottom: 1px; }
+.log-body > .ll.round { display: flex; }
 .ll { position: relative; padding: 3px 6px 3px 10px; cursor: default; overflow-wrap: anywhere; color: var(--text2); border-left: 2px solid transparent; line-height: 1.35; }
 .ll.has { cursor: pointer; }
 .ll.has::after { content: '+'; position: absolute; right: 4px; top: 2px; font-family: var(--f-mono); font-size: 11px; color: var(--dim); }
@@ -946,6 +948,247 @@ details[open] summary { margin-bottom: 8px; }
 .abtn .cnt { white-space: nowrap; }
 @media (max-width: 760px) { .shot { width: auto; } }
 .deploybar { z-index: 14; max-width: min(860px, calc(100% - 24px)); }
+
+/* =====================================================================
+   PHONE PASS — larger type and touch targets for small screens.
+   Generated type bumps first (every style ≤14px gains ~1.5px, floor 12.5px),
+   then hand-tuned layout overrides.
+   ===================================================================== */
+@media (max-width: 760px), (max-height: 500px) and (pointer: coarse) {
+  .btn.small { font-size: 14.5px; }
+  .btn.tiny { font-size: 14.5px; }
+  label { font-size: 14.5px; }
+  .pill { font-size: 14.5px; }
+  .label, .eyebrow, .sec-label { font-size: 13.5px; }
+  .note { font-size: 14.5px; }
+  .empty { font-size: 14.5px; }
+  .seg button { font-size: 13.5px; }
+  kbd { font-size: 12.5px; }
+  .emb .lv { font-size: 12.5px; }
+  .mc-txt small { font-size: 15.5px; }
+  .home-foot { font-size: 13.5px; }
+  .hs-title { font-size: 13.5px; }
+  .hs-row small { font-size: 14.5px; }
+  .dia.m { font-size: 15.5px; }
+  .dia.c { font-size: 15.5px; }
+  .bar-title small { font-size: 12.5px; }
+  .preset .pm { font-size: 13.5px; }
+  .preset .pd { font-size: 14px; }
+  .stepper { font-size: 13.5px; }
+  .item .meta span { font-size: 14px; }
+  .item .meta .num { font-size: 13.5px; }
+  .aitog { font-size: 13.5px; }
+  .xpbar .zone span { font-size: 12.5px; }
+  .xpbar .mark { font-size: 12.5px; }
+  .xpbar .cur { font-size: 13.5px; }
+  .btable-head { font-size: 12.5px; }
+  .brow .lv { font-size: 15.5px; }
+  .brow .nm small { font-size: 13px; }
+  .brow .sz { font-size: 13.5px; }
+  .brow.grp { font-size: 13.5px; }
+  .xp { font-size: 14px; }
+  .badge-t { font-size: 12.5px; }
+  .bestiary-empty { font-size: 14.5px; }
+  .mapcard.on::before { font-size: 12.5px; }
+  .mapcard b { font-size: 15.5px; }
+  .mapcard span { font-size: 13.5px; }
+  .mapcard .msz { font-size: 12.5px; }
+  .rchar span { font-size: 13.5px; }
+  .bf-head h3 small { font-size: 12.5px; }
+  .bf-steps button { font-size: 14.5px; }
+  .bf-steps button i { font-size: 12.5px; }
+  .fsec h4 i { font-size: 13.5px; }
+  .fsec h4 small { font-size: 14.5px; }
+  .field > span { font-size: 13.5px; }
+  .desc { font-size: 14.5px; }
+  .clscard b { font-size: 15.5px; }
+  .clscard small { font-size: 12.5px; }
+  .attrchip { font-size: 14.5px; }
+  .attrchip .an small { font-size: 12.5px; }
+  .skillgrid .rk { font-size: 12.5px; }
+  .sheet .sheet-tag { font-size: 12.5px; }
+  /* ---------- stat block ---------- */
+.sb { font-size: 15.5px; }
+  .sb .sub { font-size: 14.5px; }
+  .sb .trait { font-size: 13px; }
+  .sb .stat small { font-size: 12.5px; }
+  .sb .line { font-size: 15.5px; }
+  .sb .line .act { font-size: 14.5px; }
+  .sb .abil .mk { font-size: 12.5px; }
+  .sb .abil .tr { font-size: 14px; }
+  .sb .abil p { font-size: 15px; }
+  .set-row small { font-size: 14px; }
+  .set-row .seg button { font-size: 14.5px; }
+  /* ---------- battle HUD ---------- */
+.hud { font-size: 15.5px; }
+  .ibtn .tl { font-size: 14.5px; }
+  .roundbox small { font-size: 12.5px; }
+  .spd select { font-size: 14.5px; }
+  .icard .nm { font-size: 13px; }
+  .icard .in { font-size: 12.5px; }
+  .banner .bk { font-size: 14.5px; }
+  .banner .bs { font-size: 15.5px; }
+  /* deploy bar */
+.deploybar { font-size: 15.5px; }
+  .deploybar b { font-size: 14.5px; }
+  .log-head { font-size: 13.5px; }
+  .log-head b { font-size: 14.5px; }
+  .log-head .dim { font-size: 13px; }
+  .log-body { font-size: 14.5px; }
+  .ll.has::after { font-size: 12.5px; }
+  .ll .det { font-size: 12.5px; }
+  .ll.round { font-size: 13.5px; }
+  .ll.turn { font-size: 13.5px; }
+  /* cursor tip */
+.tip { font-size: 14.5px; }
+  .tip .tt .dia-txt { font-size: 14.5px; }
+  .tip .mods { font-size: 13px; }
+  .tip .cv { font-size: 13.5px; }
+  .tip .hint { font-size: 12.5px; }
+  .shot .sh-t small { font-size: 13.5px; }
+  .shot .big small { font-size: 13px; }
+  .shot .big .crit b sup { font-size: 15.5px; }
+  .shot .dlegend { font-size: 12.5px; }
+  .shot .vs { font-size: 14px; }
+  .shot .sect h5 { font-size: 13px; }
+  .shot .sect h5 span { font-size: 13.5px; }
+  .shot .mrow { font-size: 14px; }
+  .shot .dmg { font-size: 14.5px; }
+  .shot .dmg .avg { font-size: 13.5px; }
+  .shot .notes { font-size: 14px; }
+  .shot .ah { font-size: 14.5px; }
+  .shot .ah b { font-size: 14px; }
+  .shot .sh-foot .hint { font-size: 12.5px; }
+  .uc-name > span { font-size: 14.5px; }
+  .hpline .hpt { font-size: 13.5px; }
+  .uc-stats small { font-size: 12.5px; }
+  .uc-stats b { font-size: 15.5px; }
+  .econ-tag { font-size: 13.5px; }
+  .chip { font-size: 13.5px; }
+  .tchip .pct small { font-size: 12.5px; }
+  .tchip .tn { font-size: 13px; }
+  .tchip.picked::after { font-size: 12.5px; }
+  /* ability info strip */
+.ainfo { font-size: 15px; }
+  .ainfo .trs { font-size: 13.5px; }
+  .ttab { font-size: 14.5px; }
+  .ttab .n { font-size: 12.5px; }
+  .agroup > .gl { font-size: 12.5px; }
+  .abtn .nm { font-size: 13px; }
+  .abtn .cost { font-size: 12.5px; }
+  .abtn .hk { font-size: 12.5px; }
+  .abtn .cnt { font-size: 12.5px; }
+  .endbtn small { font-size: 12.5px; }
+  .sbk-head b { font-size: 15.5px; }
+  .sbk-head .num { font-size: 14px; }
+  .sbrank .rk { font-size: 13.5px; }
+  .scard b { font-size: 15.5px; }
+  .scard small { font-size: 13px; }
+  .scard .cost { font-size: 13.5px; }
+  .res-head small { font-size: 13.5px; }
+  .res-head .dim { font-size: 14.5px; }
+  .res-stats small { font-size: 12.5px; }
+  .mvp small { font-size: 13.5px; }
+  .mvp span { font-size: 14.5px; }
+  .rr { font-size: 15px; }
+  .rr .st { font-size: 13.5px; }
+  .rr .fate { font-size: 13.5px; }
+  /* help */
+.help { font-size: 15.5px; }
+  .plate .pl-lv { font-size: 12.5px; }
+  .plate b { font-size: 14px; }
+  .plate .pl-dy { font-size: 12.5px; }
+  .float.crit::before { font-size: 13.5px; }
+  .float.critlbl { font-size: 15.5px; }
+  .toast { font-size: 15.5px; }
+}
+@media (max-width: 760px), (max-height: 500px) and (pointer: coarse) {
+  body { font-size: 16px; -webkit-text-size-adjust: 100%; }
+  input[type=text], input[type=search], input[type=number], select, textarea { font-size: 16px !important; min-height: 44px; }  /* iOS zooms on focus below 16px */
+  .btn { min-height: 44px; }
+  button, .abtn, .tchip, .icard, .ttab, .menu-card, .rchar, .brow { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+
+  /* --- top HUD --- */
+  .hud-top { padding: calc(6px + env(safe-area-inset-top, 0px)) 8px 8px; }
+  .ibtn { min-width: 44px; height: 44px; }
+  .ibtn svg { width: 22px; height: 22px; }
+  .roundbox b { font-size: 17px; }
+  .roundbox small, .roundbox span { font-size: 11.5px; }
+  .icard { width: 58px; padding: 4px 3px; }
+  .icard.cur { width: 66px; }
+  .icard .emb { width: 32px; height: 32px; }
+  .icard.cur .emb { width: 36px; height: 36px; }
+  .icard .nm { font-size: 12.5px; max-width: 54px; }
+
+  /* --- nameplates & floating numbers --- */
+  .plate b { font-size: 13.5px; padding: 2px 6px; }
+  .plate .pl-hp { width: 82px; height: 8px; }
+  .plate .pl-lv { font-size: 12px; }
+  .plate .lv, .plate small { font-size: 12px; }
+  .float { font-size: 24px; }
+  .float.crit { font-size: 32px; }
+  .float.info, .float.react, .float.good, .float.miss { font-size: 17px; }
+
+  /* --- bottom HUD --- */
+  .hud-bottom { gap: 6px; padding: 6px 6px calc(8px + env(safe-area-inset-bottom, 0px)); }
+  .ainfo { font-size: 14px; padding: 3px 8px; }
+  .ttab { min-height: 42px; padding: 6px 14px; font-size: 14px; }
+  .abtn { width: 76px; height: 80px; }
+  .abtn .ai svg { width: 30px; height: 30px; }
+  .abtn .nm { font-size: 13px; line-height: 1.1; }
+  .abtn .cost, .abtn .bon, .abtn .hk, .abtn .cnt { font-size: 12px; }
+  .abtn .hk { display: none; }
+  .actions { scroll-snap-type: x proximity; -webkit-overflow-scrolling: touch; padding: 4px 2px 6px; }
+  .uc-name b { font-size: 17px; }
+  .uc-name span { font-size: 13px; }
+  .uc-head .emb { width: 40px; height: 40px; }
+  .pip { width: 16px; height: 16px; }
+  .unitcard .chip { font-size: 13px; min-height: 28px; }
+  .endbtn { min-height: 64px; }
+  .endbtn b { font-size: 17px; }
+  .endbtn small { font-size: 12.5px; }
+
+  /* --- targeting --- */
+  .tchip { min-height: 50px; grid-template-columns: 38px auto; }
+  .tchip .emb { width: 38px; height: 38px; }
+  .tchip .pct { font-size: 19px; }
+  .tchip .tn { font-size: 13px; max-width: 110px; }
+  .shot { font-size: 15px; }
+  .shot .big b { font-size: 38px; }
+  .shot .btn { min-height: 48px; font-size: 16px; }
+
+  /* --- panels --- */
+  .log-body { font-size: 15px; }
+  .ll { padding: 5px 8px 5px 12px; line-height: 1.4; }
+  .ll .det { font-size: 13px; }
+  .spellbook .abtn { width: 100%; height: auto; min-height: 60px; grid-template-columns: 36px minmax(0, 1fr) auto; grid-template-rows: auto; justify-items: start; text-align: left; padding: 8px 10px; gap: 10px; }
+  .spellbook .abtn .nm { font-size: 15px; }
+  .inspect, .help, .modal-card { font-size: 15px; }
+  .sb .line, .sb .stat small { font-size: 14px; }
+  .sb .stat b { font-size: 18px; }
+  .banner { font-size: 30px; }
+
+  /* --- menus --- */
+  .mc-txt b { font-size: 19px; }
+  .mc-txt small { font-size: 14.5px; }
+  .lede { font-size: 16.5px; }
+  .item .meta b { font-size: 16.5px; }
+  .item .meta span { font-size: 14px; }
+  .preset b { font-size: 16.5px; }
+  .preset { width: 236px; }
+  .brow { min-height: 52px; }
+  .seg button { min-height: 36px; padding: 4px 10px; font-size: 13.5px; }
+  .field > span { font-size: 13px; }
+  .desc, .note { font-size: 14.5px; }
+}
+/* short landscape phones: keep the battlefield visible */
+@media (max-height: 500px) and (pointer: coarse) {
+  .hud-bottom { grid-template-columns: auto minmax(0, 1fr) auto; grid-template-areas: 'unit tray end'; align-items: end; }
+  .ainfo { display: none; }
+  .uc-stats, .unitcard .chips { display: none; }
+  .abtn { width: 68px; height: 70px; }
+  .log { height: 70%; }
+}
 
 </style>
 <div id="app">
@@ -12724,10 +12967,10 @@ class Particles {
     opts = opts || {}; const p = toV(pos); const R = radius || 2; kind = kind || 'fire'; const small = opts.small; const lc = C(KIND_COLOR[kind] || '#8fd0ff'); const hot = kind === 'fire' ? [3.2, 2.2, 1.1] : [lc[0] * 3, lc[1] * 3, lc[2] * 3];
     const k = small ? 0.35 : 1; const ground = V3(p.x, (opts.groundY != null ? opts.groundY : p.y - (small ? 0 : 0.5)), p.z);
     // core flash + light
-    this._flash(p, kind === 'fire' ? [2.2, 1.5, 0.7] : hot, R * (kind === 'fire' ? 1.1 : 1.4), 0.15, 0.7); this.lightFlash(p, new THREE.Color(Math.min(1, lc[0] * 1.2), Math.min(1, lc[1] * 1.1), lc[2]), small ? 3 : 9, small ? 0.35 : 0.9, R * 4 + 3);
+    this._flash(p, kind === 'fire' ? [1.15, 0.78, 0.36] : hot, R * (kind === 'fire' ? 0.85 : 1.4), 0.15, 0.7); this.lightFlash(p, new THREE.Color(Math.min(1, lc[0] * 1.2), Math.min(1, lc[1] * 1.1), lc[2]), small ? 2.5 : 5, small ? 0.35 : 0.8, R * 4 + 3);
     if (kind === 'fire') {
-      for (let i = 0; i < 110 * k; i++) { randDir(_tmp, 0.35); const sp = rr(0.45, 1) * R * 3.0; this.add.spawn({ p: p.clone().addScaledVector(_tmp, rr(0.05, 0.3) * R), v: _tmp.clone().multiplyScalar(sp), c0: [1.5, 0.62, 0.16], c1: [0.32, 0.04, 0.0], s0: R * rr(0.3, 0.5), s1: R * rr(0.6, 0.9), life: rr(0.5, 0.9), a: 0.5, drag: 4.5, g: 1.5, frame: 1, rotV: rr(-2, 2), fi: 0.04, fo: 0.25 }); }
-      for (let i = 0; i < 26 * k; i++) { randDir(_tmp, 0.2); this.add.spawn({ p: p.clone(), v: _tmp.clone().multiplyScalar(rr(0.5, 1) * R * 2.2), c0: [2.2, 1.5, 0.6], c1: [0.8, 0.2, 0.02], s0: R * 0.35, s1: R * 0.2, life: rr(0.2, 0.35), a: 0.6, drag: 5, frame: 1, rotV: rr(-2, 2), fi: 0, fo: 0.2 }); }
+      for (let i = 0; i < 110 * k; i++) { randDir(_tmp, 0.35); const sp = rr(0.45, 1) * R * 3.0; this.add.spawn({ p: p.clone().addScaledVector(_tmp, rr(0.05, 0.3) * R), v: _tmp.clone().multiplyScalar(sp), c0: [1.15, 0.47, 0.12], c1: [0.3, 0.04, 0.0], s0: R * rr(0.26, 0.42), s1: R * rr(0.5, 0.8), life: rr(0.5, 0.9), a: 0.4, drag: 4.5, g: 1.5, frame: 1, rotV: rr(-2, 2), fi: 0.04, fo: 0.25 }); }
+      for (let i = 0; i < 14 * k; i++) { randDir(_tmp, 0.2); this.add.spawn({ p: p.clone(), v: _tmp.clone().multiplyScalar(rr(0.5, 1) * R * 2.2), c0: [1.3, 0.85, 0.35], c1: [0.8, 0.2, 0.02], s0: R * 0.35, s1: R * 0.2, life: rr(0.2, 0.35), a: 0.6, drag: 5, frame: 1, rotV: rr(-2, 2), fi: 0, fo: 0.2 }); }
       this._puffs(p, Math.round(40 * k), [0.13, 0.11, 0.1], { r: R * 0.5, a: 0.6, s0: R * 0.35, s1: R * 1.05, life: 2.6, min: 0.6 * R, max: 1.6 * R, up: 1.4, g: 0.35, drag: 1.8, delay: 0.12, turb: 0.5, c1: [0.3, 0.29, 0.28] });
       this._sparks(p, Math.round(50 * k), [3.2, 1.6, 0.4], { up: 0.6, min: R * 2, max: R * 5, life: 1.0, w: 0.025, g: -6, drag: 0.6 });
       if (!small) this.scorch(ground, R * 0.9);
@@ -14764,7 +15007,7 @@ App.startBattle = cfg => {
   BC.showZones();
   const cen = team => { const us = B.units.filter(u => u.team === team); return { x: us.reduce((a, u) => a + u.x + u.sq / 2, 0) / Math.max(1, us.length), y: us.reduce((a, u) => a + u.y + u.sq / 2, 0) / Math.max(1, us.length) }; };
   const a = cen('pc'), b = cen('foe');
-  R.cam.gyaw = R.cam.yaw = Math.atan2(a.x - b.x, a.y - b.y); R.cam.gdist = innerWidth < 760 ? 20 : 17; R.cam.gpitch = 0.88;
+  R.cam.gyaw = R.cam.yaw = Math.atan2(a.x - b.x, a.y - b.y); R.cam.gdist = innerWidth < 760 ? (innerHeight > innerWidth ? 15 : 13) : 17; R.cam.gpitch = 0.88;
   R.focus(a.x * 0.65 + b.x * 0.35, a.y * 0.65 + b.y * 0.35, true);
   BC.addLog({ text: (cfg.title ? cfg.title + ' — ' : '') + D.maps[cfg.map].name + '. Party level ' + cfg.partyLevel + '. ' + BC.threatText(), cls: 'head' });
   const first = B.units.find(u => u.team === 'pc'); BC.sel = first || null; if (first) R.setActive(first.id);
@@ -14834,7 +15077,20 @@ BC.frame = () => {
   if (!BC.B) return;
   const R = App.R;
   const hb = $('#hudBottom').offsetHeight; if (hb !== BC._hb) { BC._hb = hb; $('#battle').style.setProperty('--hudb', hb + 'px'); }
-  Object.keys(BC.plates).forEach(id => { const p = BC.plates[id]; const sc = R.unitScreen(id); if (!sc || sc.behind) { p.el.style.display = 'none'; return; } p.el.style.display = ''; p.el.style.left = sc.x + 'px'; p.el.style.top = sc.y + 'px'; });
+  // position nameplates, then nudge overlapping ones upward (declutter), keeping the nearest-to-camera plate in place
+  const vis = [];
+  Object.keys(BC.plates).forEach(id => { const p = BC.plates[id]; const sc = R.unitScreen(id); if (!sc || sc.behind) { p.el.style.display = 'none'; return; } p.el.style.display = ''; vis.push({ p, x: sc.x, y: sc.y, w: p.w || (p.w = p.el.offsetWidth || 90), h: p.h || (p.h = p.el.offsetHeight || 28) }); });
+  vis.sort((a, b) => b.y - a.y);
+  for (let i = 0; i < vis.length; i++) {
+    const a = vis[i];
+    for (let k = 0; k < 6; k++) {
+      let moved = false;
+      for (let j = 0; j < i; j++) { const b = vis[j]; if (Math.abs(a.x - b.x) < (a.w + b.w) / 2 - 4 && Math.abs(a.y - b.y) < a.h) { a.y = b.y - a.h - 1; moved = true; } }
+      if (!moved) break;
+    }
+    a.p.el.style.left = a.x + 'px'; a.p.el.style.top = a.y + 'px';
+  }
+  if (!BC._plateMeasure || BC._plateMeasure++ > 120) { BC._plateMeasure = 1; Object.values(BC.plates).forEach(p => { p.w = 0; p.h = 0; }); }
   const t = performance.now() / 1000;
   Object.values(BC.rings).forEach(r => { if (!r.visible) return; const ru = R.units[r.userData.id]; if (!ru || ru.dead) { r.visible = false; return; } const pz = ru.g.position; r.position.set(pz.x, pz.y + 0.07, pz.z); const s = (ru.sq || 1) * (1 + (reduced() ? 0 : 0.05 * Math.sin(t * 5))); r.scale.set(s, s, s); r.rotation.y = reduced() ? 0 : t * 0.6; });
   const k = BC.keys; const sp = 0.35;

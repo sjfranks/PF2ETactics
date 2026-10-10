@@ -1528,10 +1528,10 @@ class Particles {
     opts = opts || {}; const p = toV(pos); const R = radius || 2; kind = kind || 'fire'; const small = opts.small; const lc = C(KIND_COLOR[kind] || '#8fd0ff'); const hot = kind === 'fire' ? [3.2, 2.2, 1.1] : [lc[0] * 3, lc[1] * 3, lc[2] * 3];
     const k = small ? 0.35 : 1; const ground = V3(p.x, (opts.groundY != null ? opts.groundY : p.y - (small ? 0 : 0.5)), p.z);
     // core flash + light
-    this._flash(p, kind === 'fire' ? [2.2, 1.5, 0.7] : hot, R * (kind === 'fire' ? 1.1 : 1.4), 0.15, 0.7); this.lightFlash(p, new THREE.Color(Math.min(1, lc[0] * 1.2), Math.min(1, lc[1] * 1.1), lc[2]), small ? 3 : 9, small ? 0.35 : 0.9, R * 4 + 3);
+    this._flash(p, kind === 'fire' ? [1.15, 0.78, 0.36] : hot, R * (kind === 'fire' ? 0.85 : 1.4), 0.15, 0.7); this.lightFlash(p, new THREE.Color(Math.min(1, lc[0] * 1.2), Math.min(1, lc[1] * 1.1), lc[2]), small ? 2.5 : 5, small ? 0.35 : 0.8, R * 4 + 3);
     if (kind === 'fire') {
-      for (let i = 0; i < 110 * k; i++) { randDir(_tmp, 0.35); const sp = rr(0.45, 1) * R * 3.0; this.add.spawn({ p: p.clone().addScaledVector(_tmp, rr(0.05, 0.3) * R), v: _tmp.clone().multiplyScalar(sp), c0: [1.5, 0.62, 0.16], c1: [0.32, 0.04, 0.0], s0: R * rr(0.3, 0.5), s1: R * rr(0.6, 0.9), life: rr(0.5, 0.9), a: 0.5, drag: 4.5, g: 1.5, frame: 1, rotV: rr(-2, 2), fi: 0.04, fo: 0.25 }); }
-      for (let i = 0; i < 26 * k; i++) { randDir(_tmp, 0.2); this.add.spawn({ p: p.clone(), v: _tmp.clone().multiplyScalar(rr(0.5, 1) * R * 2.2), c0: [2.2, 1.5, 0.6], c1: [0.8, 0.2, 0.02], s0: R * 0.35, s1: R * 0.2, life: rr(0.2, 0.35), a: 0.6, drag: 5, frame: 1, rotV: rr(-2, 2), fi: 0, fo: 0.2 }); }
+      for (let i = 0; i < 110 * k; i++) { randDir(_tmp, 0.35); const sp = rr(0.45, 1) * R * 3.0; this.add.spawn({ p: p.clone().addScaledVector(_tmp, rr(0.05, 0.3) * R), v: _tmp.clone().multiplyScalar(sp), c0: [1.15, 0.47, 0.12], c1: [0.3, 0.04, 0.0], s0: R * rr(0.26, 0.42), s1: R * rr(0.5, 0.8), life: rr(0.5, 0.9), a: 0.4, drag: 4.5, g: 1.5, frame: 1, rotV: rr(-2, 2), fi: 0.04, fo: 0.25 }); }
+      for (let i = 0; i < 14 * k; i++) { randDir(_tmp, 0.2); this.add.spawn({ p: p.clone(), v: _tmp.clone().multiplyScalar(rr(0.5, 1) * R * 2.2), c0: [1.3, 0.85, 0.35], c1: [0.8, 0.2, 0.02], s0: R * 0.35, s1: R * 0.2, life: rr(0.2, 0.35), a: 0.6, drag: 5, frame: 1, rotV: rr(-2, 2), fi: 0, fo: 0.2 }); }
       this._puffs(p, Math.round(40 * k), [0.13, 0.11, 0.1], { r: R * 0.5, a: 0.6, s0: R * 0.35, s1: R * 1.05, life: 2.6, min: 0.6 * R, max: 1.6 * R, up: 1.4, g: 0.35, drag: 1.8, delay: 0.12, turb: 0.5, c1: [0.3, 0.29, 0.28] });
       this._sparks(p, Math.round(50 * k), [3.2, 1.6, 0.4], { up: 0.6, min: R * 2, max: R * 5, life: 1.0, w: 0.025, g: -6, drag: 0.6 });
       if (!small) this.scorch(ground, R * 0.9);
